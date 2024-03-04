@@ -523,9 +523,9 @@ include "include\BTH_data.asm"
 
  PAGE 7
 CEMENTER
- INCBIN "gfx\CEMENTER.SC5",#7,#4000			; Cada página tiene 16K = 4000h
+ INCBIN "gfx\CEMENTER0.SC5",#7,#4000			; Cada página tiene 16K = 4000h
  PAGE 8
- INCBIN "gfx\CEMENTER.SC5",#4007			; Cada página tiene 16K = 4000h 
+ INCBIN "gfx\CEMENTER0.SC5",#4007			; Cada página tiene 16K = 4000h 
  PAGE 9
 GRAPHIC
  INCBIN "gfx\BTH.SR8",#7,#4000			; Cada página tiene 16K = 4000h
