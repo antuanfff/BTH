@@ -66,7 +66,7 @@ INIT_CHARS_VARS:
     ld (ix+10), 08h        
 
     ld (ix+12), $07      ; Sprite 1 - Ghost
-    ld (ix+13), $E0
+    ld (ix+13), $B9
     ld (ix+14), $18
     
     XOR A
@@ -81,8 +81,15 @@ INIT_CHARS_VARS:
     LD (CHAR_SPEED_SHOOT),A
     LD (CHAR_GHOST_DEAD),A
     LD (CHAR_MIN_STEP), A
+    LD (SPRITE_COLOR_REPLACE2), A
     LD A,$01
     LD (CHAR_DIR_MAIN),A        ; $00 - UP, $01 - DOWN, $02 - LEFT, $03 - RIGHT
+
+    ld hl, SPRITE_P1_DOWN
+    ld (SPRITE_PTR_REPLACE), HL    
+    ld hl, SPRITE_COLOR_P1_DOWN
+    ld (SPRITE_COLOR_REPLACE), HL
+    LD (SPRITE_COLOR_REPLACE2), HL
     ret
 
 MAIN_LOOP:
@@ -99,7 +106,7 @@ MAIN_LOOP:
 	LD (ix+13), A	
     CP $16
     JP Z,.CHANGE_DIR_RIGHT
-    CP $E1
+    CP $B9
     JP Z,.CHANGE_DIR_LEFT
     		
     JP .check_pattern
@@ -419,7 +426,8 @@ CHECK_DIRECTION_MAIN:
     ld (SPRITE_PTR_REPLACE), HL
     
     ld hl, SPRITE_COLOR_P1_DOWN
-    ld (SPRITE_COLOR_REPLACE), HL
+    ld (SPRITE_COLOR_REPLACE), HL    
+    ld (SPRITE_COLOR_REPLACE2), HL
     CALL DUMP_SPR_P1    
 
     JP .FINISH
@@ -430,6 +438,7 @@ CHECK_DIRECTION_MAIN:
     
     ld hl, SPRITE_COLOR_P1_UP
     ld (SPRITE_COLOR_REPLACE), HL
+    ld (SPRITE_COLOR_REPLACE2), HL
     CALL DUMP_SPR_P1
 
     JP .FINISH
@@ -440,6 +449,7 @@ CHECK_DIRECTION_MAIN:
     
     ld hl, SPRITE_COLOR_P1_RIGHT
     ld (SPRITE_COLOR_REPLACE), HL
+    ;;ld (SPRITE_COLOR_REPLACE2), HL
     CALL DUMP_SPR_P1
     JP .FINISH
 
@@ -449,11 +459,14 @@ CHECK_DIRECTION_MAIN:
     
     ld hl, SPRITE_COLOR_P1_LEFT
     ld (SPRITE_COLOR_REPLACE), HL
+    ld (SPRITE_COLOR_REPLACE2), HL
     CALL DUMP_SPR_P1
     
     JP .FINISH
 
 .FINISH:
+    XOR A
+    LD (CHAR_MIN_STEP), A   ; reseteamos el contador de pasos
     LD A, (CHAR_NEW_DIR_MAIN)
     LD (CHAR_DIR_MAIN),A    
     RET
@@ -483,6 +496,7 @@ UPDATE_MOVEMENT:
     LD A, (CHAR_MIN_STEP)
     CP MAX_CHAR_STEPS
     JP NZ,.NO_CHAR_PATTERN_CHANGE
+    
     XOR A
     LD (CHAR_MIN_STEP), A   ; reseteamos el contador de pasos
     LD A, (ix+2)    ; Cargamos el patrón
@@ -491,15 +505,22 @@ UPDATE_MOVEMENT:
     LD (ix+2), $00
     LD (ix+6), $04
     LD (ix+10), $08
+    ld hl, (SPRITE_COLOR_REPLACE)
+    ld (SPRITE_COLOR_REPLACE2), HL
     ret
 
 .SET_SPR_1P_2:
     LD (ix+2), $0C
     LD (ix+6), $10
     LD (ix+10), $14
+        
+    ld A, (SPRITE_COLOR_REPLACE)
+    ADD 48
+    ld (SPRITE_COLOR_REPLACE2), A
+
 	ret
 
-.NO_CHAR_PATTERN_CHANGE
+.NO_CHAR_PATTERN_CHANGE    
     ADD 1
     LD (CHAR_MIN_STEP), A
     ret

@@ -321,6 +321,16 @@ DUMP_SPR_ATTS:
     ld bc,20		; 5 x #Sprites
     call  LDIRVM 	; Mira arriba, pone la explicación
 
+;	ld a, (SPRITE_COLOR_REPLACE2)
+;	JP Z,.DUMP_SPR_ATTS_END
+	ld hl, (SPRITE_COLOR_REPLACE2) ; la rutina LDIRVM necesita haber cargado previamente la dirección de inicio de la RAM, para saber porqué he puesto 0000 fíjate este dibujo https://sites.google.com/site/multivac7/files-images/TMS9918_VRAMmap_G2_300dpi.png ,así es como está formado el VDP en screen 2
+    ld de, #7400; la rutina necesita haber cargado previamente con de la dirección de inicio de la VRAM          
+    PUSH BC
+	ld bc,16*3; 16 x #Sprites
+    call  LDIRVM 
+	POP BC
+
+.DUMP_SPR_ATTS_END:
     ret
 
 DUMP_SPR_P1:    
