@@ -339,7 +339,7 @@ DUMP_SPR_P1:
     ld hl, (SPRITE_PTR_REPLACE) ; la rutina LDIRVM necesita haber cargado previamente la dirección de inicio de la RAM, para saber porqué he puesto 03800 fíjate este dibujo https://sites.google.com/site/multivac7/files-images/TMS9918_VRAMmap_G2_300dpi.png ,así es como está formado el VDP en screen 2
     ld de, #7800; la rutina necesita haber cargado previamente con de la dirección de inicio de la VRAM          
     PUSH BC
-	ld bc, 192; 32 bytes por sprite
+	ld bc, 192; 32 bytes por sprite * 3 planos * 2 frames
     call  LDIRVM 
 	POP BC
 
