@@ -154,6 +154,7 @@ MAIN_LOOP:
     JP Z,.MOVE_SHOOT_RIGHT
     ;CP $03
     ;JP Z,.MOVE_SHOOT_UP
+    ;NOP
     JP .check_KB
 
 .MOVE_SHOOT_RIGHT:        
