@@ -351,6 +351,7 @@ DUMP_SPR_P1:
 	ld bc,16*3; 16 x #Sprites
     call  LDIRVM 
 	POP BC
+	
 
 ; Replace 4 sprites(P1) in Sprite Pattern Table
 ;    xor a

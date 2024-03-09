@@ -459,14 +459,21 @@ CHECK_DIRECTION_MAIN:
     ld hl, SPRITE_COLOR_P1_RIGHT
     ld (SPRITE_COLOR_REPLACE), HL
     ld (SPRITE_COLOR_REPLACE2), HL
+    ;    ld (ix+13), $10      ; Sprite 1 - Ghost
     CALL DUMP_SPR_P1
     JP .FINISH
 
 .FINISH:
-    LD A, MAX_CHAR_STEPS
+    LD A, 0;MAX_CHAR_STEPS
     LD (CHAR_MIN_STEP), A   ; reseteamos el contador de pasos
     LD A, (CHAR_NEW_DIR_MAIN)
     LD (CHAR_DIR_MAIN),A    
+
+    ; ponemos el primer frame del sprite
+    LD (ix+2), $00
+    LD (ix+6), $04
+    LD (ix+10), $08
+    ;CALL DUMP_SPR_ATTS
     RET
 
 UPDATE_MOVEMENT:
@@ -524,6 +531,7 @@ UPDATE_MOVEMENT:
     ret
 
 NO_MOVEMENT:    
+    
     call MAIN_LOOP
     ret
 
