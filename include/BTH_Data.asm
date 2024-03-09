@@ -196,7 +196,7 @@ SPRITE_PATTERN:
     DB $00,$80,$e0,$f0,$f8,$fc,$fe,$80
     DB $a8,$28,$fe,$fc,$fc,$fc,$fc,$fe  
 
-    ; Boomerang - RIGHT
+    ; Antichrist - RIGHT
     ; mask 0 - 28h
     ;DB $00,$00,$00,$03,$07,$0F,$1E,$1E
     ;DB $1E,$1C,$1E,$0F,$07,$03,$00,$00
@@ -208,7 +208,7 @@ SPRITE_PATTERN:
     DB $80,$80,$E0,$E0,$80,$80,$00,$00
 
 
-    ; Boomerang - LEFT
+    ; Antichrist - LEFT
     ; mask 0 - 2Ch
     ;DB $00,$00,$00,$00,$01,$03,$07,$0F
     ;DB $1F,$0E,$07,$03,$01,$00,$00,$00

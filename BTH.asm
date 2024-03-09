@@ -152,12 +152,19 @@ MAIN_LOOP:
     JP Z,.MOVE_SHOOT_LEFT
     CP $02
     JP Z,.MOVE_SHOOT_RIGHT
+    ;CP $03
+    ;JP Z,.MOVE_SHOOT_UP
     JP .check_KB
 
 .MOVE_SHOOT_RIGHT:        
     LD A, MOV_SPEED_SHOOT
 	LD (CHAR_SPEED_SHOOT), A    
     JP .CHECK_SHOOT_DISTANCE
+
+.MOVE_SHOOT_UP:        
+    ;LD A, MOV_SPEED_SHOOT
+	;LD (CHAR_SPEED_SHOOT), A    
+    ;JP .CHECK_SHOOT_DISTANCE
 
 .MOVE_SHOOT_LEFT:    
     LD A, -MOV_SPEED_SHOOT
@@ -240,6 +247,8 @@ SHOOT_MAIN_CHAR:
     LD A, (CHAR_DIR_MAIN)
     CP $03
     JP Z,.SHOOT_RIGHT
+    CP $00
+    JP Z,.SHOOT_UP
     LD A,$01                ; SHOOT LEFT
     LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando izquierda
     LD A, (ix+1)			;cargamos la X - Si no es derecha, debe ser izquierda
@@ -255,8 +264,22 @@ SHOOT_MAIN_CHAR:
     LD A, (ix+1)			;cargamos la X
 	LD HL, 12
 	ADD L
+    JP .CONTINUE
 
+.SHOOT_UP:
+    LD A,$03
+    LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando derecha
+    ld (ix+18), $28     ; Sprite Disparo
+    ;LD A, (ix+1)			;cargamos la X
+    ;PUSH AF
+    ;LD A, (ix+16)
+    ;SUB 16
+    ;LD (ix+16), A
+    ;POP AF
+    ;LD (ix+17), D
+	
 .CONTINUE:
+    ;ld (ix+16), B       ; Asignamos la Y del personaje
     ld (ix+17), A       ; Asignamos la X del personaje + el desplazamiento        
     jp MAIN_LOOP
 
@@ -464,9 +487,9 @@ CHECK_DIRECTION_MAIN:
     JP .FINISH
 
 .FINISH:
-    LD A, 0;MAX_CHAR_STEPS
-    LD (CHAR_MIN_STEP), A   ; reseteamos el contador de pasos
-    LD A, (CHAR_NEW_DIR_MAIN)
+    XOR A   ; reseteamos el contador de pasos
+    LD (CHAR_MIN_STEP), A   
+    LD A, (CHAR_NEW_DIR_MAIN)   ; Actualizamos la nueva dirección del personaje
     LD (CHAR_DIR_MAIN),A    
 
     ; ponemos el primer frame del sprite
