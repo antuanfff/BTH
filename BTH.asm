@@ -6,6 +6,7 @@
 		defpage	2..14 ;Here it is determined rom size        
         defpage	15,0xC000, 0x4000
 
+PageSize:	    equ	0x4000	        ; 16kB
 _bank1	equ	6000h
 _bank2	equ	7000h
 		DB 32h,0,70h,32h,0FFh,77h		; Para evitar seleccionar el tipo de ROM ASCII16 en OpenMSX
@@ -39,7 +40,7 @@ START
     LD HL, CEMENTER
     LD (BITMAP), HL
     LD B, :CEMENTER
-    call load_screen2
+    call load_screen
     
     call INIT_CHARS_VARS
     LD A, -MOV_SPEED_GHOST
@@ -152,19 +153,18 @@ MAIN_LOOP:
     JP Z,.MOVE_SHOOT_LEFT
     CP $02
     JP Z,.MOVE_SHOOT_RIGHT
-    ;CP $03
-    ;JP Z,.MOVE_SHOOT_UP
-    ;NOP
+    CP $03
+    JP Z,.MOVE_SHOOT_UP    
     JP .check_KB
 
 .MOVE_SHOOT_RIGHT:        
     LD A, MOV_SPEED_SHOOT
 	LD (CHAR_SPEED_SHOOT), A    
-    ;JP .CHECK_SHOOT_DISTANCE
+    JP .CHECK_SHOOT_DISTANCE
 
 .MOVE_SHOOT_UP:        
-    ;LD A, MOV_SPEED_SHOOT
-	;LD (CHAR_SPEED_SHOOT), A    
+    LD A, -MOV_SPEED_SHOOT
+	LD (CHAR_SPEED_SHOOT), A    
     JP .CHECK_SHOOT_DISTANCE
 
 .MOVE_SHOOT_LEFT:    
@@ -172,11 +172,24 @@ MAIN_LOOP:
 	LD (CHAR_SPEED_SHOOT), A    
 
 .CHECK_SHOOT_DISTANCE:
+    ; Miramos si va a izq o der
+    LD A,(CHAR_MAIN_SHOOT)    
+    SUB 3   ; Restar 3 a 1 o 2 provoca salto de carro, si es 3 o 4 no provoca el salto de carro
+    JP NC,.ADD_SHOOT_Y
     ; Movemos el disparo
     LD A, (ix+17)          ;cargamos la X del disparo
 	LD HL, (CHAR_SPEED_SHOOT)
 	ADD L					; Actualizamos la posicion en base a la velocidad
     LD (ix+17), A
+    JP .CHECK_GHOST
+.ADD_SHOOT_Y
+    ; Movemos el disparo
+    LD A, (ix+16)          ;cargamos la X del disparo
+	LD HL, (CHAR_SPEED_SHOOT)
+	ADD L					; Actualizamos la posicion en base a la velocidad
+    LD (ix+16), A
+
+.CHECK_GHOST:
     ; Comprobamos si hay colision con el fantasma
     LD A,(CHAR_GHOST_DEAD)  ; si está muerto,no lo miramos
     CP $01
@@ -241,6 +254,8 @@ SHOOT_MAIN_CHAR:
     JP Z,MAIN_LOOP
     CP $02                  ; Si ya está disparando esperamos a que termine
     JP Z,MAIN_LOOP
+    CP $03                  ; Si ya está disparando esperamos a que termine
+    JP Z,MAIN_LOOP
 
     LD A, (ix)          
     ld (ix+16), A       ; Asignamos la Y del personaje    
@@ -271,13 +286,12 @@ SHOOT_MAIN_CHAR:
     LD A,$03
     LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando derecha
     ld (ix+18), $28     ; Sprite Disparo
-    ;LD A, (ix+1)			;cargamos la X
-    ;PUSH AF
+    ; Sumamos el desplazamiento a la Y
     ;LD A, (ix+16)
     ;SUB 16
-    ;LD (ix+16), A
-    ;POP AF
+    ;LD (ix+16), A    
     ;LD (ix+17), D
+    ;LD A, (ix+1)			;cargamos la X    
 	
 .CONTINUE:
     ;ld (ix+16), B       ; Asignamos la Y del personaje
@@ -543,15 +557,16 @@ UPDATE_MOVEMENT:
     LD (ix+6), $10
     LD (ix+10), $14
         
-    ld A, (SPRITE_COLOR_REPLACE)
-    ADD 48
-    ld (SPRITE_COLOR_REPLACE2), A
+    ld HL, (SPRITE_COLOR_REPLACE)
+    ld DE,48
+    ADD HL, DE
+    ld (SPRITE_COLOR_REPLACE2), HL
     ;ld a, 0
 	ret
 
 .NO_CHAR_PATTERN_CHANGE    
     ADD 1
-    LD (CHAR_MIN_STEP), A
+    LD (CHAR_MIN_STEP), A    
     ret
 
 NO_MOVEMENT:    

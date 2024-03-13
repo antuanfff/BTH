@@ -150,26 +150,6 @@ load_screen
 		ld		de,0
 		call	_vdpsetvramwr
 		ld	e,2					; #pages
-		ld	a, :BITMAP
-		ld	d,a
-2:		ld	(_bank2),a
-		ld	hl,BITMAP
-		ld	bc,0x98
-		ld	a,64
-1:		otir
-		dec	a
-		jr	nz,1b
-		inc	d
-		ld	a,d
-		dec	e
-		jr	nz,2b
-		ret 
-
-load_screen2
-		ld		c,0
-		ld		de,0
-		call	_vdpsetvramwr
-		ld	e,2					; #pages
 		ld	a, b			; 1st page bitmap
 		ld	d,a
 2:		ld	(_bank2),a
