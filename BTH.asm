@@ -155,6 +155,8 @@ MAIN_LOOP:
     JP Z,.MOVE_SHOOT_RIGHT
     CP $03
     JP Z,.MOVE_SHOOT_UP    
+    CP $04
+    JP Z,.MOVE_SHOOT_DOWN
     JP .check_KB
 
 .MOVE_SHOOT_RIGHT:        
@@ -164,6 +166,11 @@ MAIN_LOOP:
 
 .MOVE_SHOOT_UP:        
     LD A, -MOV_SPEED_SHOOT
+	LD (CHAR_SPEED_SHOOT), A    
+    JP .CHECK_SHOOT_DISTANCE
+
+.MOVE_SHOOT_DOWN:
+    LD A, MOV_SPEED_SHOOT
 	LD (CHAR_SPEED_SHOOT), A    
     JP .CHECK_SHOOT_DISTANCE
 
@@ -256,6 +263,10 @@ SHOOT_MAIN_CHAR:
     JP Z,MAIN_LOOP
     CP $03                  ; Si ya está disparando esperamos a que termine
     JP Z,MAIN_LOOP
+    CP $04                  ; Si ya está disparando esperamos a que termine
+    JP Z,MAIN_LOOP
+
+    ld (ix+18), $28     ; Sprite Disparo
 
     LD A, (ix)          
     ld (ix+16), A       ; Asignamos la Y del personaje    
@@ -265,18 +276,21 @@ SHOOT_MAIN_CHAR:
     JP Z,.SHOOT_RIGHT
     CP $00
     JP Z,.SHOOT_UP
+    CP $01
+    JP Z,.SHOOT_DOWN
+    ; SHOOT LEFT
     LD A,$01                ; SHOOT LEFT
     LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando izquierda
     LD A, (ix+1)			;cargamos la X - Si no es derecha, debe ser izquierda
 	LD HL, -12
 	ADD L
-    ld (ix+18), $2C     ; Sprite Boomerang
+    
     JP .CONTINUE
 
 .SHOOT_RIGHT:
     LD A,$02
     LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando derecha
-    ld (ix+18), $28     ; Sprite Boomerang - Right
+    
     LD A, (ix+1)			;cargamos la X
 	LD HL, 12
 	ADD L
@@ -285,14 +299,26 @@ SHOOT_MAIN_CHAR:
 .SHOOT_UP:
     LD A,$03
     LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando derecha
-    ld (ix+18), $28     ; Sprite Disparo
+    
     ; Sumamos el desplazamiento a la Y
-    ;LD A, (ix+16)
-    ;SUB 16
-    ;LD (ix+16), A    
+    LD A, (ix+16)
+    SUB 16
+    LD (ix+16), A    
     ;LD (ix+17), D
-    ;LD A, (ix+1)			;cargamos la X    
-	
+    LD A, (ix+1)			;cargamos la X    
+    JP .CONTINUE
+
+.SHOOT_DOWN
+	LD A,$04
+    LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando derecha
+    
+    ; Sumamos el desplazamiento a la Y
+    LD A, (ix+16)
+    ADD 16
+    LD (ix+16), A    
+    ;LD (ix+17), D
+    LD A, (ix+1)			;cargamos la X    
+
 .CONTINUE:
     ;ld (ix+16), B       ; Asignamos la Y del personaje
     ld (ix+17), A       ; Asignamos la X del personaje + el desplazamiento        
