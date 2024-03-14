@@ -26,20 +26,20 @@ _bank2	equ	7000h
 
 START
 	; CODE
-	LD A,8
-	CALL CHGMOD    	
+	;LD A,8
+	;CALL CHGMOD    	
     CALL SETPAGES32K
-	CALL opening_screen
+;	CALL opening_screen
 	LD A,1
 	LD (_bank2),A
-	CALL CHGET
+;	CALL CHGET
 	; Empieza el juego    
 	call ClearVram_MSX2		
 	call SET_SCREEN5_MODE    
     call Set212Lines
-    LD HL, CEMENTER
+    LD HL, CEMENTER2
     LD (BITMAP), HL
-    LD B, :CEMENTER
+    LD B, :CEMENTER2
     call load_screen
     
     call INIT_CHARS_VARS
@@ -236,17 +236,18 @@ MAIN_LOOP:
     LD C,A    
     
     BIT KB_RIGHT, C			; La tecla presionada es DOWN?
-    call z, move_right
+    jp z, move_right
     
     BIT KB_LEFT, C			; La tecla presionada es DOWN?
-    call z, move_left
+    jp z, move_left
 
     BIT KB_UP, C			; La tecla presionada es UP?
-    call z, move_up
+    jp z, move_up
 
     BIT KB_DOWN, C			; La tecla presionada es DOWN?
-    call z, move_down
-    
+    jp z, move_down
+
+no_arrows:
     BIT KB_SPACE, C			; La tecla presionada es SPACE
     call z,SHOOT_MAIN_CHAR
 
@@ -351,8 +352,9 @@ move_up:
       
 	LD A, -MOV_SPEED
 	LD (CHAR_SPEED_Y), A
-    call UPDATE_MOVEMENT    
-    ret
+    call UPDATE_MOVEMENT   
+    JP no_arrows
+    ;ret
 
 move_down:    
     ; Actualizamos la última tecla de dirección pulsada
@@ -382,7 +384,8 @@ move_down:
     LD A, MOV_SPEED
 	LD (CHAR_SPEED_Y), A
     call UPDATE_MOVEMENT    
-    ret
+    JP no_arrows
+    ;ret
 
 move_right:
     ; Actualizamos la última tecla de dirección pulsada
@@ -424,8 +427,9 @@ move_right:
     
     LD A, MOV_SPEED
 	LD (CHAR_SPEED_X), A
-    call UPDATE_MOVEMENT            
-    ret
+    call UPDATE_MOVEMENT      
+    JP no_arrows
+    ;ret
 
 move_left:
     ; Actualizamos la última tecla de dirección pulsada
@@ -467,7 +471,8 @@ move_left:
     LD A, -MOV_SPEED
 	LD (CHAR_SPEED_X), A
     call UPDATE_MOVEMENT     
-    ret
+    JP no_arrows
+    ;ret
 
 CHECK_DIRECTION_MAIN:
     LD A, (CHAR_DIR_MAIN)		                ;Cargamos el valor anterior de direccion
@@ -614,10 +619,10 @@ include "include\BTH_data.asm"
  PAGE 6
 
  PAGE 7
-CEMENTER
- INCBIN "gfx\CEMENTER0.SC5",#7,#4000			; Cada página tiene 16K = 4000h
+CEMENTER1
+ INCBIN "gfx\CEMENTER1.SC5",#7,#4000			; Cada página tiene 16K = 4000h
  PAGE 8
- INCBIN "gfx\CEMENTER0.SC5",#4007			; Cada página tiene 16K = 4000h 
+ INCBIN "gfx\CEMENTER1.SC5",#4007			; Cada página tiene 16K = 4000h 
  PAGE 9
 GRAPHIC
  INCBIN "gfx\BTH.SR8",#7,#4000			; Cada página tiene 16K = 4000h
@@ -631,9 +636,10 @@ GRAPHIC
  INCBIN "gfx\BTH.SR8",#C007
 
  PAGE 13
-
+CEMENTER2
+ INCBIN "gfx\CEMENTER2.SC5",#7,#4000			; Cada página tiene 16K = 4000h
  PAGE 14
-
+ INCBIN "gfx\CEMENTER2.SC5",#4007			; Cada página tiene 16K = 4000h 
  PAGE 15
 ;---------------------------------------------------------
 ; Variables
