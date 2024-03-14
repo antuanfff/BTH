@@ -47,7 +47,7 @@ get_bloque_en_X_Y:
         ld e,a      ;de=x/8
         add hl,de   ;hl=(y/8)*32+(x/8)
 
-        ld de,mapa
+        ld de,(MAPA)
         add hl,de   ;hl=mapa + hl=(y/8)*32+(x/8)
 
         ld a,[hl]

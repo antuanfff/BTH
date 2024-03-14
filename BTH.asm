@@ -37,15 +37,17 @@ START
 	call ClearVram_MSX2		
 	call SET_SCREEN5_MODE    
     call Set212Lines
-    LD HL, CEMENTER2
+    LD HL, CEMENTER1
     LD (BITMAP), HL
-    LD B, :CEMENTER2
+    LD B, :CEMENTER1
     call load_screen
     
     call INIT_CHARS_VARS
     LD A, -MOV_SPEED_GHOST
 	LD (CHAR_SPEED_X_GHOST), A
     call DUMP_SPR_ALL
+    LD HL, mapa1
+    LD (MAPA), HL
     call MAIN_LOOP
     ;CALL CHGET
 	ret
@@ -95,6 +97,9 @@ INIT_CHARS_VARS:
 
 MAIN_LOOP:
     ;halt ; sincroniza el teclado y pantalla con el procesador (que va muy rápido)    
+    LD A, (ix)  ; Cargamos la Y
+    CP $00
+    JP Z, STAGE2
     call DUMP_SPR_ATTS    
     
     LD A,(CHAR_GHOST_DEAD)
@@ -604,6 +609,43 @@ NO_MOVEMENT:
     
     call MAIN_LOOP
     ret
+
+STAGE2:
+    LD HL, CEMENTER2
+    LD (BITMAP), HL
+    LD B, :CEMENTER2
+
+    call load_screen
+    LD HL, mapa2
+    LD (MAPA), HL
+    
+MAIN_LOOP2:
+    halt    
+
+    ld a, 8
+	call SNSMAT   
+    LD C,A    
+    
+    BIT KB_RIGHT, C			; La tecla presionada es DOWN?
+    jp z, move_right
+    
+    BIT KB_LEFT, C			; La tecla presionada es DOWN?
+    jp z, move_left
+
+    BIT KB_UP, C			; La tecla presionada es UP?
+    jp z, move_up
+
+    BIT KB_DOWN, C			; La tecla presionada es DOWN?
+    jp z, move_down
+
+.no_arrows:
+    BIT KB_SPACE, C			; La tecla presionada es SPACE
+    call z,SHOOT_MAIN_CHAR
+
+    BIT KB_DEL, C			; La tecla presionada es DEL    
+    ret z
+
+    jp MAIN_LOOP2
 
 include "include\BTH_data.asm"
 
