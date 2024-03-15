@@ -357,6 +357,15 @@ STAGE2:
     
     call DUMP_SPR_ALL    
     CALL DUMP_SPR_P1
+    ; Esqueleto
+    LD (ix+20), 10h
+    LD (ix+21), 10h
+    LD (ix+22), 2Ch
+
+    LD (ix+24), 10h
+    LD (ix+25), 10h
+    LD (ix+26), 30h
+
     CALL ENASCR
     
 MAIN_LOOP2:
