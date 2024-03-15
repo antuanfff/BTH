@@ -22,7 +22,8 @@ _bank2	equ	7000h
 
 ; Funciones auxiliares
 	include "include\BTH_func.asm"
-	include "include\SETPAGES48K.asm"
+    include "include\BTH_animate.asm"
+	;include "include\SETPAGES48K.asm"
 
 START
 	; CODE
@@ -37,18 +38,12 @@ START
 	call ClearVram_MSX2		
 	call SET_SCREEN5_MODE    
     call Set212Lines
-    LD HL, CEMENTER1
-    LD (BITMAP), HL
-    LD B, :CEMENTER1
-    call load_screen
-    
+        
     call INIT_CHARS_VARS
     LD A, -MOV_SPEED_GHOST
 	LD (CHAR_SPEED_X_GHOST), A
-    call DUMP_SPR_ALL
-    LD HL, mapa1
-    LD (MAPA), HL
-    call MAIN_LOOP
+    CALL STAGE1
+    ;call MAIN_LOOP
     ;CALL CHGET
 	ret
 
@@ -94,6 +89,19 @@ INIT_CHARS_VARS:
     ld (SPRITE_COLOR_REPLACE), HL
     LD (SPRITE_COLOR_REPLACE2), HL
     ret
+
+STAGE1:
+    CALL DISSCR
+    LD HL, CEMENTER1
+    LD (BITMAP), HL
+    LD B, :CEMENTER1
+    call load_screen
+    
+    call DUMP_SPR_ALL
+    CALL DUMP_SPR_P1
+    LD HL, mapa1
+    LD (MAPA), HL    
+    CALL ENASCR
 
 MAIN_LOOP:
     ;halt ; sincroniza el teclado y pantalla con el procesador (que va muy rápido)    
@@ -340,16 +348,37 @@ STAGE2:
     call load_screen
     LD HL, mapa2
     LD (MAPA), HL
-    CALL ENASCR
-    LD (ix), 196    
+
+    LD (ix), 196    ; Ponemos el P1 abajo
     LD (ix+4), 196    
     LD (ix+8), 196    
+    
+    LD (ix+12),217  ; ocultamos el fantasma
+    
     call DUMP_SPR_ALL    
+    CALL DUMP_SPR_P1
+    CALL ENASCR
     
 MAIN_LOOP2:
     halt    
 
+    LD A, (ix)    
+    CP 198
+    JP NZ, .no_screen_change
+    LD (ix), 1          ; SP1 - Y = 1
+    LD (ix+4), 1
+    LD (ix+8), 1
+    
+    LD A, (CHAR_GHOST_DEAD)
+    CP $01
+    JP Z, .GHOST_DEAD
+    ld (ix+12), $07      ; Sprite 1 - Ghost
+.GHOST_DEAD:
+    CALL STAGE1
+
+.no_screen_change:
     call DUMP_SPR_ATTS    
+    
     ld a, 8
 	call SNSMAT   
     LD C,A    
