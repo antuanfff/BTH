@@ -1,4 +1,4 @@
-Sjasm Z80 Assembler v0.42c - www.xl2s.tk             [2024.03.16 - 00:54:52]
+Sjasm Z80 Assembler v0.42c - www.xl2s.tk             [2024.03.16 - 01:08:19]
 
 .\bth.asm
 Errors: 0
@@ -18,7 +18,7 @@ Errors: 0
       13   00:56DE  (00)                		page 0			
       14   00:4000                              org 4000h		
       15   00:4000                              dw  4241h,START,0,0,0,0,0,0
-      15   00:4000  41 42 92 43 00 00 00 00 00 00 00 00 00 00 00 00 
+      15   00:4000  41 42 FD 43 00 00 00 00 00 00 00 00 00 00 00 00 
       16   00:4010                      
       17   00:4010                      ;Llamadas a rutinas bios
       18   00:4010                          include "include\System_BIOSCalls.asm"
@@ -716,397 +716,402 @@ Errors: 0
      280.  00:4391                      
      281.  00:4391                      NO_MOVEMENT:    
      282.  00:4391  C9                      ret
-      26   00:4392                      	;include "include\SETPAGES48K.asm"
-      27   00:4392                      
-      28   00:4392                      START
-      29   00:4392                      	; CODE
-      30   00:4392                      	;LD A,8
-      31   00:4392                      	;CALL CHGMOD    	
-      32   00:4392  CD FC 40                CALL SETPAGES32K
-      33   00:4395                      ;	CALL opening_screen
-      34   00:4395  3E 01               	LD A,1
-      35   00:4397  32 00 70            	LD (_bank2),A
-      36   00:439A                      ;	CALL CHGET
-      37   00:439A                      	; Empieza el juego    
-      38   00:439A  CD 69 40            	call ClearVram_MSX2		
-      39   00:439D  CD 0F 41            	call SET_SCREEN5_MODE    
-      40   00:43A0  CD 5D 40                call Set212Lines
-      41   00:43A3                              
-      42   00:43A3  CD AF 43                call INIT_CHARS_VARS
-      43   00:43A6  3E FF                   LD A, -MOV_SPEED_GHOST
-      44   00:43A8  32 03 C0            	LD (CHAR_SPEED_X_GHOST), A
-      45   00:43AB  CD 1D 44                CALL STAGE1
-      46   00:43AE                          ;call MAIN_LOOP
-      47   00:43AE                          ;CALL CHGET
-      48   00:43AE  C9                  	ret
-      49   00:43AF                      
-      50   00:43AF                      
-      51   00:43AF                      INIT_CHARS_VARS:    
-      52   00:43AF  DD 21 0C C0             ld ix, SPRITE_ATTRS           
-      53   00:43B3                          
-      54   00:43B3  DD 36 00 07             ld (ix), 07h        ; Sprite 1 - $AF abajo
-      55   00:43B7  DD 36 01 09             ld (ix+1), 09h
-      56   00:43BB  DD 36 02 00             ld (ix+2), 00h    
-      57   00:43BF                      
-      58   00:43BF  DD 36 04 07             ld (ix+4), 07h     ; Sprite 2
-      59   00:43C3  DD 36 05 09             ld (ix+5), 09h
-      60   00:43C7  DD 36 06 04             ld (ix+6), 04h        
-      61   00:43CB                      
-      62   00:43CB  DD 36 08 07             ld (ix+8), 07h     ; Sprite 3
-      63   00:43CF  DD 36 09 09             ld (ix+9), 09h
-      64   00:43D3  DD 36 0A 08             ld (ix+10), 08h        
-      65   00:43D7                      
-      66   00:43D7  DD 36 0C 07             ld (ix+12), $07      ; Sprite 1 - Ghost
-      67   00:43DB  DD 36 0D B9             ld (ix+13), $B9
-      68   00:43DF  DD 36 0E 18             ld (ix+14), $18
-      69   00:43E3                          
-      70   00:43E3  AF                      XOR A
-      71   00:43E4  32 00 C0                LD (JIFFY_TEMP),A
-      72   00:43E7  32 01 C0                LD (CHAR_SPEED_X),A
-      73   00:43EA  32 02 C0                LD (CHAR_SPEED_Y),A
-      74   00:43ED  32 03 C0                LD (CHAR_SPEED_X_GHOST),A
-      75   00:43F0  32 05 C0                LD (CHAR_DIR_GHOST1),A      ; $00 - LEFT, $FF - RIGHT
-      76   00:43F3  32 07 C0                LD (CHAR_NEW_DIR_MAIN),A    
-      77   00:43F6  32 08 C0                LD (CHAR_MAIN_SHOOT),A      ; Indica si el personaje está disparando - $FF
-      78   00:43F9  32 0A C0                LD (CHAR_DISTANCE_SHOOT),A
-      79   00:43FC  32 0B C0                LD (CHAR_SPEED_SHOOT),A
-      80   00:43FF  32 04 C0                LD (CHAR_GHOST_DEAD),A
-      81   00:4402  32 09 C0                LD (CHAR_MIN_STEP), A
-      82   00:4405  32 93 C0                LD (SPRITE_COLOR_REPLACE2), A
-      83   00:4408  3E 01                   LD A,$01
-      84   00:440A  32 06 C0                LD (CHAR_DIR_MAIN),A        ; $00 - UP, $01 - DOWN, $02 - LEFT, $03 - RIGHT
-      85   00:440D                      
-      86   00:440D  21 28 47                ld hl, SPRITE_P1_DOWN
-      87   00:4410  22 8F C0                ld (SPRITE_PTR_REPLACE), HL    
-      88   00:4413  21 D8 4B                ld hl, SPRITE_COLOR_P1_DOWN
-      89   00:4416  22 91 C0                ld (SPRITE_COLOR_REPLACE), HL
-      90   00:4419  22 93 C0                LD (SPRITE_COLOR_REPLACE2), HL
-      91   00:441C  C9                      ret
-      92   00:441D                      
-      93   00:441D                      STAGE1:
-      94   00:441D  CD 41 00                CALL DISSCR
-      95   00:4420  21 00 80                LD HL, CEMENTER1
-      96   00:4423  22 97 C0                LD (BITMAP), HL
-      97   00:4426  06 07                   LD B, :CEMENTER1
-      98   00:4428  CD A7 40                call load_screen
-      99   00:442B                          
-     100   00:442B  CD 31 41                call DUMP_SPR_ALL
-     101   00:442E  CD 71 41                CALL DUMP_SPR_P1
-     102   00:4431  21 98 4C                LD HL, mapa1
-     103   00:4434  22 95 C0                LD (MAPA), HL    
-     104   00:4437  CD 44 00                CALL ENASCR
-     105   00:443A                      
-     106   00:443A                      MAIN_LOOP:
-     107   00:443A                          ;halt ; sincroniza el teclado y pantalla con el procesador (que va muy rápido)    
-     108   00:443A  DD 7E 00                LD A, (ix)  ; Cargamos la Y
-     109   00:443D  FE 00                   CP $00
-     110   00:443F  CA D7 45                JP Z, STAGE2
-     111   00:4442  CD 56 41                call DUMP_SPR_ATTS    
-     112   00:4445                          
-     113   00:4445  3A 04 C0                LD A,(CHAR_GHOST_DEAD)
-     114   00:4448  FE 01                   CP $01
-     115   00:444A  CA AB 44                JP Z,.continue
-     116   00:444D  DD 7E 0D                LD A, (ix+13)          ;cargamos la X del Fantasma
-     117   00:4450  2A 03 C0            	LD HL, (CHAR_SPEED_X_GHOST)
-     118   00:4453  85                  	ADD L					; Actualizamos la posicion en base a la velocidad
-     119   00:4454                          
-     120   00:4454  DD 77 0D            	LD (ix+13), A	
-     121   00:4457  FE 16                   CP $16
-     122   00:4459  CA 64 44                JP Z,.CHANGE_DIR_RIGHT
-     123   00:445C  FE B9                   CP $B9
-     124   00:445E  CA 71 44                JP Z,.CHANGE_DIR_LEFT
-     125   00:4461                          		
-     126   00:4461  C3 7A 44                JP .check_pattern
-     127   00:4464                      
-     128   00:4464                      .CHANGE_DIR_RIGHT:
-     129   00:4464  3E 01                   LD A, MOV_SPEED_GHOST
-     130   00:4466  32 03 C0            	LD (CHAR_SPEED_X_GHOST), A
-     131   00:4469  3E FF                   LD A,$FF
-     132   00:446B  32 05 C0                LD (CHAR_DIR_GHOST1),A
-     133   00:446E  C3 7A 44                JP .check_pattern
-     134   00:4471                      
-     135   00:4471                      .CHANGE_DIR_LEFT:
-     136   00:4471  3E FF                   LD A, -MOV_SPEED_GHOST
-     137   00:4473  32 03 C0            	LD (CHAR_SPEED_X_GHOST), A
-     138   00:4476  AF                      XOR A   ; Pone A a 0
-     139   00:4477  32 05 C0                LD (CHAR_DIR_GHOST1),A
-     140   00:447A                      
-     141   00:447A                      .check_pattern:
-     142   00:447A  3A 05 C0                LD A,(CHAR_DIR_GHOST1)
-     143   00:447D  FE FF                   CP $FF
-     144   00:447F  CA 98 44                JP Z,.check_pattern_RIGHT
-     145   00:4482  DD 7E 0E                LD A, (ix+14)       ; Cargamos el patrón y lo cambiamos
-     146   00:4485  FE 18                   CP $18
-     147   00:4487  CA 91 44                jp z,.change_pattern_L
-     148   00:448A  DD 36 0E 18             LD (ix+14),$18
-     149   00:448E  C3 AB 44                jp .continue
-     150   00:4491                      .change_pattern_L:
-     151   00:4491  DD 36 0E 1C             LD (ix+14),$1C
-     152   00:4495  C3 AB 44                jp .continue
-     153   00:4498                      
-     154   00:4498                      .check_pattern_RIGHT
-     155   00:4498  DD 7E 0E                LD A, (ix+14)       ; Cargamos el patrón y lo cambiamos
-     156   00:449B  FE 20                   CP $20
-     157   00:449D  CA A7 44                jp z,.change_pattern_R
-     158   00:44A0  DD 36 0E 20             LD (ix+14),$20
-     159   00:44A4  C3 AB 44                jp .continue
-     160   00:44A7                      .change_pattern_R:
-     161   00:44A7  DD 36 0E 24             LD (ix+14),$24
-     162   00:44AB                      
-     163   00:44AB                      .continue:    
-     164   00:44AB  3A 08 C0                LD A,(CHAR_MAIN_SHOOT)    
-     165   00:44AE  FE 01                   CP $01
-     166   00:44B0  CA DD 44                JP Z,.MOVE_SHOOT_LEFT
-     167   00:44B3  FE 02                   CP $02
-     168   00:44B5  CA C5 44                JP Z,.MOVE_SHOOT_RIGHT
-     169   00:44B8  FE 03                   CP $03
-     170   00:44BA  CA CD 44                JP Z,.MOVE_SHOOT_UP    
-     171   00:44BD  FE 04                   CP $04
-     172   00:44BF  CA D5 44                JP Z,.MOVE_SHOOT_DOWN
-     173   00:44C2  C3 41 45                JP .check_KB
-     174   00:44C5                      
-     175   00:44C5                      .MOVE_SHOOT_RIGHT:        
-     176   00:44C5  3E 03                   LD A, MOV_SPEED_SHOOT
-     177   00:44C7  32 0B C0            	LD (CHAR_SPEED_SHOOT), A    
-     178   00:44CA  C3 E2 44                JP .CHECK_SHOOT_DISTANCE
-     179   00:44CD                      
-     180   00:44CD                      .MOVE_SHOOT_UP:        
-     181   00:44CD  3E FD                   LD A, -MOV_SPEED_SHOOT
-     182   00:44CF  32 0B C0            	LD (CHAR_SPEED_SHOOT), A    
-     183   00:44D2  C3 E2 44                JP .CHECK_SHOOT_DISTANCE
-     184   00:44D5                      
-     185   00:44D5                      .MOVE_SHOOT_DOWN:
-     186   00:44D5  3E 03                   LD A, MOV_SPEED_SHOOT
-     187   00:44D7  32 0B C0            	LD (CHAR_SPEED_SHOOT), A    
-     188   00:44DA  C3 E2 44                JP .CHECK_SHOOT_DISTANCE
-     189   00:44DD                      
-     190   00:44DD                      .MOVE_SHOOT_LEFT:    
-     191   00:44DD  3E FD                   LD A, -MOV_SPEED_SHOOT
-     192   00:44DF  32 0B C0            	LD (CHAR_SPEED_SHOOT), A    
-     193   00:44E2                      
-     194   00:44E2                      .CHECK_SHOOT_DISTANCE:
-     195   00:44E2                          ; Miramos si va a izq o der
-     196   00:44E2  3A 08 C0                LD A,(CHAR_MAIN_SHOOT)    
-     197   00:44E5  D6 03                   SUB 3   ; Restar 3 a 1 o 2 provoca salto de carro, si es 3 o 4 no provoca el salto de carro
-     198   00:44E7  D2 F7 44                JP NC,.ADD_SHOOT_Y
-     199   00:44EA                          ; Movemos el disparo
-     200   00:44EA  DD 7E 11                LD A, (ix+17)          ;cargamos la X del disparo
-     201   00:44ED  2A 0B C0            	LD HL, (CHAR_SPEED_SHOOT)
-     202   00:44F0  85                  	ADD L					; Actualizamos la posicion en base a la velocidad
-     203   00:44F1  DD 77 11                LD (ix+17), A
-     204   00:44F4  C3 01 45                JP .CHECK_GHOST
-     205   00:44F7                      .ADD_SHOOT_Y
-     206   00:44F7                          ; Movemos el disparo
-     207   00:44F7  DD 7E 10                LD A, (ix+16)          ;cargamos la X del disparo
-     208   00:44FA  2A 0B C0            	LD HL, (CHAR_SPEED_SHOOT)
-     209   00:44FD  85                  	ADD L					; Actualizamos la posicion en base a la velocidad
-     210   00:44FE  DD 77 10                LD (ix+16), A
-     211   00:4501                      
-     212   00:4501                      .CHECK_GHOST:
-     213   00:4501                          ; Comprobamos si hay colision con el fantasma
-     214   00:4501  3A 04 C0                LD A,(CHAR_GHOST_DEAD)  ; si está muerto,no lo miramos
-     215   00:4504  FE 01                   CP $01
-     216   00:4506  CA 1D 45                JP Z,.ADD_DISTANCE
-     217   00:4509                      
-     218   00:4509  DD 46 10                LD B,(ix+16)         ; Y del disparo
-     219   00:450C  DD 4E 11                LD C,(ix+17)         ; X del disparo
-     220   00:450F  DD 56 0C                LD D,(ix+12)         ; Y del fantasma 
-     221   00:4512  DD 5E 0D                LD E,(ix+13)         ; X del fantasma
-     222   00:4515  CD 10 40                call check_spr_collision
-     223   00:4518  FE 01                   CP 1
-     224   00:451A  CA 2D 45                JP Z,.KILL_GHOST
-     225   00:451D                      .ADD_DISTANCE:
-     226   00:451D  3A 0A C0                LD A,(CHAR_DISTANCE_SHOOT)
-     227   00:4520  C6 03                   ADD MOV_SPEED_SHOOT
-     228   00:4522  32 0A C0                LD (CHAR_DISTANCE_SHOOT),A    
-     229   00:4525  FE 30                   CP MAX_DISTANCE_SHOOT
-     230   00:4527  C2 41 45                JP NZ,.check_KB
-     231   00:452A  C3 36 45                JP .HIDE_SHOOT
-     232   00:452D                      
-     233   00:452D                      .KILL_GHOST:
-     234   00:452D  3E 01                   LD A,1
-     235   00:452F  32 04 C0                LD (CHAR_GHOST_DEAD),A
-     236   00:4532  DD 36 0C D9             LD (ix+12),217    
-     237   00:4536                      
-     238   00:4536                      .HIDE_SHOOT:
-     239   00:4536  DD 36 10 D9             LD (ix+16),217          ; Y = 217 para ocultar el Sprite
-     240   00:453A  AF                      XOR A
-     241   00:453B  32 08 C0                LD (CHAR_MAIN_SHOOT),A   ; Desactivo el estado disparando 
-     242   00:453E  32 0A C0                LD (CHAR_DISTANCE_SHOOT),A
-     243   00:4541                      
-     244   00:4541                      .check_KB:
-     245   00:4541  76                      halt    
-     246   00:4542                      
-     247   00:4542  3E 08                   ld a, 8
-     248   00:4544  CD 41 01            	call SNSMAT   
-     249   00:4547  4F                      LD C,A    
-     250   00:4548                          
-     251   00:4548  CB 79                   BIT KB_RIGHT, C			; La tecla presionada es RIGHT?
-     252   00:454A  CC FD 41                call z, move_right
-     253   00:454D                          
-     254   00:454D  CB 61                   BIT KB_LEFT, C			; La tecla presionada es LEFT?
-     255   00:454F  CC 4B 42                call z, move_left
-     256   00:4552                      
-     257   00:4552  CB 69                   BIT KB_UP, C			; La tecla presionada es UP?
-     258   00:4554  CC 8E 41                call z, move_up
-     259   00:4557                      
-     260   00:4557  CB 71                   BIT KB_DOWN, C			; La tecla presionada es DOWN?
-     261   00:4559  CC C5 41                call z, move_down
-     262   00:455C                      
-     263   00:455C                      no_arrows:
-     264   00:455C  CB 41                   BIT KB_SPACE, C			; La tecla presionada es SPACE
-     265   00:455E  CC 67 45                call z,SHOOT_MAIN_CHAR
-     266   00:4561                      
-     267   00:4561  CB 59                   BIT KB_DEL, C			; La tecla presionada es DEL    
-     268   00:4563  C8                      ret z
-     269   00:4564                      
-     270   00:4564  C3 3A 44                jp MAIN_LOOP
-     271   00:4567                      
-     272   00:4567                      SHOOT_MAIN_CHAR:    
-     273   00:4567  3A 08 C0                LD A, (CHAR_MAIN_SHOOT)
-     274   00:456A  FE 01                   CP $01                  ; Si ya está disparando esperamos a que termine
-     275   00:456C  C8                      RET Z;,MAIN_LOOP
-     276   00:456D  FE 02                   CP $02                  ; Si ya está disparando esperamos a que termine
-     277   00:456F  C8                      RET Z;,MAIN_LOOP
-     278   00:4570  FE 03                   CP $03                  ; Si ya está disparando esperamos a que termine
-     279   00:4572  C8                      RET Z;,MAIN_LOOP
-     280   00:4573  FE 04                   CP $04                  ; Si ya está disparando esperamos a que termine
-     281   00:4575  C8                      RET Z;,MAIN_LOOP
-     282   00:4576                      
-     283   00:4576  DD 36 12 28             ld (ix+18), $28     ; Sprite Disparo
-     284   00:457A                      
-     285   00:457A  DD 7E 00                LD A, (ix)          
-     286   00:457D  DD 77 10                ld (ix+16), A       ; Asignamos la Y del personaje    
-     287   00:4580                      
-     288   00:4580  3A 06 C0                LD A, (CHAR_DIR_MAIN)
-     289   00:4583  FE 03                   CP $03
-     290   00:4585  CA A1 45                JP Z,.SHOOT_RIGHT
-     291   00:4588  FE 00                   CP $00
-     292   00:458A  CA B0 45                JP Z,.SHOOT_UP
-     293   00:458D  FE 01                   CP $01
-     294   00:458F  CA C3 45                JP Z,.SHOOT_DOWN
-     295   00:4592                          ; SHOOT LEFT
-     296   00:4592  3E 01                   LD A,$01                ; SHOOT LEFT
-     297   00:4594  32 08 C0                LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando izquierda
-     298   00:4597  DD 7E 01                LD A, (ix+1)			;cargamos la X - Si no es derecha, debe ser izquierda
-     299   00:459A  21 F4 FF            	LD HL, -12
-     300   00:459D  85                  	ADD L
-     301   00:459E                          
-     302   00:459E  C3 D3 45                JP .CONTINUE
-     303   00:45A1                      
-     304   00:45A1                      .SHOOT_RIGHT:    
-     305   00:45A1  3E 02                   LD A,$02
-     306   00:45A3  32 08 C0                LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando derecha
-     307   00:45A6                          
-     308   00:45A6  DD 7E 01                LD A, (ix+1)			;cargamos la X
-     309   00:45A9  21 0C 00            	LD HL, 12
-     310   00:45AC  85                  	ADD L
-     311   00:45AD  C3 D3 45                JP .CONTINUE
-     312   00:45B0                      
-     313   00:45B0                      .SHOOT_UP:
-     314   00:45B0  3E 03                   LD A,$03
-     315   00:45B2  32 08 C0                LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando derecha
-     316   00:45B5                          
-     317   00:45B5                          ; Sumamos el desplazamiento a la Y
-     318   00:45B5  DD 7E 10                LD A, (ix+16)
-     319   00:45B8  D6 10                   SUB 16
-     320   00:45BA  DD 77 10                LD (ix+16), A    
-     321   00:45BD                          ;LD (ix+17), D
-     322   00:45BD  DD 7E 01                LD A, (ix+1)			;cargamos la X    
-     323   00:45C0  C3 D3 45                JP .CONTINUE
-     324   00:45C3                      
-     325   00:45C3                      .SHOOT_DOWN
-     326   00:45C3  3E 04               	LD A,$04
-     327   00:45C5  32 08 C0                LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando derecha
-     328   00:45C8                          
-     329   00:45C8                          ; Sumamos el desplazamiento a la Y
-     330   00:45C8  DD 7E 10                LD A, (ix+16)
-     331   00:45CB  C6 10                   ADD 16
-     332   00:45CD  DD 77 10                LD (ix+16), A    
-     333   00:45D0                          ;LD (ix+17), D
-     334   00:45D0  DD 7E 01                LD A, (ix+1)			;cargamos la X    
-     335   00:45D3                      
-     336   00:45D3                      .CONTINUE:
-     337   00:45D3                          ;ld (ix+16), B       ; Asignamos la Y del personaje
-     338   00:45D3  DD 77 11                ld (ix+17), A       ; Asignamos la X del personaje + el desplazamiento        
-     339   00:45D6                          ;jp MAIN_LOOP
-     340   00:45D6  C9                      ret
-     341   00:45D7                      
-     342   00:45D7                      STAGE2:
-     343   00:45D7  CD 41 00                CALL DISSCR
-     344   00:45DA  21 00 80                LD HL, CEMENTER2
-     345   00:45DD  22 97 C0                LD (BITMAP), HL
-     346   00:45E0  06 0D                   LD B, :CEMENTER2
-     347   00:45E2                      
-     348   00:45E2  CD A7 40                call load_screen
-     349   00:45E5  21 D8 4F                LD HL, mapa2
-     350   00:45E8  22 95 C0                LD (MAPA), HL
-     351   00:45EB                      
-     352   00:45EB  DD 36 00 C4             LD (ix), 196    ; Ponemos el P1 abajo
-     353   00:45EF  DD 36 04 C4             LD (ix+4), 196    
-     354   00:45F3  DD 36 08 C4             LD (ix+8), 196    
-     355   00:45F7                          
-     356   00:45F7  DD 36 0C D9             LD (ix+12),217  ; ocultamos el fantasma
-     357   00:45FB                          
-     358   00:45FB  CD 31 41                call DUMP_SPR_ALL    
-     359   00:45FE  CD 71 41                CALL DUMP_SPR_P1
-     360   00:4601                          ; Esqueleto
-     361   00:4601  DD 36 14 10             LD (ix+20), 10h
-     362   00:4605  DD 36 15 10             LD (ix+21), 10h
-     363   00:4609  DD 36 16 2C             LD (ix+22), 2Ch
-     364   00:460D                      
-     365   00:460D  DD 36 18 10             LD (ix+24), 10h
-     366   00:4611  DD 36 19 10             LD (ix+25), 10h
-     367   00:4615  DD 36 1A 30             LD (ix+26), 30h
-     368   00:4619                      
-     369   00:4619  CD 44 00                CALL ENASCR
-     370   00:461C                          
-     371   00:461C                      MAIN_LOOP2:
-     372   00:461C  76                      halt    
-     373   00:461D                      
-     374   00:461D  DD 7E 00                LD A, (ix)    
-     375   00:4620  FE C6                   CP 198
-     376   00:4622  C2 40 46                JP NZ, .no_screen_change
-     377   00:4625  DD 36 00 01             LD (ix), 1          ; SP1 - Y = 1
-     378   00:4629  DD 36 04 01             LD (ix+4), 1
-     379   00:462D  DD 36 08 01             LD (ix+8), 1
-     380   00:4631                          
-     381   00:4631  3A 04 C0                LD A, (CHAR_GHOST_DEAD)
-     382   00:4634  FE 01                   CP $01
-     383   00:4636  CA 3D 46                JP Z, .GHOST_DEAD
-     384   00:4639  DD 36 0C 07             ld (ix+12), $07      ; Sprite 1 - Ghost
-     385   00:463D                      .GHOST_DEAD:
-     386   00:463D  CD 1D 44                CALL STAGE1
-     387   00:4640                      
-     388   00:4640                      .no_screen_change:
-     389   00:4640  CD 56 41                call DUMP_SPR_ATTS    
-     390   00:4643                          
-     391   00:4643  3E 08                   ld a, 8
-     392   00:4645  CD 41 01            	call SNSMAT   
-     393   00:4648  4F                      LD C,A    
-     394   00:4649                              
-     395   00:4649  CB 79                   BIT KB_RIGHT, C			; La tecla presionada es RIGHT?
-     396   00:464B  CC FD 41                call z, move_right
-     397   00:464E                          
-     398   00:464E  CB 61                   BIT KB_LEFT, C			; La tecla presionada es LEFT?
-     399   00:4650  CC 4B 42                call z, move_left
-     400   00:4653                      
-     401   00:4653  CB 69                   BIT KB_UP, C			; La tecla presionada es UP?
-     402   00:4655  CC 8E 41                call z, move_up
-     403   00:4658                      
-     404   00:4658  CB 71                   BIT KB_DOWN, C			; La tecla presionada es DOWN?
-     405   00:465A  CC C5 41                call z, move_down
-     406   00:465D                      
-     407   00:465D                      .no_arrows:
-     408   00:465D  CB 41                   BIT KB_SPACE, C			; La tecla presionada es SPACE
-     409   00:465F  CC 67 45                call z,SHOOT_MAIN_CHAR
-     410   00:4662                      
-     411   00:4662  CB 59                   BIT KB_DEL, C			; La tecla presionada es DEL    
-     412   00:4664  C8                      ret z
-     413   00:4665                      
-     414   00:4665  C3 1C 46                jp MAIN_LOOP2
-     415   00:4668                      
-     416   00:4668                      include "include\BTH_data.asm"
+     283.  00:4392                      
+     284.  00:4392                      MOVE_SHOOT:
+     285.  00:4392  3A 08 C0                LD A,(CHAR_MAIN_SHOOT)    
+     286.  00:4395  FE 01                   CP $01
+     287.  00:4397  CA C2 43                JP Z,.MOVE_SHOOT_LEFT
+     288.  00:439A  FE 02                   CP $02
+     289.  00:439C  CA AA 43                JP Z,.MOVE_SHOOT_RIGHT
+     290.  00:439F  FE 03                   CP $03
+     291.  00:43A1  CA B2 43                JP Z,.MOVE_SHOOT_UP    
+     292.  00:43A4  FE 04                   CP $04
+     293.  00:43A6  CA BA 43                JP Z,.MOVE_SHOOT_DOWN
+     294.  00:43A9  C9                      RET
+     295.  00:43AA                      
+     296.  00:43AA                      .MOVE_SHOOT_RIGHT:        
+     297.  00:43AA  3E 03                   LD A, MOV_SPEED_SHOOT
+     298.  00:43AC  32 0B C0            	LD (CHAR_SPEED_SHOOT), A    
+     299.  00:43AF  C3 C7 43                JP .CHECK_SHOOT_DISTANCE
+     300.  00:43B2                      
+     301.  00:43B2                      .MOVE_SHOOT_UP:        
+     302.  00:43B2  3E FD                   LD A, -MOV_SPEED_SHOOT
+     303.  00:43B4  32 0B C0            	LD (CHAR_SPEED_SHOOT), A    
+     304.  00:43B7  C3 C7 43                JP .CHECK_SHOOT_DISTANCE
+     305.  00:43BA                      
+     306.  00:43BA                      .MOVE_SHOOT_DOWN:
+     307.  00:43BA  3E 03                   LD A, MOV_SPEED_SHOOT
+     308.  00:43BC  32 0B C0            	LD (CHAR_SPEED_SHOOT), A    
+     309.  00:43BF  C3 C7 43                JP .CHECK_SHOOT_DISTANCE
+     310.  00:43C2                      
+     311.  00:43C2                      .MOVE_SHOOT_LEFT:    
+     312.  00:43C2  3E FD                   LD A, -MOV_SPEED_SHOOT
+     313.  00:43C4  32 0B C0            	LD (CHAR_SPEED_SHOOT), A    
+     314.  00:43C7                      
+     315.  00:43C7                      .CHECK_SHOOT_DISTANCE:
+     316.  00:43C7                          ; Miramos si va a izq o der
+     317.  00:43C7  3A 08 C0                LD A,(CHAR_MAIN_SHOOT)    
+     318.  00:43CA  D6 03                   SUB 3   ; Restar 3 a 1 o 2 provoca salto de carro, si es 3 o 4 no provoca el salto de carro
+     319.  00:43CC  D2 DC 43                JP NC,.ADD_SHOOT_Y
+     320.  00:43CF                          ; Movemos el disparo
+     321.  00:43CF  DD 7E 11                LD A, (ix+17)          ;cargamos la X del disparo
+     322.  00:43D2  2A 0B C0            	LD HL, (CHAR_SPEED_SHOOT)
+     323.  00:43D5  85                  	ADD L					; Actualizamos la posicion en base a la velocidad
+     324.  00:43D6  DD 77 11                LD (ix+17), A
+     325.  00:43D9  C3 E6 43                JP .ADD_DISTANCE
+     326.  00:43DC                      .ADD_SHOOT_Y
+     327.  00:43DC                          ; Movemos el disparo
+     328.  00:43DC  DD 7E 10                LD A, (ix+16)          ;cargamos la X del disparo
+     329.  00:43DF  2A 0B C0            	LD HL, (CHAR_SPEED_SHOOT)
+     330.  00:43E2  85                  	ADD L					; Actualizamos la posicion en base a la velocidad
+     331.  00:43E3  DD 77 10                LD (ix+16), A
+     332.  00:43E6                      
+     333.  00:43E6                      .ADD_DISTANCE:
+     334.  00:43E6  3A 0A C0                LD A,(CHAR_DISTANCE_SHOOT)
+     335.  00:43E9  C6 03                   ADD MOV_SPEED_SHOOT
+     336.  00:43EB  32 0A C0                LD (CHAR_DISTANCE_SHOOT),A    
+     337.  00:43EE  FE 30                   CP MAX_DISTANCE_SHOOT
+     338.  00:43F0  C0                      RET NZ
+     339.  00:43F1                      
+     340.  00:43F1                      .HIDE_SHOOT:
+     341.  00:43F1  DD 36 10 D9             LD (ix+16),217          ; Y = 217 para ocultar el Sprite
+     342.  00:43F5  AF                      XOR A
+     343.  00:43F6  32 08 C0                LD (CHAR_MAIN_SHOOT),A   ; Desactivo el estado disparando 
+     344.  00:43F9  32 0A C0                LD (CHAR_DISTANCE_SHOOT),A
+     345.  00:43FC  C9                      RET
+     346.  00:43FD                      
+      26   00:43FD                      	;include "include\SETPAGES48K.asm"
+      27   00:43FD                      
+      28   00:43FD                      START
+      29   00:43FD                      	; CODE
+      30   00:43FD                      	;LD A,8
+      31   00:43FD                      	;CALL CHGMOD    	
+      32   00:43FD  CD FC 40                CALL SETPAGES32K
+      33   00:4400                      ;	CALL opening_screen
+      34   00:4400  3E 01               	LD A,1
+      35   00:4402  32 00 70            	LD (_bank2),A
+      36   00:4405                      ;	CALL CHGET
+      37   00:4405                      	; Empieza el juego    
+      38   00:4405  CD 69 40            	call ClearVram_MSX2		
+      39   00:4408  CD 0F 41            	call SET_SCREEN5_MODE    
+      40   00:440B  CD 5D 40                call Set212Lines
+      41   00:440E                              
+      42   00:440E  CD 1A 44                call INIT_CHARS_VARS
+      43   00:4411  3E FF                   LD A, -MOV_SPEED_GHOST
+      44   00:4413  32 03 C0            	LD (CHAR_SPEED_X_GHOST), A
+      45   00:4416  CD 88 44                CALL STAGE1
+      46   00:4419                          ;call MAIN_LOOP
+      47   00:4419                          ;CALL CHGET
+      48   00:4419  C9                  	ret
+      49   00:441A                      
+      50   00:441A                      
+      51   00:441A                      INIT_CHARS_VARS:    
+      52   00:441A  DD 21 0C C0             ld ix, SPRITE_ATTRS           
+      53   00:441E                          
+      54   00:441E  DD 36 00 07             ld (ix), 07h        ; Sprite 1 - $AF abajo
+      55   00:4422  DD 36 01 09             ld (ix+1), 09h
+      56   00:4426  DD 36 02 00             ld (ix+2), 00h    
+      57   00:442A                      
+      58   00:442A  DD 36 04 07             ld (ix+4), 07h     ; Sprite 2
+      59   00:442E  DD 36 05 09             ld (ix+5), 09h
+      60   00:4432  DD 36 06 04             ld (ix+6), 04h        
+      61   00:4436                      
+      62   00:4436  DD 36 08 07             ld (ix+8), 07h     ; Sprite 3
+      63   00:443A  DD 36 09 09             ld (ix+9), 09h
+      64   00:443E  DD 36 0A 08             ld (ix+10), 08h        
+      65   00:4442                      
+      66   00:4442  DD 36 0C 07             ld (ix+12), $07      ; Sprite 1 - Ghost
+      67   00:4446  DD 36 0D B9             ld (ix+13), $B9
+      68   00:444A  DD 36 0E 18             ld (ix+14), $18
+      69   00:444E                          
+      70   00:444E  AF                      XOR A
+      71   00:444F  32 00 C0                LD (JIFFY_TEMP),A
+      72   00:4452  32 01 C0                LD (CHAR_SPEED_X),A
+      73   00:4455  32 02 C0                LD (CHAR_SPEED_Y),A
+      74   00:4458  32 03 C0                LD (CHAR_SPEED_X_GHOST),A
+      75   00:445B  32 05 C0                LD (CHAR_DIR_GHOST1),A      ; $00 - LEFT, $FF - RIGHT
+      76   00:445E  32 07 C0                LD (CHAR_NEW_DIR_MAIN),A    
+      77   00:4461  32 08 C0                LD (CHAR_MAIN_SHOOT),A      ; Indica si el personaje está disparando - $FF
+      78   00:4464  32 0A C0                LD (CHAR_DISTANCE_SHOOT),A
+      79   00:4467  32 0B C0                LD (CHAR_SPEED_SHOOT),A
+      80   00:446A  32 04 C0                LD (CHAR_GHOST_DEAD),A
+      81   00:446D  32 09 C0                LD (CHAR_MIN_STEP), A
+      82   00:4470  32 93 C0                LD (SPRITE_COLOR_REPLACE2), A
+      83   00:4473  3E 01                   LD A,$01
+      84   00:4475  32 06 C0                LD (CHAR_DIR_MAIN),A        ; $00 - UP, $01 - DOWN, $02 - LEFT, $03 - RIGHT
+      85   00:4478                      
+      86   00:4478  21 28 47                ld hl, SPRITE_P1_DOWN
+      87   00:447B  22 8F C0                ld (SPRITE_PTR_REPLACE), HL    
+      88   00:447E  21 D8 4B                ld hl, SPRITE_COLOR_P1_DOWN
+      89   00:4481  22 91 C0                ld (SPRITE_COLOR_REPLACE), HL
+      90   00:4484  22 93 C0                LD (SPRITE_COLOR_REPLACE2), HL
+      91   00:4487  C9                      ret
+      92   00:4488                      
+      93   00:4488                      STAGE1:
+      94   00:4488  CD 41 00                CALL DISSCR
+      95   00:448B  21 00 80                LD HL, CEMENTER1
+      96   00:448E  22 97 C0                LD (BITMAP), HL
+      97   00:4491  06 07                   LD B, :CEMENTER1
+      98   00:4493  CD A7 40                call load_screen
+      99   00:4496                          
+     100   00:4496  CD 31 41                call DUMP_SPR_ALL
+     101   00:4499  CD 71 41                CALL DUMP_SPR_P1
+     102   00:449C  21 98 4C                LD HL, mapa1
+     103   00:449F  22 95 C0                LD (MAPA), HL    
+     104   00:44A2  CD 44 00                CALL ENASCR
+     105   00:44A5                      
+     106   00:44A5                      MAIN_LOOP:
+     107   00:44A5                          ;halt ; sincroniza el teclado y pantalla con el procesador (que va muy rápido)    
+     108   00:44A5  DD 7E 00                LD A, (ix)  ; Cargamos la Y
+     109   00:44A8  FE 00                   CP $00
+     110   00:44AA  CA D4 45                JP Z, STAGE2
+     111   00:44AD  CD 56 41                call DUMP_SPR_ATTS    
+     112   00:44B0                          
+     113   00:44B0  3A 04 C0                LD A,(CHAR_GHOST_DEAD)
+     114   00:44B3  FE 01                   CP $01
+     115   00:44B5  CA 16 45                JP Z,.continue
+     116   00:44B8  DD 7E 0D                LD A, (ix+13)          ;cargamos la X del Fantasma
+     117   00:44BB  2A 03 C0            	LD HL, (CHAR_SPEED_X_GHOST)
+     118   00:44BE  85                  	ADD L					; Actualizamos la posicion en base a la velocidad
+     119   00:44BF                          
+     120   00:44BF  DD 77 0D            	LD (ix+13), A	
+     121   00:44C2  FE 16                   CP $16
+     122   00:44C4  CA CF 44                JP Z,.CHANGE_DIR_RIGHT
+     123   00:44C7  FE B9                   CP $B9
+     124   00:44C9  CA DC 44                JP Z,.CHANGE_DIR_LEFT
+     125   00:44CC                          		
+     126   00:44CC  C3 E5 44                JP .check_pattern
+     127   00:44CF                      
+     128   00:44CF                      .CHANGE_DIR_RIGHT:
+     129   00:44CF  3E 01                   LD A, MOV_SPEED_GHOST
+     130   00:44D1  32 03 C0            	LD (CHAR_SPEED_X_GHOST), A
+     131   00:44D4  3E FF                   LD A,$FF
+     132   00:44D6  32 05 C0                LD (CHAR_DIR_GHOST1),A
+     133   00:44D9  C3 E5 44                JP .check_pattern
+     134   00:44DC                      
+     135   00:44DC                      .CHANGE_DIR_LEFT:
+     136   00:44DC  3E FF                   LD A, -MOV_SPEED_GHOST
+     137   00:44DE  32 03 C0            	LD (CHAR_SPEED_X_GHOST), A
+     138   00:44E1  AF                      XOR A   ; Pone A a 0
+     139   00:44E2  32 05 C0                LD (CHAR_DIR_GHOST1),A
+     140   00:44E5                      
+     141   00:44E5                      .check_pattern:
+     142   00:44E5  3A 05 C0                LD A,(CHAR_DIR_GHOST1)
+     143   00:44E8  FE FF                   CP $FF
+     144   00:44EA  CA 03 45                JP Z,.check_pattern_RIGHT
+     145   00:44ED  DD 7E 0E                LD A, (ix+14)       ; Cargamos el patrón y lo cambiamos
+     146   00:44F0  FE 18                   CP $18
+     147   00:44F2  CA FC 44                jp z,.change_pattern_L
+     148   00:44F5  DD 36 0E 18             LD (ix+14),$18
+     149   00:44F9  C3 16 45                jp .continue
+     150   00:44FC                      .change_pattern_L:
+     151   00:44FC  DD 36 0E 1C             LD (ix+14),$1C
+     152   00:4500  C3 16 45                jp .continue
+     153   00:4503                      
+     154   00:4503                      .check_pattern_RIGHT
+     155   00:4503  DD 7E 0E                LD A, (ix+14)       ; Cargamos el patrón y lo cambiamos
+     156   00:4506  FE 20                   CP $20
+     157   00:4508  CA 12 45                jp z,.change_pattern_R
+     158   00:450B  DD 36 0E 20             LD (ix+14),$20
+     159   00:450F  C3 16 45                jp .continue
+     160   00:4512                      .change_pattern_R:
+     161   00:4512  DD 36 0E 24             LD (ix+14),$24
+     162   00:4516                      
+     163   00:4516                      .continue:    
+     164   00:4516  CD 92 43                CALL MOVE_SHOOT
+     165   00:4519                      .CHECK_GHOST:
+     166   00:4519                          ; Comprobamos si hay colision con el fantasma
+     167   00:4519  3A 04 C0                LD A,(CHAR_GHOST_DEAD)  ; si está muerto,no lo miramos
+     168   00:451C  FE 01                   CP $01
+     169   00:451E  CA 3E 45                JP Z,.check_KB
+     170   00:4521                      
+     171   00:4521  DD 46 10                LD B,(ix+16)         ; Y del disparo
+     172   00:4524  DD 4E 11                LD C,(ix+17)         ; X del disparo
+     173   00:4527  DD 56 0C                LD D,(ix+12)         ; Y del fantasma 
+     174   00:452A  DD 5E 0D                LD E,(ix+13)         ; X del fantasma
+     175   00:452D  CD 10 40                call check_spr_collision
+     176   00:4530  FE 01                   CP 1
+     177   00:4532  C2 3E 45                JP NZ,.check_KB
+     178   00:4535                      
+     179   00:4535                      .KILL_GHOST:
+     180   00:4535  3E 01                   LD A,1
+     181   00:4537  32 04 C0                LD (CHAR_GHOST_DEAD),A
+     182   00:453A  DD 36 0C D9             LD (ix+12),217    
+     183   00:453E                      
+     184   00:453E                      .check_KB:
+     185   00:453E  76                      halt    
+     186   00:453F                      
+     187   00:453F  3E 08                   ld a, 8
+     188   00:4541  CD 41 01            	call SNSMAT   
+     189   00:4544  4F                      LD C,A    
+     190   00:4545                          
+     191   00:4545  CB 79                   BIT KB_RIGHT, C			; La tecla presionada es RIGHT?
+     192   00:4547  CC FD 41                call z, move_right
+     193   00:454A                          
+     194   00:454A  CB 61                   BIT KB_LEFT, C			; La tecla presionada es LEFT?
+     195   00:454C  CC 4B 42                call z, move_left
+     196   00:454F                      
+     197   00:454F  CB 69                   BIT KB_UP, C			; La tecla presionada es UP?
+     198   00:4551  CC 8E 41                call z, move_up
+     199   00:4554                      
+     200   00:4554  CB 71                   BIT KB_DOWN, C			; La tecla presionada es DOWN?
+     201   00:4556  CC C5 41                call z, move_down
+     202   00:4559                      
+     203   00:4559                      no_arrows:
+     204   00:4559  CB 41                   BIT KB_SPACE, C			; La tecla presionada es SPACE
+     205   00:455B  CC 64 45                call z,SHOOT_MAIN_CHAR
+     206   00:455E                      
+     207   00:455E  CB 59                   BIT KB_DEL, C			; La tecla presionada es DEL    
+     208   00:4560  C8                      ret z
+     209   00:4561                      
+     210   00:4561  C3 A5 44                jp MAIN_LOOP
+     211   00:4564                      
+     212   00:4564                      SHOOT_MAIN_CHAR:    
+     213   00:4564  3A 08 C0                LD A, (CHAR_MAIN_SHOOT)
+     214   00:4567  FE 01                   CP $01                  ; Si ya está disparando esperamos a que termine
+     215   00:4569  C8                      RET Z;,MAIN_LOOP
+     216   00:456A  FE 02                   CP $02                  ; Si ya está disparando esperamos a que termine
+     217   00:456C  C8                      RET Z;,MAIN_LOOP
+     218   00:456D  FE 03                   CP $03                  ; Si ya está disparando esperamos a que termine
+     219   00:456F  C8                      RET Z;,MAIN_LOOP
+     220   00:4570  FE 04                   CP $04                  ; Si ya está disparando esperamos a que termine
+     221   00:4572  C8                      RET Z;,MAIN_LOOP
+     222   00:4573                      
+     223   00:4573  DD 36 12 28             ld (ix+18), $28     ; Sprite Disparo
+     224   00:4577                      
+     225   00:4577  DD 7E 00                LD A, (ix)          
+     226   00:457A  DD 77 10                ld (ix+16), A       ; Asignamos la Y del personaje    
+     227   00:457D                      
+     228   00:457D  3A 06 C0                LD A, (CHAR_DIR_MAIN)
+     229   00:4580  FE 03                   CP $03
+     230   00:4582  CA 9E 45                JP Z,.SHOOT_RIGHT
+     231   00:4585  FE 00                   CP $00
+     232   00:4587  CA AD 45                JP Z,.SHOOT_UP
+     233   00:458A  FE 01                   CP $01
+     234   00:458C  CA C0 45                JP Z,.SHOOT_DOWN
+     235   00:458F                          ; SHOOT LEFT
+     236   00:458F  3E 01                   LD A,$01                ; SHOOT LEFT
+     237   00:4591  32 08 C0                LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando izquierda
+     238   00:4594  DD 7E 01                LD A, (ix+1)			;cargamos la X - Si no es derecha, debe ser izquierda
+     239   00:4597  21 F4 FF            	LD HL, -12
+     240   00:459A  85                  	ADD L
+     241   00:459B                          
+     242   00:459B  C3 D0 45                JP .CONTINUE
+     243   00:459E                      
+     244   00:459E                      .SHOOT_RIGHT:    
+     245   00:459E  3E 02                   LD A,$02
+     246   00:45A0  32 08 C0                LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando derecha
+     247   00:45A3                          
+     248   00:45A3  DD 7E 01                LD A, (ix+1)			;cargamos la X
+     249   00:45A6  21 0C 00            	LD HL, 12
+     250   00:45A9  85                  	ADD L
+     251   00:45AA  C3 D0 45                JP .CONTINUE
+     252   00:45AD                      
+     253   00:45AD                      .SHOOT_UP:
+     254   00:45AD  3E 03                   LD A,$03
+     255   00:45AF  32 08 C0                LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando derecha
+     256   00:45B2                          
+     257   00:45B2                          ; Sumamos el desplazamiento a la Y
+     258   00:45B2  DD 7E 10                LD A, (ix+16)
+     259   00:45B5  D6 10                   SUB 16
+     260   00:45B7  DD 77 10                LD (ix+16), A    
+     261   00:45BA                          ;LD (ix+17), D
+     262   00:45BA  DD 7E 01                LD A, (ix+1)			;cargamos la X    
+     263   00:45BD  C3 D0 45                JP .CONTINUE
+     264   00:45C0                      
+     265   00:45C0                      .SHOOT_DOWN
+     266   00:45C0  3E 04               	LD A,$04
+     267   00:45C2  32 08 C0                LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando derecha
+     268   00:45C5                          
+     269   00:45C5                          ; Sumamos el desplazamiento a la Y
+     270   00:45C5  DD 7E 10                LD A, (ix+16)
+     271   00:45C8  C6 10                   ADD 16
+     272   00:45CA  DD 77 10                LD (ix+16), A    
+     273   00:45CD                          ;LD (ix+17), D
+     274   00:45CD  DD 7E 01                LD A, (ix+1)			;cargamos la X    
+     275   00:45D0                      
+     276   00:45D0                      .CONTINUE:
+     277   00:45D0                          ;ld (ix+16), B       ; Asignamos la Y del personaje
+     278   00:45D0  DD 77 11                ld (ix+17), A       ; Asignamos la X del personaje + el desplazamiento        
+     279   00:45D3                          ;jp MAIN_LOOP
+     280   00:45D3  C9                      ret
+     281   00:45D4                      
+     282   00:45D4                      STAGE2:
+     283   00:45D4  CD 41 00                CALL DISSCR
+     284   00:45D7  21 00 80                LD HL, CEMENTER2
+     285   00:45DA  22 97 C0                LD (BITMAP), HL
+     286   00:45DD  06 0D                   LD B, :CEMENTER2
+     287   00:45DF                      
+     288   00:45DF  CD A7 40                call load_screen
+     289   00:45E2  21 D8 4F                LD HL, mapa2
+     290   00:45E5  22 95 C0                LD (MAPA), HL
+     291   00:45E8                      
+     292   00:45E8  DD 36 00 C4             LD (ix), 196    ; Ponemos el P1 abajo
+     293   00:45EC  DD 36 04 C4             LD (ix+4), 196    
+     294   00:45F0  DD 36 08 C4             LD (ix+8), 196    
+     295   00:45F4                          
+     296   00:45F4  DD 36 0C D9             LD (ix+12),217  ; ocultamos el fantasma
+     297   00:45F8                          
+     298   00:45F8  CD 31 41                call DUMP_SPR_ALL    
+     299   00:45FB  CD 71 41                CALL DUMP_SPR_P1
+     300   00:45FE                          ; Esqueleto
+     301   00:45FE  DD 36 14 10             LD (ix+20), 10h
+     302   00:4602  DD 36 15 10             LD (ix+21), 10h
+     303   00:4606  DD 36 16 2C             LD (ix+22), 2Ch
+     304   00:460A                      
+     305   00:460A  DD 36 18 10             LD (ix+24), 10h
+     306   00:460E  DD 36 19 10             LD (ix+25), 10h
+     307   00:4612  DD 36 1A 30             LD (ix+26), 30h
+     308   00:4616                      
+     309   00:4616  CD 44 00                CALL ENASCR
+     310   00:4619                          
+     311   00:4619                      MAIN_LOOP2:
+     312   00:4619  76                      halt    
+     313   00:461A                      
+     314   00:461A  DD 7E 00                LD A, (ix)    
+     315   00:461D  FE C6                   CP 198
+     316   00:461F  C2 3D 46                JP NZ, .no_screen_change
+     317   00:4622  DD 36 00 01             LD (ix), 1          ; SP1 - Y = 1
+     318   00:4626  DD 36 04 01             LD (ix+4), 1
+     319   00:462A  DD 36 08 01             LD (ix+8), 1
+     320   00:462E                          
+     321   00:462E  3A 04 C0                LD A, (CHAR_GHOST_DEAD)
+     322   00:4631  FE 01                   CP $01
+     323   00:4633  CA 3A 46                JP Z, .GHOST_DEAD
+     324   00:4636  DD 36 0C 07             ld (ix+12), $07      ; Sprite 1 - Ghost
+     325   00:463A                      .GHOST_DEAD:
+     326   00:463A  CD 88 44                CALL STAGE1
+     327   00:463D                      
+     328   00:463D                      .no_screen_change:
+     329   00:463D  CD 56 41                call DUMP_SPR_ATTS    
+     330   00:4640  CD 92 43                CALL MOVE_SHOOT
+     331   00:4643                              
+     332   00:4643  3E 08                   ld a, 8
+     333   00:4645  CD 41 01            	call SNSMAT   
+     334   00:4648  4F                      LD C,A    
+     335   00:4649                              
+     336   00:4649  CB 79                   BIT KB_RIGHT, C			; La tecla presionada es RIGHT?
+     337   00:464B  CC FD 41                call z, move_right
+     338   00:464E                          
+     339   00:464E  CB 61                   BIT KB_LEFT, C			; La tecla presionada es LEFT?
+     340   00:4650  CC 4B 42                call z, move_left
+     341   00:4653                      
+     342   00:4653  CB 69                   BIT KB_UP, C			; La tecla presionada es UP?
+     343   00:4655  CC 8E 41                call z, move_up
+     344   00:4658                      
+     345   00:4658  CB 71                   BIT KB_DOWN, C			; La tecla presionada es DOWN?
+     346   00:465A  CC C5 41                call z, move_down
+     347   00:465D                      
+     348   00:465D                      .no_arrows:
+     349   00:465D  CB 41                   BIT KB_SPACE, C			; La tecla presionada es SPACE
+     350   00:465F  CC 64 45                call z,SHOOT_MAIN_CHAR
+     351   00:4662                      
+     352   00:4662  CB 59                   BIT KB_DEL, C			; La tecla presionada es DEL    
+     353   00:4664  C8                      ret z
+     354   00:4665                      
+     355   00:4665  C3 19 46                jp MAIN_LOOP2
+     356   00:4668                      
+     357   00:4668                      include "include\BTH_data.asm"
        1.  00:4668                      SPRITE_P1_UP:
        2.  00:4668                          ; UP 1        
        3.  00:4668                          ; mask 0
@@ -1924,51 +1929,51 @@ Errors: 0
      448.  00:56C8  00 00 00 00 42 00 00 00 
      449.  00:56D0                          DB $46,$46,$41,$00,$00,$00,$00,$00
      449.  00:56D0  46 46 41 00 00 00 00 00 
-     417   00:56D8                      
-     418   00:56D8  (01)                 PAGE 1
-     419   01:8000                      ; CODE O NO
-     420   01:8000                      
-     421   01:8000  (02)                 PAGE 2
-     422   02:8000                      
-     423   02:8000  (03)                 PAGE 3
-     424   03:8000                      
-     425   03:8000  (04)                 PAGE 4
-     426   04:8000  (05)                 PAGE 5
-     427   05:8000  (06)                 PAGE 6
-     428   06:8000                      
-     429   06:8000  (07)                 PAGE 7
-     430   07:8000                      CEMENTER1
-     431   07:8000  (4000)               INCBIN "gfx\CEMENTER1.SC5",#7,#4000			; Cada página tiene 16K = 4000h
-     432   07:C000  (08)                 PAGE 8
-     433   08:8000  (2A00)               INCBIN "gfx\CEMENTER1.SC5",#4007			; Cada página tiene 16K = 4000h 
-     434   08:AA00  (09)                 PAGE 9
-     435   09:8000                      GRAPHIC
-     436   09:8000  (4000)               INCBIN "gfx\BTH.SR8",#7,#4000			; Cada página tiene 16K = 4000h
-     437   09:C000  (0A)                 PAGE 10
-     438   0A:8000  (4000)               INCBIN "gfx\BTH.SR8",#4007,#4000
-     439   0A:C000                      
-     440   0A:C000  (0B)                 PAGE 11
-     441   0B:8000  (4000)               INCBIN "gfx\BTH.SR8",#8007,#4000
-     442   0B:C000                      
-     443   0B:C000  (0C)                 PAGE 12
-     444   0C:8000  (1400)               INCBIN "gfx\BTH.SR8",#C007
-     445   0C:9400                      
-     446   0C:9400  (0D)                 PAGE 13
-     447   0D:8000                      CEMENTER2
-     448   0D:8000  (4000)               INCBIN "gfx\CEMENTER2.SC5",#7,#4000			; Cada página tiene 16K = 4000h
-     449   0D:C000  (0E)                 PAGE 14
-     450   0E:8000  (2A00)               INCBIN "gfx\CEMENTER2.SC5",#4007			; Cada página tiene 16K = 4000h 
-     451   0E:AA00  (0F)                 PAGE 15
-     452   0F:C000                      ;---------------------------------------------------------
-     453   0F:C000                      ; Variables
-     454   0F:C000                      ;---------------------------------------------------------
-     455   0F:C000                      	
-     456   0F:C000  (C000)              	MAP #C000  ;Ram page 3
-     457   0F:C000                      ;	MAP #E5FF  ;Ram page 3
-     458   0F:C000                      ;NAME #1  ;a byte is reserved for this variable
-     459   0F:C000                      ;ETC
-     460   0F:C000                      ;
-     461   0F:C000                      	include "include\BTH_RAM.asm"
+     358   00:56D8                      
+     359   00:56D8  (01)                 PAGE 1
+     360   01:8000                      ; CODE O NO
+     361   01:8000                      
+     362   01:8000  (02)                 PAGE 2
+     363   02:8000                      
+     364   02:8000  (03)                 PAGE 3
+     365   03:8000                      
+     366   03:8000  (04)                 PAGE 4
+     367   04:8000  (05)                 PAGE 5
+     368   05:8000  (06)                 PAGE 6
+     369   06:8000                      
+     370   06:8000  (07)                 PAGE 7
+     371   07:8000                      CEMENTER1
+     372   07:8000  (4000)               INCBIN "gfx\CEMENTER1.SC5",#7,#4000			; Cada página tiene 16K = 4000h
+     373   07:C000  (08)                 PAGE 8
+     374   08:8000  (2A00)               INCBIN "gfx\CEMENTER1.SC5",#4007			; Cada página tiene 16K = 4000h 
+     375   08:AA00  (09)                 PAGE 9
+     376   09:8000                      GRAPHIC
+     377   09:8000  (4000)               INCBIN "gfx\BTH.SR8",#7,#4000			; Cada página tiene 16K = 4000h
+     378   09:C000  (0A)                 PAGE 10
+     379   0A:8000  (4000)               INCBIN "gfx\BTH.SR8",#4007,#4000
+     380   0A:C000                      
+     381   0A:C000  (0B)                 PAGE 11
+     382   0B:8000  (4000)               INCBIN "gfx\BTH.SR8",#8007,#4000
+     383   0B:C000                      
+     384   0B:C000  (0C)                 PAGE 12
+     385   0C:8000  (1400)               INCBIN "gfx\BTH.SR8",#C007
+     386   0C:9400                      
+     387   0C:9400  (0D)                 PAGE 13
+     388   0D:8000                      CEMENTER2
+     389   0D:8000  (4000)               INCBIN "gfx\CEMENTER2.SC5",#7,#4000			; Cada página tiene 16K = 4000h
+     390   0D:C000  (0E)                 PAGE 14
+     391   0E:8000  (2A00)               INCBIN "gfx\CEMENTER2.SC5",#4007			; Cada página tiene 16K = 4000h 
+     392   0E:AA00  (0F)                 PAGE 15
+     393   0F:C000                      ;---------------------------------------------------------
+     394   0F:C000                      ; Variables
+     395   0F:C000                      ;---------------------------------------------------------
+     396   0F:C000                      	
+     397   0F:C000  (C000)              	MAP #C000  ;Ram page 3
+     398   0F:C000                      ;	MAP #E5FF  ;Ram page 3
+     399   0F:C000                      ;NAME #1  ;a byte is reserved for this variable
+     400   0F:C000                      ;ETC
+     401   0F:C000                      ;
+     402   0F:C000                      	include "include\BTH_RAM.asm"
        1.  0F:C000  00                  JIFFY_TEMP DB $00
        2.  0F:C001  00                  CHAR_SPEED_X DB $00
        3.  0F:C002  00                  CHAR_SPEED_Y DB $00
@@ -1999,7 +2004,7 @@ Errors: 0
       28.  0F:C095  00 (2)                  DS 2
       29.  0F:C097                      BITMAP:
       30.  0F:C097  00 (2)                  DS 2
-     462   0F:C099  (0000)              	ENDMAP
+     403   0F:C099  (0000)              	ENDMAP
 
     LABELS
 -------------------------------------------------
@@ -2075,38 +2080,39 @@ Errors: 0
 00:00004374   UPDATE_MOVEMENT.SET_SPR_1P_2
 00:0000438B   UPDATE_MOVEMENT.NO_CHAR_PATTERN_CHANGE
 00:00004391   NO_MOVEMENT
-00:00004392   START
-00:000043AF   INIT_CHARS_VARS
-00:0000441D   STAGE1
-00:0000443A   MAIN_LOOP
-00:00004464   MAIN_LOOP.CHANGE_DIR_RIGHT
-00:00004471   MAIN_LOOP.CHANGE_DIR_LEFT
-00:0000447A   MAIN_LOOP.check_pattern
-00:00004491   MAIN_LOOP.change_pattern_L
-00:00004498   MAIN_LOOP.check_pattern_RIGHT
-00:000044A7   MAIN_LOOP.change_pattern_R
-00:000044AB   MAIN_LOOP.continue
-00:000044C5   MAIN_LOOP.MOVE_SHOOT_RIGHT
-00:000044CD   MAIN_LOOP.MOVE_SHOOT_UP
-00:000044D5   MAIN_LOOP.MOVE_SHOOT_DOWN
-00:000044DD   MAIN_LOOP.MOVE_SHOOT_LEFT
-00:000044E2   MAIN_LOOP.CHECK_SHOOT_DISTANCE
-00:000044F7   MAIN_LOOP.ADD_SHOOT_Y
-00:00004501   MAIN_LOOP.CHECK_GHOST
-00:0000451D   MAIN_LOOP.ADD_DISTANCE
-00:0000452D   MAIN_LOOP.KILL_GHOST
-00:00004536   MAIN_LOOP.HIDE_SHOOT
-00:00004541   MAIN_LOOP.check_KB
-00:0000455C X no_arrows
-00:00004567   SHOOT_MAIN_CHAR
-00:000045A1   SHOOT_MAIN_CHAR.SHOOT_RIGHT
-00:000045B0   SHOOT_MAIN_CHAR.SHOOT_UP
-00:000045C3   SHOOT_MAIN_CHAR.SHOOT_DOWN
-00:000045D3   SHOOT_MAIN_CHAR.CONTINUE
-00:000045D7   STAGE2
-00:0000461C   MAIN_LOOP2
-00:0000463D   MAIN_LOOP2.GHOST_DEAD
-00:00004640   MAIN_LOOP2.no_screen_change
+00:00004392   MOVE_SHOOT
+00:000043AA   MOVE_SHOOT.MOVE_SHOOT_RIGHT
+00:000043B2   MOVE_SHOOT.MOVE_SHOOT_UP
+00:000043BA   MOVE_SHOOT.MOVE_SHOOT_DOWN
+00:000043C2   MOVE_SHOOT.MOVE_SHOOT_LEFT
+00:000043C7   MOVE_SHOOT.CHECK_SHOOT_DISTANCE
+00:000043DC   MOVE_SHOOT.ADD_SHOOT_Y
+00:000043E6   MOVE_SHOOT.ADD_DISTANCE
+00:000043F1 X MOVE_SHOOT.HIDE_SHOOT
+00:000043FD   START
+00:0000441A   INIT_CHARS_VARS
+00:00004488   STAGE1
+00:000044A5   MAIN_LOOP
+00:000044CF   MAIN_LOOP.CHANGE_DIR_RIGHT
+00:000044DC   MAIN_LOOP.CHANGE_DIR_LEFT
+00:000044E5   MAIN_LOOP.check_pattern
+00:000044FC   MAIN_LOOP.change_pattern_L
+00:00004503   MAIN_LOOP.check_pattern_RIGHT
+00:00004512   MAIN_LOOP.change_pattern_R
+00:00004516   MAIN_LOOP.continue
+00:00004519 X MAIN_LOOP.CHECK_GHOST
+00:00004535 X MAIN_LOOP.KILL_GHOST
+00:0000453E   MAIN_LOOP.check_KB
+00:00004559 X no_arrows
+00:00004564   SHOOT_MAIN_CHAR
+00:0000459E   SHOOT_MAIN_CHAR.SHOOT_RIGHT
+00:000045AD   SHOOT_MAIN_CHAR.SHOOT_UP
+00:000045C0   SHOOT_MAIN_CHAR.SHOOT_DOWN
+00:000045D0   SHOOT_MAIN_CHAR.CONTINUE
+00:000045D4   STAGE2
+00:00004619   MAIN_LOOP2
+00:0000463A   MAIN_LOOP2.GHOST_DEAD
+00:0000463D   MAIN_LOOP2.no_screen_change
 00:0000465D X MAIN_LOOP2.no_arrows
 00:00004668   SPRITE_P1_UP
 00:00004728   SPRITE_P1_DOWN

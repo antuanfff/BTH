@@ -280,3 +280,67 @@ UPDATE_MOVEMENT:
 
 NO_MOVEMENT:    
     ret
+
+MOVE_SHOOT:
+    LD A,(CHAR_MAIN_SHOOT)    
+    CP $01
+    JP Z,.MOVE_SHOOT_LEFT
+    CP $02
+    JP Z,.MOVE_SHOOT_RIGHT
+    CP $03
+    JP Z,.MOVE_SHOOT_UP    
+    CP $04
+    JP Z,.MOVE_SHOOT_DOWN
+    RET
+
+.MOVE_SHOOT_RIGHT:        
+    LD A, MOV_SPEED_SHOOT
+	LD (CHAR_SPEED_SHOOT), A    
+    JP .CHECK_SHOOT_DISTANCE
+
+.MOVE_SHOOT_UP:        
+    LD A, -MOV_SPEED_SHOOT
+	LD (CHAR_SPEED_SHOOT), A    
+    JP .CHECK_SHOOT_DISTANCE
+
+.MOVE_SHOOT_DOWN:
+    LD A, MOV_SPEED_SHOOT
+	LD (CHAR_SPEED_SHOOT), A    
+    JP .CHECK_SHOOT_DISTANCE
+
+.MOVE_SHOOT_LEFT:    
+    LD A, -MOV_SPEED_SHOOT
+	LD (CHAR_SPEED_SHOOT), A    
+
+.CHECK_SHOOT_DISTANCE:
+    ; Miramos si va a izq o der
+    LD A,(CHAR_MAIN_SHOOT)    
+    SUB 3   ; Restar 3 a 1 o 2 provoca salto de carro, si es 3 o 4 no provoca el salto de carro
+    JP NC,.ADD_SHOOT_Y
+    ; Movemos el disparo
+    LD A, (ix+17)          ;cargamos la X del disparo
+	LD HL, (CHAR_SPEED_SHOOT)
+	ADD L					; Actualizamos la posicion en base a la velocidad
+    LD (ix+17), A
+    JP .ADD_DISTANCE
+.ADD_SHOOT_Y
+    ; Movemos el disparo
+    LD A, (ix+16)          ;cargamos la X del disparo
+	LD HL, (CHAR_SPEED_SHOOT)
+	ADD L					; Actualizamos la posicion en base a la velocidad
+    LD (ix+16), A
+
+.ADD_DISTANCE:
+    LD A,(CHAR_DISTANCE_SHOOT)
+    ADD MOV_SPEED_SHOOT
+    LD (CHAR_DISTANCE_SHOOT),A    
+    CP MAX_DISTANCE_SHOOT
+    RET NZ
+
+.HIDE_SHOOT:
+    LD (ix+16),217          ; Y = 217 para ocultar el Sprite
+    XOR A
+    LD (CHAR_MAIN_SHOOT),A   ; Desactivo el estado disparando 
+    LD (CHAR_DISTANCE_SHOOT),A
+    RET
+

@@ -161,59 +161,12 @@ MAIN_LOOP:
     LD (ix+14),$24
 
 .continue:    
-    LD A,(CHAR_MAIN_SHOOT)    
-    CP $01
-    JP Z,.MOVE_SHOOT_LEFT
-    CP $02
-    JP Z,.MOVE_SHOOT_RIGHT
-    CP $03
-    JP Z,.MOVE_SHOOT_UP    
-    CP $04
-    JP Z,.MOVE_SHOOT_DOWN
-    JP .check_KB
-
-.MOVE_SHOOT_RIGHT:        
-    LD A, MOV_SPEED_SHOOT
-	LD (CHAR_SPEED_SHOOT), A    
-    JP .CHECK_SHOOT_DISTANCE
-
-.MOVE_SHOOT_UP:        
-    LD A, -MOV_SPEED_SHOOT
-	LD (CHAR_SPEED_SHOOT), A    
-    JP .CHECK_SHOOT_DISTANCE
-
-.MOVE_SHOOT_DOWN:
-    LD A, MOV_SPEED_SHOOT
-	LD (CHAR_SPEED_SHOOT), A    
-    JP .CHECK_SHOOT_DISTANCE
-
-.MOVE_SHOOT_LEFT:    
-    LD A, -MOV_SPEED_SHOOT
-	LD (CHAR_SPEED_SHOOT), A    
-
-.CHECK_SHOOT_DISTANCE:
-    ; Miramos si va a izq o der
-    LD A,(CHAR_MAIN_SHOOT)    
-    SUB 3   ; Restar 3 a 1 o 2 provoca salto de carro, si es 3 o 4 no provoca el salto de carro
-    JP NC,.ADD_SHOOT_Y
-    ; Movemos el disparo
-    LD A, (ix+17)          ;cargamos la X del disparo
-	LD HL, (CHAR_SPEED_SHOOT)
-	ADD L					; Actualizamos la posicion en base a la velocidad
-    LD (ix+17), A
-    JP .CHECK_GHOST
-.ADD_SHOOT_Y
-    ; Movemos el disparo
-    LD A, (ix+16)          ;cargamos la X del disparo
-	LD HL, (CHAR_SPEED_SHOOT)
-	ADD L					; Actualizamos la posicion en base a la velocidad
-    LD (ix+16), A
-
+    CALL MOVE_SHOOT
 .CHECK_GHOST:
     ; Comprobamos si hay colision con el fantasma
     LD A,(CHAR_GHOST_DEAD)  ; si está muerto,no lo miramos
     CP $01
-    JP Z,.ADD_DISTANCE
+    JP Z,.check_KB
 
     LD B,(ix+16)         ; Y del disparo
     LD C,(ix+17)         ; X del disparo
@@ -221,25 +174,12 @@ MAIN_LOOP:
     LD E,(ix+13)         ; X del fantasma
     call check_spr_collision
     CP 1
-    JP Z,.KILL_GHOST
-.ADD_DISTANCE:
-    LD A,(CHAR_DISTANCE_SHOOT)
-    ADD MOV_SPEED_SHOOT
-    LD (CHAR_DISTANCE_SHOOT),A    
-    CP MAX_DISTANCE_SHOOT
     JP NZ,.check_KB
-    JP .HIDE_SHOOT
 
 .KILL_GHOST:
     LD A,1
     LD (CHAR_GHOST_DEAD),A
     LD (ix+12),217    
-
-.HIDE_SHOOT:
-    LD (ix+16),217          ; Y = 217 para ocultar el Sprite
-    XOR A
-    LD (CHAR_MAIN_SHOOT),A   ; Desactivo el estado disparando 
-    LD (CHAR_DISTANCE_SHOOT),A
 
 .check_KB:
     halt    
@@ -377,7 +317,7 @@ MAIN_LOOP2:
     LD (ix), 1          ; SP1 - Y = 1
     LD (ix+4), 1
     LD (ix+8), 1
-    
+
     LD A, (CHAR_GHOST_DEAD)
     CP $01
     JP Z, .GHOST_DEAD
@@ -386,8 +326,10 @@ MAIN_LOOP2:
     CALL STAGE1
 
 .no_screen_change:
+
     call DUMP_SPR_ATTS    
-    
+    CALL MOVE_SHOOT
+
     ld a, 8
 	call SNSMAT   
     LD C,A    
