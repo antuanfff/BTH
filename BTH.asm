@@ -323,12 +323,16 @@ MAIN_LOOP2:
     JP Z, .GHOST_DEAD
     ld (ix+12), $07      ; Sprite 1 - Ghost
 .GHOST_DEAD:
+    LD (ix+20),217  ; ocultamos el esqueleto
+    LD (ix+24),217  ; ocultamos el esqueleto
     CALL STAGE1
 
 .no_screen_change:
 
     call DUMP_SPR_ATTS    
     CALL MOVE_SHOOT
+
+    ; Movemos el fantasma
 
     ld a, 8
 	call SNSMAT   
@@ -346,7 +350,6 @@ MAIN_LOOP2:
     BIT KB_DOWN, C			; La tecla presionada es DOWN?
     call z, move_down
 
-.no_arrows:
     BIT KB_SPACE, C			; La tecla presionada es SPACE
     call z,SHOOT_MAIN_CHAR
 

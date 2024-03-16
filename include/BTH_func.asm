@@ -298,7 +298,7 @@ DUMP_SPR_ATTS:
 
     ld hl, SPRITE_ATTRS ; la rutina LDIRVM necesita haber cargado previamente la dirección de inicio de la RAM, para saber porqué he puesto 0000 fíjate este dibujo https://sites.google.com/site/multivac7/files-images/TMS9918_VRAMmap_G2_300dpi.png ,así es como está formado el VDP en screen 2
     ld de, #7600	; la rutina necesita haber cargado previamente con de la dirección de inicio de la VRAM          
-    ld bc,24		; 6 x #Sprites
+    ld bc,28		; 6 x #Sprites
     call  LDIRVM 	; Mira arriba, pone la explicación
 
 ;	ld a, (SPRITE_COLOR_REPLACE2)
