@@ -80,6 +80,7 @@ INIT_CHARS_VARS:
     LD (CHAR_GHOST_DEAD),A
     LD (CHAR_MIN_STEP), A
     LD (SPRITE_COLOR_REPLACE2), A
+    LD (OLD_KEY_PRESSED), A
     LD A,$01
     LD (CHAR_DIR_MAIN),A        ; $00 - UP, $01 - DOWN, $02 - LEFT, $03 - RIGHT
 
@@ -186,6 +187,10 @@ MAIN_LOOP:
 
     ld a, 8
 	call SNSMAT   
+
+    ;LD B, (OLD_KEY_PRESSED)
+    ;XOR B
+
     LD C,A    
     
     BIT KB_RIGHT, C			; La tecla presionada es RIGHT?
