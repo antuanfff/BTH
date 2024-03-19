@@ -300,11 +300,18 @@ STAGE2:
     ; Esqueleto
     LD (ix+20), 10h
     LD (ix+21), 10h
-    LD (ix+22), 2Ch
+    LD (ix+22), 3Ch
 
     LD (ix+24), 10h
     LD (ix+25), 10h
-    LD (ix+26), 30h
+    LD (ix+26), 40h
+
+    LD a, 1
+    LD (CHAR_GHOST_DEAD_STG2), A
+    LD A, $FF
+    LD (CHAR_DIR_GHOST_STG2), A
+    LD A, MOV_SPEED_GHOST
+	LD (CHAR_SPEED_X_GHOST_STG2), A
 
     CALL ENASCR
     
@@ -314,6 +321,7 @@ MAIN_LOOP2:
     LD A, (ix)    
     CP 198
     JP NZ, .no_screen_change
+    ; Ponemos el SP1 al principio de la pantalla 1
     LD (ix), 1          ; SP1 - Y = 1
     LD (ix+4), 1
     LD (ix+8), 1
@@ -330,9 +338,64 @@ MAIN_LOOP2:
 .no_screen_change:
 
     call DUMP_SPR_ATTS    
-    CALL MOVE_SHOOT
+    ; Movemos el esqueleto
+    LD A,(CHAR_GHOST_DEAD_STG2)
+    CP $01
+    JP Z,.continue
+    LD A, (ix+21)          ;cargamos la X del Esqueleto
+	LD HL, (CHAR_SPEED_X_GHOST_STG2)
+	ADD L					; Actualizamos la posicion en base a la velocidad
+    
+	LD (ix+21), A	
+    LD (ix+25), A
+    CP $16
+    JP Z,.CHANGE_DIR_RIGHT
+    CP $B9
+    JP Z,.CHANGE_DIR_LEFT
+    		
+    JP .check_pattern
 
-    ; Movemos el fantasma
+.CHANGE_DIR_RIGHT:
+    LD A, MOV_SPEED_GHOST
+	LD (CHAR_SPEED_X_GHOST_STG2), A
+    LD A,$FF
+    LD (CHAR_DIR_GHOST_STG2),A
+    JP .check_pattern
+
+.CHANGE_DIR_LEFT:
+    LD A, -MOV_SPEED_GHOST
+	LD (CHAR_SPEED_X_GHOST_STG2), A
+    XOR A   ; Pone A a 0
+    LD (CHAR_DIR_GHOST_STG2),A
+
+.check_pattern:
+    LD A,(CHAR_DIR_GHOST_STG2)
+    CP $FF
+    JP Z,.check_pattern_RIGHT
+    LD A, (ix+22)       ; Cargamos el patrón y lo cambiamos
+    CP $2C
+    jp z,.change_pattern_L
+    LD (ix+22),$2C
+    LD (ix+26),$30
+    jp .continue
+.change_pattern_L:
+    LD (ix+22),$34
+    LD (ix+26),$38
+    jp .continue
+
+.check_pattern_RIGHT
+    LD A, (ix+22)       ; Cargamos el patrón y lo cambiamos
+    CP $3C
+    jp z,.change_pattern_R
+    LD (ix+22),$3C
+    LD (ix+26),$40
+    jp .continue
+.change_pattern_R:
+    LD (ix+22),$44
+    LD (ix+26),$48
+
+.continue:
+    CALL MOVE_SHOOT    
 
     ld a, 8
 	call SNSMAT   
