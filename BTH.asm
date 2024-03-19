@@ -306,8 +306,9 @@ STAGE2:
     LD (ix+25), 10h
     LD (ix+26), 40h
 
-    LD a, 1
+    XOR A
     LD (CHAR_GHOST_DEAD_STG2), A
+    LD (CHAR_MIN_STEP_STG2), A
     LD A, $FF
     LD (CHAR_DIR_GHOST_STG2), A
     LD A, MOV_SPEED_GHOST
@@ -352,8 +353,13 @@ MAIN_LOOP2:
     JP Z,.CHANGE_DIR_RIGHT
     CP $B9
     JP Z,.CHANGE_DIR_LEFT
-    		
-    JP .check_pattern
+
+    LD A, (CHAR_MIN_STEP_STG2)		
+    CP MAX_CHAR_STEPS_STG2
+    JP Z,.check_pattern
+    ADD 1
+    LD (CHAR_MIN_STEP_STG2), A
+    JP .continue
 
 .CHANGE_DIR_RIGHT:
     LD A, MOV_SPEED_GHOST
@@ -369,6 +375,8 @@ MAIN_LOOP2:
     LD (CHAR_DIR_GHOST_STG2),A
 
 .check_pattern:
+    XOR A
+    LD (CHAR_MIN_STEP_STG2), A
     LD A,(CHAR_DIR_GHOST_STG2)
     CP $FF
     JP Z,.check_pattern_RIGHT

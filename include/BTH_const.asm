@@ -11,6 +11,7 @@ MOV_SPEED_GHOST			equ 1
 MOV_SPEED_SHOOT         equ 3
 MAX_DISTANCE_SHOOT      equ 48
 MAX_CHAR_STEPS          equ 4       ; #steps pattern change MAIN CHAR
+MAX_CHAR_STEPS_STG2          equ 6
 REG9SAV                 equ #FFE8
 PORT_0                  equ 0x98
 PORT_1                  equ 0x99
