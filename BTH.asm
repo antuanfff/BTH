@@ -51,16 +51,16 @@ START
 INIT_CHARS_VARS:    
     ld ix, SPRITE_ATTRS           
     
-    ld (ix), 07h        ; Sprite 1 - $AF abajo
-    ld (ix+1), 09h
-    ld (ix+2), 00h    
+    ld (ix), 69h        ; Sprite 1 - $AF abajo - Y
+    ld (ix+1), 7Fh      ; X        
+    ld (ix+2), 00h      ; Pattern
 
-    ld (ix+4), 07h     ; Sprite 2
-    ld (ix+5), 09h
+    ld (ix+4), 69h     ; Sprite 2
+    ld (ix+5), 7Fh
     ld (ix+6), 04h        
 
-    ld (ix+8), 07h     ; Sprite 3
-    ld (ix+9), 09h
+    ld (ix+8), 69h     ; Sprite 3
+    ld (ix+9), 7Fh
     ld (ix+10), 08h        
 
     ld (ix+12), $07      ; Sprite 1 - Ghost
@@ -80,6 +80,7 @@ INIT_CHARS_VARS:
     LD (CHAR_GHOST_DEAD),A
     LD (CHAR_MIN_STEP), A
     LD (SPRITE_COLOR_REPLACE2), A
+   ; LD A,$FF
     LD (OLD_KEY_PRESSED), A
     LD A,$01
     LD (CHAR_DIR_MAIN),A        ; $00 - UP, $01 - DOWN, $02 - LEFT, $03 - RIGHT
@@ -185,11 +186,15 @@ MAIN_LOOP:
 .check_KB:
     halt    
 
+    LD A, (OLD_KEY_PRESSED)
+    LD B, A
+
     ld a, 8
 	call SNSMAT   
-
-    ;LD B, (OLD_KEY_PRESSED)
+    
+    LD (OLD_KEY_PRESSED), A
     ;XOR B
+    ;AND B
 
     LD C,A    
     
@@ -209,8 +214,8 @@ no_arrows:
     BIT KB_SPACE, C			; La tecla presionada es SPACE
     call z,SHOOT_MAIN_CHAR
 
-    BIT KB_DEL, C			; La tecla presionada es DEL    
-    ret z
+    ;BIT KB_DEL, C			; La tecla presionada es DEL    
+    ;ret z
 
     jp MAIN_LOOP
 
