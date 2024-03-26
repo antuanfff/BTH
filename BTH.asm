@@ -63,7 +63,7 @@ INIT_CHARS_VARS:
     ld (ix+9), 7Fh
     ld (ix+10), 08h        
 
-    ld (ix+12), $07      ; Sprite 1 - Ghost
+    ld (ix+12), $0f      ; Sprite 1 - Ghost
     ld (ix+13), $B9
     ld (ix+14), $18
     
