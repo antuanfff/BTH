@@ -103,8 +103,20 @@ STAGE1:
     call DUMP_SPR_ALL
     CALL DUMP_SPR_P1
     LD HL, mapa1
-    LD (MAPA), HL   
+    LD (MAPA), HL
+       
+    LD HL, string01
+	LD DE, 5CA8H	; Aquí irá el offset de la memoria del VDP en base a X, Y
     call print_string 
+    
+	LD DE, 60A8H	; Aquí irá el offset de la memoria del VDP en base a X, Y
+    LD HL, string02
+    call print_string 
+
+    LD HL, string03
+	LD DE, 64A8H	; Aquí irá el offset de la memoria del VDP en base a X, Y
+    call print_string 
+
     CALL ENASCR
 
 MAIN_LOOP:

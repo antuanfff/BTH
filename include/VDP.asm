@@ -1,7 +1,7 @@
 print_string:       
 	
-	LD HL, string01
-	LD DE, 5D28H	; Aquí irá el offset de la memoria del VDP en base a X, Y
+	;LD HL, string01
+	;LD DE, 5CA8H	; Aquí irá el offset de la memoria del VDP en base a X, Y
 .loop_str:
 	LD A, (HL)
 	AND A
