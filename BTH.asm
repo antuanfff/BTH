@@ -19,11 +19,12 @@ _bank2	equ	7000h
 
 ;Constantes
     include "include\BTH_const.asm"
+    include "include\BTH_strings.asm"
 
 ; Funciones auxiliares
 	include "include\BTH_func.asm"
     include "include\BTH_animate.asm"
-	;include "include\SETPAGES48K.asm"
+	include "include\VDP.asm"
 
 START
 	; CODE
@@ -102,7 +103,8 @@ STAGE1:
     call DUMP_SPR_ALL
     CALL DUMP_SPR_P1
     LD HL, mapa1
-    LD (MAPA), HL    
+    LD (MAPA), HL   
+    call print_string 
     CALL ENASCR
 
 MAIN_LOOP:
@@ -451,7 +453,8 @@ include "include\BTH_data.asm"
  PAGE 4
  PAGE 5
  PAGE 6
-
+FONT:
+ INCBIN "gfx\FONT.SC5",#7
  PAGE 7
 CEMENTER1
  INCBIN "gfx\CEMENTER1.SC5",#7,#4000			; Cada página tiene 16K = 4000h

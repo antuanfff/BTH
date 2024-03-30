@@ -1,0 +1,5 @@
+intro_strings: dw string01, string05
+
+string01: db 'CRISTO DE ACERO.',0
+string05: db 'COMO HEREDERO DE TUKARAM, TU DEBER ES PONERTE EN MARCHA, VENCER AL CAOS Y RESTABLECER EL ORDEN.',0
+mensaje: db '1234',0
