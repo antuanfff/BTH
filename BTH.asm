@@ -118,6 +118,8 @@ STAGE1:
     call print_string 
 
     CALL ENASCR
+    CALL CHGET
+    CALL CLEAR_DIALOG_BOX
 
 MAIN_LOOP:
     ;halt ; sincroniza el teclado y pantalla con el procesador (que va muy rápido)    
@@ -354,7 +356,7 @@ MAIN_LOOP2:
     LD A, (CHAR_GHOST_DEAD)
     CP $01
     JP Z, .GHOST_DEAD
-    ld (ix+12), $07      ; Sprite 1 - Ghost
+    ld (ix+12), $0F      ; Sprite 1 - Ghost
 .GHOST_DEAD:
     LD (ix+20),217  ; ocultamos el esqueleto
     LD (ix+24),217  ; ocultamos el esqueleto

@@ -76,3 +76,16 @@ print_char
 		dec	a
 		jr	nz,1b		
 		ret 
+
+CLEAR_DIALOG_BOX:		
+		LD C,0
+		LD DE, 5CA8H
+		call _vdpsetvramwr
+
+		LD A, 24		; Borraremos 24 líneas de la pantalla
+		LD HL, BLANK_DATA
+1:		LD BC,0x5498	; Escribimos 84 bytes
+		OTIR
+		DEC a
+		JR NZ,1b
+		RET
