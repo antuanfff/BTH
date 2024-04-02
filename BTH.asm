@@ -104,23 +104,11 @@ STAGE1:
     CALL DUMP_SPR_P1
     LD HL, mapa1
     LD (MAPA), HL
-       
-    LD HL, string01
-	LD DE, 5CA8H	; Aquí irá el offset de la memoria del VDP en base a X, Y
-    call print_string 
     
-	LD DE, 60A8H	; Aquí irá el offset de la memoria del VDP en base a X, Y
-    LD HL, string02
-    call print_string 
-
-    LD HL, string03
-	LD DE, 64A8H	; Aquí irá el offset de la memoria del VDP en base a X, Y
-    call print_string 
-
     CALL ENASCR
-    CALL CHGET
-    CALL CLEAR_DIALOG_BOX
-
+    ;CALL CHGET
+    ;CALL CLEAR_DIALOG_BOX
+    
 MAIN_LOOP:
     ;halt ; sincroniza el teclado y pantalla con el procesador (que va muy rápido)    
     LD A, (ix)  ; Cargamos la Y
@@ -128,6 +116,18 @@ MAIN_LOOP:
     JP Z, STAGE2
     call DUMP_SPR_ATTS    
     
+    LD A, (ix +1)   ; Cargamos la Y para mirar si hay colisión con la tumba
+    CP 176
+    JR NZ, .animate_ghost
+    LD A, (SHOWING_DIALOG)
+    CP 1
+    JR Z, .animate_ghost
+    LD IY, sardu01_strings
+    CALL print_strings_dialog_box
+    LD A,1
+    LD (SHOWING_DIALOG), A
+
+.animate_ghost
     LD A,(CHAR_GHOST_DEAD)
     CP $01
     JP Z,.continue

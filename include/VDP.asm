@@ -1,3 +1,25 @@
+print_strings_dialog_box:
+
+	LD H, (IY+1)
+	LD L, (IY)
+	LD DE, FIRST_LINE_DLG_BOX	; Aquí irá el offset de la memoria del VDP en base a X, Y
+	PUSH IY
+    call print_string 
+    POP IY
+
+	LD H, (IY+3)
+	LD L, (IY+2)
+    LD DE, SEC_LINE_DLG_BOX	; Aquí irá el offset de la memoria del VDP en base a X, Y    
+	PUSH IY
+    call print_string 
+	POP IY
+
+    LD H, (IY+5)
+	LD L, (IY+4)
+	LD DE, THIRD_LINE_DLG_BOX	; Aquí irá el offset de la memoria del VDP en base a X, Y
+    call print_string 
+	RET
+
 print_string:       
 	
 	;LD HL, string01
@@ -79,7 +101,7 @@ print_char
 
 CLEAR_DIALOG_BOX:		
 		LD C,0
-		LD DE, 5CA8H
+		LD DE, 5C28H
 		LD (CHR_ACR), DE
 		call _vdpsetvramwr
 		LD A, 24		; Borraremos 24 líneas de la pantalla

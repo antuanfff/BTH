@@ -1,3 +1,8 @@
+; VDP Const
+FIRST_LINE_DLG_BOX   equ 5C28H
+SEC_LINE_DLG_BOX   equ 6028H
+THIRD_LINE_DLG_BOX   equ 6428H
+
 ROMMODE                 equ 1 ; 0 Dos Mode 1 Rom Mode
 KB_RIGHT 				equ 7
 KB_DOWN 				equ 6
