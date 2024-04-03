@@ -1,21 +1,21 @@
-Sjasm Z80 Assembler v0.42c - www.xl2s.tk             [2024.04.02 - 20:14:22]
+Sjasm Z80 Assembler v0.42c - www.xl2s.tk             [2024.04.03 - 10:04:43]
 
 .\BTH.asm
 Errors: 0
 
        1   00:0000                      	output "BTH.rom" 
-       2   00:59CA                      
-       3   00:59CA                      ;ROM ASCII16
-       4   00:59CA                      		defpage	0,0x4000, 0x4000
-       5   00:59CA                      		defpage	1,0x8000, 0x4000        
-       6   00:59CA                      		defpage	2..14 ;Here it is determined rom size        
-       7   00:59CA                              defpage	15,0xC000, 0x4000
-       8   00:59CA                      
-       9   00:59CA  (00:4000)           PageSize:	    equ	0x4000	        ; 16kB
-      10   00:59CA  (00:6000)           _bank1	equ	6000h
-      11   00:59CA  (00:7000)           _bank2	equ	7000h
-      12   00:59CA  32 00 70 32 FF 77   		DB 32h,0,70h,32h,0FFh,77h		; Para evitar seleccionar el tipo de ROM ASCII16 en OpenMSX
-      13   00:59D0  (00)                		page 0			
+       2   00:59C7                      
+       3   00:59C7                      ;ROM ASCII16
+       4   00:59C7                      		defpage	0,0x4000, 0x4000
+       5   00:59C7                      		defpage	1,0x8000, 0x4000        
+       6   00:59C7                      		defpage	2..14 ;Here it is determined rom size        
+       7   00:59C7                              defpage	15,0xC000, 0x4000
+       8   00:59C7                      
+       9   00:59C7  (00:4000)           PageSize:	    equ	0x4000	        ; 16kB
+      10   00:59C7  (00:6000)           _bank1	equ	6000h
+      11   00:59C7  (00:7000)           _bank2	equ	7000h
+      12   00:59C7  32 00 70 32 FF 77   		DB 32h,0,70h,32h,0FFh,77h		; Para evitar seleccionar el tipo de ROM ASCII16 en OpenMSX
+      13   00:59CD  (00)                		page 0			
       14   00:4000                              org 4000h		
       15   00:4000                              dw  4241h,START,0,0,0,0,0,0
       15   00:4000  41 42 F7 44 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -355,7 +355,7 @@ Errors: 0
      272.  00:4161                      
      273.  00:4161                      ;-----------------------------Definición del sprite en #7800  y volcado a la VRAM-------------------------------------------
      274.  00:4161                      
-     275.  00:4161  21 26 4B                ld hl, SPRITE_PATTERN ; la rutina LDIRVM necesita haber cargado previamente la dirección de inicio de la RAM, para saber porqué he puesto 03800 fíjate este dibujo https://sites.google.com/site/multivac7/files-images/TMS9918_VRAMmap_G2_300dpi.png ,así es como está formado el VDP en screen 2
+     275.  00:4161  21 23 4B                ld hl, SPRITE_PATTERN ; la rutina LDIRVM necesita haber cargado previamente la dirección de inicio de la RAM, para saber porqué he puesto 03800 fíjate este dibujo https://sites.google.com/site/multivac7/files-images/TMS9918_VRAMmap_G2_300dpi.png ,así es como está formado el VDP en screen 2
      276.  00:4164  11 00 78                ld de, #7800; la rutina necesita haber cargado previamente con de la dirección de inicio de la VRAM          
      277.  00:4167  01 60 02                ld bc, 8*4*19; 8 byte de cada tile * 4 que son los sprites de 16x16 y * #sprites
      278.  00:416A  CD 5C 00                call  LDIRVM ; Mira arriba, pone la explicación
@@ -369,7 +369,7 @@ Errors: 0
      286.  00:4179                      
      287.  00:4179                      ;-----------------------------Definición de los colores en #7400 y volcado a la VRAM------------------------------------
      288.  00:4179                      
-     289.  00:4179  21 86 4D                ld hl, SPRITE_COLOR_TABLE ; la rutina LDIRVM necesita haber cargado previamente la dirección de inicio de la RAM, para saber porqué he puesto 0000 fíjate este dibujo https://sites.google.com/site/multivac7/files-images/TMS9918_VRAMmap_G2_300dpi.png ,así es como está formado el VDP en screen 2
+     289.  00:4179  21 83 4D                ld hl, SPRITE_COLOR_TABLE ; la rutina LDIRVM necesita haber cargado previamente la dirección de inicio de la RAM, para saber porqué he puesto 0000 fíjate este dibujo https://sites.google.com/site/multivac7/files-images/TMS9918_VRAMmap_G2_300dpi.png ,así es como está formado el VDP en screen 2
      290.  00:417C  11 00 74                ld de, #7400; la rutina necesita haber cargado previamente con de la dirección de inicio de la VRAM          
      291.  00:417F  01 30 01                ld bc,16*19; 16 x #Sprites
      292.  00:4182  CD 5C 00                call  LDIRVM ; Mira arriba, pone la explicación
@@ -622,10 +622,10 @@ Errors: 0
      169.  00:42E8  C3 3F 43                JP .FINISH
      170.  00:42EB                          
      171.  00:42EB                      .SET_DIR_DOWN:    
-     172.  00:42EB  21 E6 48                ld hl, SPRITE_P1_DOWN
+     172.  00:42EB  21 E3 48                ld hl, SPRITE_P1_DOWN
      173.  00:42EE  22 9A C0                ld (SPRITE_PTR_REPLACE), HL
      174.  00:42F1                          
-     175.  00:42F1  21 76 4E                ld hl, SPRITE_COLOR_P1_DOWN
+     175.  00:42F1  21 73 4E                ld hl, SPRITE_COLOR_P1_DOWN
      176.  00:42F4  22 9C C0                ld (SPRITE_COLOR_REPLACE), HL    
      177.  00:42F7  22 9E C0                ld (SPRITE_COLOR_REPLACE2), HL
      178.  00:42FA  CD A1 41                CALL DUMP_SPR_P1    
@@ -633,30 +633,30 @@ Errors: 0
      180.  00:42FD  C3 3F 43                JP .FINISH
      181.  00:4300                      
      182.  00:4300                      .SET_DIR_UP:
-     183.  00:4300  21 26 48                ld hl, SPRITE_P1_UP
+     183.  00:4300  21 23 48                ld hl, SPRITE_P1_UP
      184.  00:4303  22 9A C0                ld (SPRITE_PTR_REPLACE), HL
      185.  00:4306                          
-     186.  00:4306  21 16 4E                ld hl, SPRITE_COLOR_P1_UP
+     186.  00:4306  21 13 4E                ld hl, SPRITE_COLOR_P1_UP
      187.  00:4309  22 9C C0                ld (SPRITE_COLOR_REPLACE), HL
      188.  00:430C  22 9E C0                ld (SPRITE_COLOR_REPLACE2), HL
      189.  00:430F  CD A1 41                CALL DUMP_SPR_P1
      190.  00:4312  C3 3F 43                JP .FINISH
      191.  00:4315                      
      192.  00:4315                      .SET_DIR_LEFT:    
-     193.  00:4315  21 A6 49                ld hl, SPRITE_P1_LEFT
+     193.  00:4315  21 A3 49                ld hl, SPRITE_P1_LEFT
      194.  00:4318  22 9A C0                ld (SPRITE_PTR_REPLACE), HL
      195.  00:431B                          
-     196.  00:431B  21 16 59                ld hl, SPRITE_COLOR_P1_LEFT
+     196.  00:431B  21 13 59                ld hl, SPRITE_COLOR_P1_LEFT
      197.  00:431E  22 9C C0                ld (SPRITE_COLOR_REPLACE), HL
      198.  00:4321  22 9E C0                ld (SPRITE_COLOR_REPLACE2), HL
      199.  00:4324  CD A1 41                CALL DUMP_SPR_P1   
      200.  00:4327  C3 3F 43                JP .FINISH
      201.  00:432A                      
      202.  00:432A                      .SET_DIR_RIGHT:
-     203.  00:432A  21 66 4A                ld hl, SPRITE_P1_RIGHT
+     203.  00:432A  21 63 4A                ld hl, SPRITE_P1_RIGHT
      204.  00:432D  22 9A C0                ld (SPRITE_PTR_REPLACE), HL
      205.  00:4330                          
-     206.  00:4330  21 D6 4E                ld hl, SPRITE_COLOR_P1_RIGHT
+     206.  00:4330  21 D3 4E                ld hl, SPRITE_COLOR_P1_RIGHT
      207.  00:4333  22 9C C0                ld (SPRITE_COLOR_REPLACE), HL
      208.  00:4336  22 9E C0                ld (SPRITE_COLOR_REPLACE2), HL
      209.  00:4339                          ;    ld (ix+13), $10      ; Sprite 1 - Ghost
@@ -905,7 +905,7 @@ Errors: 0
      105.  00:44CA  ED 53 01 C0         		LD (CHR_ACR), DE
      106.  00:44CE  CD F9 40            		call _vdpsetvramwr
      107.  00:44D1  3E 18               		LD A, 24		; Borraremos 24 líneas de la pantalla
-     108.  00:44D3  21 76 59            1:		LD HL, BLANK_DATA
+     108.  00:44D3  21 73 59            1:		LD HL, BLANK_DATA
      109.  00:44D6  01 98 54            		LD BC,0x5498	; Escribimos 84 bytes
      110.  00:44D9  ED B3               		OTIR
      111.  00:44DB                      
@@ -984,9 +984,9 @@ Errors: 0
       86   00:4570  3E 01                   LD A,$01
       87   00:4572  32 11 C0                LD (CHAR_DIR_MAIN),A        ; $00 - UP, $01 - DOWN, $02 - LEFT, $03 - RIGHT
       88   00:4575                      
-      89   00:4575  21 E6 48                ld hl, SPRITE_P1_DOWN
+      89   00:4575  21 E3 48                ld hl, SPRITE_P1_DOWN
       90   00:4578  22 9A C0                ld (SPRITE_PTR_REPLACE), HL    
-      91   00:457B  21 76 4E                ld hl, SPRITE_COLOR_P1_DOWN
+      91   00:457B  21 73 4E                ld hl, SPRITE_COLOR_P1_DOWN
       92   00:457E  22 9C C0                ld (SPRITE_COLOR_REPLACE), HL
       93   00:4581  22 9E C0                LD (SPRITE_COLOR_REPLACE2), HL
       94   00:4584  C9                      ret
@@ -1000,7 +1000,7 @@ Errors: 0
      102   00:4593                          
      103   00:4593  CD 61 41                call DUMP_SPR_ALL
      104   00:4596  CD A1 41                CALL DUMP_SPR_P1
-     105   00:4599  21 36 4F                LD HL, mapa1
+     105   00:4599  21 33 4F                LD HL, mapa1
      106   00:459C  22 A0 C0                LD (MAPA), HL
      107   00:459F                          
      108   00:459F  CD 44 00                CALL ENASCR
@@ -1011,1266 +1011,1266 @@ Errors: 0
      113   00:45A2                          ;halt ; sincroniza el teclado y pantalla con el procesador (que va muy rápido)    
      114   00:45A2  DD 7E 00                LD A, (ix)  ; Cargamos la Y
      115   00:45A5  FE 00                   CP $00
-     116   00:45A7  CA EF 46                JP Z, STAGE2
+     116   00:45A7  CA EC 46                JP Z, STAGE2
      117   00:45AA  CD 86 41                call DUMP_SPR_ATTS    
      118   00:45AD                          
      119   00:45AD  DD 7E 01                LD A, (ix +1)   ; Cargamos la Y para mirar si hay colisión con la tumba
      120   00:45B0  FE B0                   CP 176
-     121   00:45B2  20 13                   JR NZ, .animate_ghost
+     121   00:45B2  20 10                   JR NZ, .animate_ghost
      122   00:45B4  3A 00 C0                LD A, (SHOWING_DIALOG)
      123   00:45B7  FE 01                   CP 1
-     124   00:45B9  28 0C                   JR Z, .animate_ghost
+     124   00:45B9  28 09                   JR Z, .animate_ghost
      125   00:45BB  FD 21 10 40             LD IY, sardu01_strings
      126   00:45BF  CD 2D 44                CALL print_strings_dialog_box
      127   00:45C2  3E 01                   LD A,1
-     128   00:45C4  32 00 C0                LD (SHOWING_DIALOG), A
-     129   00:45C7                      
-     130   00:45C7                      .animate_ghost
-     131   00:45C7  3A 0C C0                LD A,(CHAR_GHOST_DEAD)
-     132   00:45CA  FE 01                   CP $01
-     133   00:45CC  CA 2D 46                JP Z,.continue
-     134   00:45CF  DD 7E 0D                LD A, (ix+13)          ;cargamos la X del Fantasma
-     135   00:45D2  2A 0A C0            	LD HL, (CHAR_SPEED_X_GHOST)
-     136   00:45D5  85                  	ADD L					; Actualizamos la posicion en base a la velocidad
-     137   00:45D6                          
-     138   00:45D6  DD 77 0D            	LD (ix+13), A	
-     139   00:45D9  FE 16                   CP $16
-     140   00:45DB  CA E6 45                JP Z,.CHANGE_DIR_RIGHT
-     141   00:45DE  FE B9                   CP $B9
-     142   00:45E0  CA F3 45                JP Z,.CHANGE_DIR_LEFT
-     143   00:45E3                          		
-     144   00:45E3  C3 FC 45                JP .check_pattern
-     145   00:45E6                      
-     146   00:45E6                      .CHANGE_DIR_RIGHT:
-     147   00:45E6  3E 01                   LD A, MOV_SPEED_GHOST
-     148   00:45E8  32 0A C0            	LD (CHAR_SPEED_X_GHOST), A
-     149   00:45EB  3E FF                   LD A,$FF
-     150   00:45ED  32 0F C0                LD (CHAR_DIR_GHOST1),A
-     151   00:45F0  C3 FC 45                JP .check_pattern
-     152   00:45F3                      
-     153   00:45F3                      .CHANGE_DIR_LEFT:
-     154   00:45F3  3E FF                   LD A, -MOV_SPEED_GHOST
-     155   00:45F5  32 0A C0            	LD (CHAR_SPEED_X_GHOST), A
-     156   00:45F8  AF                      XOR A   ; Pone A a 0
-     157   00:45F9  32 0F C0                LD (CHAR_DIR_GHOST1),A
-     158   00:45FC                      
-     159   00:45FC                      .check_pattern:
-     160   00:45FC  3A 0F C0                LD A,(CHAR_DIR_GHOST1)
-     161   00:45FF  FE FF                   CP $FF
-     162   00:4601  CA 1A 46                JP Z,.check_pattern_RIGHT
-     163   00:4604  DD 7E 0E                LD A, (ix+14)       ; Cargamos el patrón y lo cambiamos
-     164   00:4607  FE 18                   CP $18
-     165   00:4609  CA 13 46                jp z,.change_pattern_L
-     166   00:460C  DD 36 0E 18             LD (ix+14),$18
-     167   00:4610  C3 2D 46                jp .continue
-     168   00:4613                      .change_pattern_L:
-     169   00:4613  DD 36 0E 1C             LD (ix+14),$1C
-     170   00:4617  C3 2D 46                jp .continue
-     171   00:461A                      
-     172   00:461A                      .check_pattern_RIGHT
-     173   00:461A  DD 7E 0E                LD A, (ix+14)       ; Cargamos el patrón y lo cambiamos
-     174   00:461D  FE 20                   CP $20
-     175   00:461F  CA 29 46                jp z,.change_pattern_R
-     176   00:4622  DD 36 0E 20             LD (ix+14),$20
-     177   00:4626  C3 2D 46                jp .continue
-     178   00:4629                      .change_pattern_R:
-     179   00:4629  DD 36 0E 24             LD (ix+14),$24
-     180   00:462D                      
-     181   00:462D                      .continue:    
-     182   00:462D  CD C2 43                CALL MOVE_SHOOT
-     183   00:4630                      .CHECK_GHOST:
-     184   00:4630                          ; Comprobamos si hay colision con el fantasma
-     185   00:4630  3A 0C C0                LD A,(CHAR_GHOST_DEAD)  ; si está muerto,no lo miramos
-     186   00:4633  FE 01                   CP $01
-     187   00:4635  CA 55 46                JP Z,.check_KB
-     188   00:4638                      
-     189   00:4638  DD 46 10                LD B,(ix+16)         ; Y del disparo
-     190   00:463B  DD 4E 11                LD C,(ix+17)         ; X del disparo
-     191   00:463E  DD 56 0C                LD D,(ix+12)         ; Y del fantasma 
-     192   00:4641  DD 5E 0D                LD E,(ix+13)         ; X del fantasma
-     193   00:4644  CD 40 40                call check_spr_collision
-     194   00:4647  FE 01                   CP 1
-     195   00:4649  C2 55 46                JP NZ,.check_KB
-     196   00:464C                      
-     197   00:464C                      .KILL_GHOST:
-     198   00:464C  3E 01                   LD A,1
-     199   00:464E  32 0C C0                LD (CHAR_GHOST_DEAD),A
-     200   00:4651  DD 36 0C D9             LD (ix+12),217    
-     201   00:4655                      
-     202   00:4655                      .check_KB:
-     203   00:4655  76                      halt    
-     204   00:4656                      
-     205   00:4656  3A 06 C0                LD A, (OLD_KEY_PRESSED)
-     206   00:4659  47                      LD B, A
-     207   00:465A                      
-     208   00:465A  3E 08                   ld a, 8
-     209   00:465C  CD 41 01            	call SNSMAT   
-     210   00:465F                          
-     211   00:465F  32 06 C0                LD (OLD_KEY_PRESSED), A
-     212   00:4662                          ;XOR B
-     213   00:4662                          ;AND B
-     214   00:4662                      
-     215   00:4662  4F                      LD C,A    
-     216   00:4663                          
-     217   00:4663  CB 79                   BIT KB_RIGHT, C			; La tecla presionada es RIGHT?
-     218   00:4665  CC 2D 42                call z, move_right
-     219   00:4668                          
-     220   00:4668  CB 61                   BIT KB_LEFT, C			; La tecla presionada es LEFT?
-     221   00:466A  CC 7B 42                call z, move_left
-     222   00:466D                      
-     223   00:466D  CB 69                   BIT KB_UP, C			; La tecla presionada es UP?
-     224   00:466F  CC BE 41                call z, move_up
-     225   00:4672                      
-     226   00:4672  CB 71                   BIT KB_DOWN, C			; La tecla presionada es DOWN?
-     227   00:4674  CC F5 41                call z, move_down
-     228   00:4677                      
-     229   00:4677                      no_arrows:
-     230   00:4677  CB 41                   BIT KB_SPACE, C			; La tecla presionada es SPACE
-     231   00:4679  CC 7F 46                call z,SHOOT_MAIN_CHAR
-     232   00:467C                      
-     233   00:467C                          ;BIT KB_DEL, C			; La tecla presionada es DEL    
-     234   00:467C                          ;ret z
-     235   00:467C                      
-     236   00:467C  C3 A2 45                jp MAIN_LOOP
-     237   00:467F                      
-     238   00:467F                      SHOOT_MAIN_CHAR:    
-     239   00:467F  3A 13 C0                LD A, (CHAR_MAIN_SHOOT)
-     240   00:4682  FE 01                   CP $01                  ; Si ya está disparando esperamos a que termine
-     241   00:4684  C8                      RET Z;,MAIN_LOOP
-     242   00:4685  FE 02                   CP $02                  ; Si ya está disparando esperamos a que termine
-     243   00:4687  C8                      RET Z;,MAIN_LOOP
-     244   00:4688  FE 03                   CP $03                  ; Si ya está disparando esperamos a que termine
-     245   00:468A  C8                      RET Z;,MAIN_LOOP
-     246   00:468B  FE 04                   CP $04                  ; Si ya está disparando esperamos a que termine
-     247   00:468D  C8                      RET Z;,MAIN_LOOP
-     248   00:468E                      
-     249   00:468E  DD 36 12 28             ld (ix+18), $28     ; Sprite Disparo
-     250   00:4692                      
-     251   00:4692  DD 7E 00                LD A, (ix)          
-     252   00:4695  DD 77 10                ld (ix+16), A       ; Asignamos la Y del personaje    
-     253   00:4698                      
-     254   00:4698  3A 11 C0                LD A, (CHAR_DIR_MAIN)
-     255   00:469B  FE 03                   CP $03
-     256   00:469D  CA B9 46                JP Z,.SHOOT_RIGHT
-     257   00:46A0  FE 00                   CP $00
-     258   00:46A2  CA C8 46                JP Z,.SHOOT_UP
-     259   00:46A5  FE 01                   CP $01
-     260   00:46A7  CA DB 46                JP Z,.SHOOT_DOWN
-     261   00:46AA                          ; SHOOT LEFT
-     262   00:46AA  3E 01                   LD A,$01                ; SHOOT LEFT
-     263   00:46AC  32 13 C0                LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando izquierda
-     264   00:46AF  DD 7E 01                LD A, (ix+1)			;cargamos la X - Si no es derecha, debe ser izquierda
-     265   00:46B2  21 F4 FF            	LD HL, -12
-     266   00:46B5  85                  	ADD L
-     267   00:46B6                          
-     268   00:46B6  C3 EB 46                JP .CONTINUE
-     269   00:46B9                      
-     270   00:46B9                      .SHOOT_RIGHT:    
-     271   00:46B9  3E 02                   LD A,$02
-     272   00:46BB  32 13 C0                LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando derecha
-     273   00:46BE                          
-     274   00:46BE  DD 7E 01                LD A, (ix+1)			;cargamos la X
-     275   00:46C1  21 0C 00            	LD HL, 12
-     276   00:46C4  85                  	ADD L
-     277   00:46C5  C3 EB 46                JP .CONTINUE
-     278   00:46C8                      
-     279   00:46C8                      .SHOOT_UP:
-     280   00:46C8  3E 03                   LD A,$03
-     281   00:46CA  32 13 C0                LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando derecha
-     282   00:46CD                          
-     283   00:46CD                          ; Sumamos el desplazamiento a la Y
-     284   00:46CD  DD 7E 10                LD A, (ix+16)
-     285   00:46D0  D6 10                   SUB 16
-     286   00:46D2  DD 77 10                LD (ix+16), A    
-     287   00:46D5                          ;LD (ix+17), D
-     288   00:46D5  DD 7E 01                LD A, (ix+1)			;cargamos la X    
-     289   00:46D8  C3 EB 46                JP .CONTINUE
-     290   00:46DB                      
-     291   00:46DB                      .SHOOT_DOWN
-     292   00:46DB  3E 04               	LD A,$04
-     293   00:46DD  32 13 C0                LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando derecha
-     294   00:46E0                          
-     295   00:46E0                          ; Sumamos el desplazamiento a la Y
-     296   00:46E0  DD 7E 10                LD A, (ix+16)
-     297   00:46E3  C6 10                   ADD 16
-     298   00:46E5  DD 77 10                LD (ix+16), A    
-     299   00:46E8                          ;LD (ix+17), D
-     300   00:46E8  DD 7E 01                LD A, (ix+1)			;cargamos la X    
-     301   00:46EB                      
-     302   00:46EB                      .CONTINUE:
-     303   00:46EB                          ;ld (ix+16), B       ; Asignamos la Y del personaje
-     304   00:46EB  DD 77 11                ld (ix+17), A       ; Asignamos la X del personaje + el desplazamiento        
-     305   00:46EE                          ;jp MAIN_LOOP
-     306   00:46EE  C9                      ret
-     307   00:46EF                      
-     308   00:46EF                      STAGE2:
-     309   00:46EF  CD 41 00                CALL DISSCR
-     310   00:46F2  21 00 80                LD HL, CEMENTER2
-     311   00:46F5  22 A2 C0                LD (BITMAP), HL
-     312   00:46F8  06 0D                   LD B, :CEMENTER2
-     313   00:46FA                      
-     314   00:46FA  CD D7 40                call load_screen
-     315   00:46FD  21 76 52                LD HL, mapa2
-     316   00:4700  22 A0 C0                LD (MAPA), HL
-     317   00:4703                      
-     318   00:4703  DD 36 00 C4             LD (ix), 196    ; Ponemos el P1 abajo
-     319   00:4707  DD 36 04 C4             LD (ix+4), 196    
-     320   00:470B  DD 36 08 C4             LD (ix+8), 196    
-     321   00:470F                          
-     322   00:470F  DD 36 0C D9             LD (ix+12),217  ; ocultamos el fantasma
-     323   00:4713                          
-     324   00:4713  CD 61 41                call DUMP_SPR_ALL    
-     325   00:4716  CD A1 41                CALL DUMP_SPR_P1
-     326   00:4719                          ; Esqueleto
-     327   00:4719  DD 36 14 10             LD (ix+20), 10h
-     328   00:471D  DD 36 15 10             LD (ix+21), 10h
-     329   00:4721  DD 36 16 3C             LD (ix+22), 3Ch
-     330   00:4725                      
-     331   00:4725  DD 36 18 10             LD (ix+24), 10h
-     332   00:4729  DD 36 19 10             LD (ix+25), 10h
-     333   00:472D  DD 36 1A 40             LD (ix+26), 40h
-     334   00:4731                      
-     335   00:4731  AF                      XOR A
-     336   00:4732  32 0D C0                LD (CHAR_GHOST_DEAD_STG2), A
-     337   00:4735  32 0E C0                LD (CHAR_MIN_STEP_STG2), A
-     338   00:4738  3E FF                   LD A, $FF
-     339   00:473A  32 10 C0                LD (CHAR_DIR_GHOST_STG2), A
-     340   00:473D  3E 01                   LD A, MOV_SPEED_GHOST
-     341   00:473F  32 0B C0            	LD (CHAR_SPEED_X_GHOST_STG2), A
-     342   00:4742                      
-     343   00:4742  CD 44 00                CALL ENASCR
-     344   00:4745                          
-     345   00:4745                      MAIN_LOOP2:
-     346   00:4745  76                      halt    
-     347   00:4746                      
-     348   00:4746  DD 7E 00                LD A, (ix)    
-     349   00:4749  FE C6                   CP 198
-     350   00:474B  C2 71 47                JP NZ, .no_screen_change
-     351   00:474E                          ; Ponemos el SP1 al principio de la pantalla 1
-     352   00:474E  DD 36 00 01             LD (ix), 1          ; SP1 - Y = 1
-     353   00:4752  DD 36 04 01             LD (ix+4), 1
-     354   00:4756  DD 36 08 01             LD (ix+8), 1
-     355   00:475A                      
-     356   00:475A  3A 0C C0                LD A, (CHAR_GHOST_DEAD)
-     357   00:475D  FE 01                   CP $01
-     358   00:475F  CA 66 47                JP Z, .GHOST_DEAD
-     359   00:4762  DD 36 0C 0F             ld (ix+12), $0F      ; Sprite 1 - Ghost
-     360   00:4766                      .GHOST_DEAD:
-     361   00:4766  DD 36 14 D9             LD (ix+20),217  ; ocultamos el esqueleto
-     362   00:476A  DD 36 18 D9             LD (ix+24),217  ; ocultamos el esqueleto
-     363   00:476E  CD 85 45                CALL STAGE1
-     364   00:4771                      
-     365   00:4771                      .no_screen_change:
-     366   00:4771                      
-     367   00:4771  CD 86 41                call DUMP_SPR_ATTS    
-     368   00:4774                          ; Movemos el esqueleto
-     369   00:4774  3A 0D C0                LD A,(CHAR_GHOST_DEAD_STG2)
-     370   00:4777  FE 01                   CP $01
-     371   00:4779  CA FE 47                JP Z,.continue
-     372   00:477C  DD 7E 15                LD A, (ix+21)          ;cargamos la X del Esqueleto
-     373   00:477F  2A 0B C0            	LD HL, (CHAR_SPEED_X_GHOST_STG2)
-     374   00:4782  85                  	ADD L					; Actualizamos la posicion en base a la velocidad
-     375   00:4783                          
-     376   00:4783  DD 77 15            	LD (ix+21), A	
-     377   00:4786  DD 77 19                LD (ix+25), A
-     378   00:4789  FE 16                   CP $16
-     379   00:478B  CA A3 47                JP Z,.CHANGE_DIR_RIGHT
-     380   00:478E  FE B9                   CP $B9
-     381   00:4790  CA B0 47                JP Z,.CHANGE_DIR_LEFT
-     382   00:4793                      
-     383   00:4793  3A 0E C0                LD A, (CHAR_MIN_STEP_STG2)		
-     384   00:4796  FE 06                   CP MAX_CHAR_STEPS_STG2
-     385   00:4798  CA B9 47                JP Z,.check_pattern
-     386   00:479B  C6 01                   ADD 1
-     387   00:479D  32 0E C0                LD (CHAR_MIN_STEP_STG2), A
-     388   00:47A0  C3 FE 47                JP .continue
-     389   00:47A3                      
-     390   00:47A3                      .CHANGE_DIR_RIGHT:
-     391   00:47A3  3E 01                   LD A, MOV_SPEED_GHOST
-     392   00:47A5  32 0B C0            	LD (CHAR_SPEED_X_GHOST_STG2), A
-     393   00:47A8  3E FF                   LD A,$FF
-     394   00:47AA  32 10 C0                LD (CHAR_DIR_GHOST_STG2),A
-     395   00:47AD  C3 B9 47                JP .check_pattern
-     396   00:47B0                      
-     397   00:47B0                      .CHANGE_DIR_LEFT:
-     398   00:47B0  3E FF                   LD A, -MOV_SPEED_GHOST
-     399   00:47B2  32 0B C0            	LD (CHAR_SPEED_X_GHOST_STG2), A
-     400   00:47B5  AF                      XOR A   ; Pone A a 0
-     401   00:47B6  32 10 C0                LD (CHAR_DIR_GHOST_STG2),A
-     402   00:47B9                      
-     403   00:47B9                      .check_pattern:
-     404   00:47B9  AF                      XOR A
-     405   00:47BA  32 0E C0                LD (CHAR_MIN_STEP_STG2), A
-     406   00:47BD  3A 10 C0                LD A,(CHAR_DIR_GHOST_STG2)
-     407   00:47C0  FE FF                   CP $FF
-     408   00:47C2  CA E3 47                JP Z,.check_pattern_RIGHT
-     409   00:47C5  DD 7E 16                LD A, (ix+22)       ; Cargamos el patrón y lo cambiamos
-     410   00:47C8  FE 2C                   CP $2C
-     411   00:47CA  CA D8 47                jp z,.change_pattern_L
-     412   00:47CD  DD 36 16 2C             LD (ix+22),$2C
-     413   00:47D1  DD 36 1A 30             LD (ix+26),$30
-     414   00:47D5  C3 FE 47                jp .continue
-     415   00:47D8                      .change_pattern_L:
-     416   00:47D8  DD 36 16 34             LD (ix+22),$34
-     417   00:47DC  DD 36 1A 38             LD (ix+26),$38
-     418   00:47E0  C3 FE 47                jp .continue
-     419   00:47E3                      
-     420   00:47E3                      .check_pattern_RIGHT
-     421   00:47E3  DD 7E 16                LD A, (ix+22)       ; Cargamos el patrón y lo cambiamos
-     422   00:47E6  FE 3C                   CP $3C
-     423   00:47E8  CA F6 47                jp z,.change_pattern_R
-     424   00:47EB  DD 36 16 3C             LD (ix+22),$3C
-     425   00:47EF  DD 36 1A 40             LD (ix+26),$40
-     426   00:47F3  C3 FE 47                jp .continue
-     427   00:47F6                      .change_pattern_R:
-     428   00:47F6  DD 36 16 44             LD (ix+22),$44
-     429   00:47FA  DD 36 1A 48             LD (ix+26),$48
-     430   00:47FE                      
-     431   00:47FE                      .continue:
-     432   00:47FE  CD C2 43                CALL MOVE_SHOOT    
-     433   00:4801                      
-     434   00:4801  3E 08                   ld a, 8
-     435   00:4803  CD 41 01            	call SNSMAT   
-     436   00:4806  4F                      LD C,A    
-     437   00:4807                              
-     438   00:4807  CB 79                   BIT KB_RIGHT, C			; La tecla presionada es RIGHT?
-     439   00:4809  CC 2D 42                call z, move_right
-     440   00:480C                          
-     441   00:480C  CB 61                   BIT KB_LEFT, C			; La tecla presionada es LEFT?
-     442   00:480E  CC 7B 42                call z, move_left
-     443   00:4811                      
-     444   00:4811  CB 69                   BIT KB_UP, C			; La tecla presionada es UP?
-     445   00:4813  CC BE 41                call z, move_up
-     446   00:4816                      
-     447   00:4816  CB 71                   BIT KB_DOWN, C			; La tecla presionada es DOWN?
-     448   00:4818  CC F5 41                call z, move_down
-     449   00:481B                      
-     450   00:481B  CB 41                   BIT KB_SPACE, C			; La tecla presionada es SPACE
-     451   00:481D  CC 7F 46                call z,SHOOT_MAIN_CHAR
-     452   00:4820                      
-     453   00:4820  CB 59                   BIT KB_DEL, C			; La tecla presionada es DEL    
-     454   00:4822  C8                      ret z
-     455   00:4823                      
-     456   00:4823  C3 45 47                jp MAIN_LOOP2
-     457   00:4826                      
-     458   00:4826                      include "include\BTH_data.asm"
-       1.  00:4826                      SPRITE_P1_UP:
-       2.  00:4826                          ; UP 1        
-       3.  00:4826                          ; mask 0
-       4.  00:4826                          DB $03,$0F,$1F,$1F,$1F,$3F,$1F,$0F
-       4.  00:4826  03 0F 1F 1F 1F 3F 1F 0F 
-       5.  00:482E                          DB $30,$78,$60,$60,$03,$03,$06,$0E
-       5.  00:482E  30 78 60 60 03 03 06 0E 
-       6.  00:4836                          DB $E0,$F0,$F8,$F8,$FC,$F8,$FC,$F0
-       6.  00:4836  E0 F0 F8 F8 FC F8 FC F0 
-       7.  00:483E                          DB $0E,$18,$06,$00,$C0,$E0,$F0,$00    
-       7.  00:483E  0E 18 06 00 C0 E0 F0 00 
-       8.  00:4846                          ; mask 1
-       9.  00:4846                          DB $00,$00,$00,$00,$00,$00,$00,$00
-       9.  00:4846  00 00 00 00 00 00 00 00 
-      10.  00:484E                          DB $0F,$00,$03,$03,$01,$01,$00,$00
-      10.  00:484E  0F 00 03 03 01 01 00 00 
-      11.  00:4856                          DB $00,$00,$00,$00,$00,$00,$00,$00
-      11.  00:4856  00 00 00 00 00 00 00 00 
-      12.  00:485E                          DB $F0,$06,$C0,$C0,$80,$80,$80,$00
-      12.  00:485E  F0 06 C0 C0 80 80 80 00 
-      13.  00:4866                          ; mask 2
-      14.  00:4866                          DB $00,$00,$00,$00,$00,$00,$00,$00
-      14.  00:4866  00 00 00 00 00 00 00 00 
-      15.  00:486E                          DB $00,$07,$01,$01,$00,$00,$00,$00
-      15.  00:486E  00 07 01 01 00 00 00 00 
-      16.  00:4876                          DB $00,$00,$00,$00,$00,$00,$00,$00
-      16.  00:4876  00 00 00 00 00 00 00 00 
-      17.  00:487E                          DB $00,$E0,$80,$80,$00,$00,$00,$00    
-      17.  00:487E  00 E0 80 80 00 00 00 00 
-      18.  00:4886                      
-      19.  00:4886                          ; UP 2
-      20.  00:4886                          ; mask 0
-      21.  00:4886                          DB $03,$0F,$1F,$1F,$1F,$3F,$1F,$0F
-      21.  00:4886  03 0F 1F 1F 1F 3F 1F 0F 
-      22.  00:488E                          DB $70,$18,$60,$00,$03,$07,$0E,$00
-      22.  00:488E  70 18 60 00 03 07 0E 00 
-      23.  00:4896                          DB $E0,$F0,$F8,$F8,$FC,$F8,$FC,$F0
-      23.  00:4896  E0 F0 F8 F8 FC F8 FC F0 
-      24.  00:489E                          DB $0C,$1E,$06,$06,$C0,$C0,$E0,$70    
-      24.  00:489E  0C 1E 06 06 C0 C0 E0 70 
-      25.  00:48A6                          ; mask 1
-      26.  00:48A6                          DB $00,$00,$00,$00,$00,$00,$00,$00
-      26.  00:48A6  00 00 00 00 00 00 00 00 
-      27.  00:48AE                          DB $0F,$60,$03,$03,$01,$01,$00,$00
-      27.  00:48AE  0F 60 03 03 01 01 00 00 
-      28.  00:48B6                          DB $00,$00,$00,$00,$00,$00,$00,$00
-      28.  00:48B6  00 00 00 00 00 00 00 00 
-      29.  00:48BE                          DB $F0,$00,$C0,$C0,$80,$80,$80,$00
-      29.  00:48BE  F0 00 C0 C0 80 80 80 00 
-      30.  00:48C6                          ; mask 2
-      31.  00:48C6                          DB $00,$00,$00,$00,$00,$00,$00,$00
-      31.  00:48C6  00 00 00 00 00 00 00 00 
-      32.  00:48CE                          DB $00,$07,$01,$01,$00,$00,$00,$00
-      32.  00:48CE  00 07 01 01 00 00 00 00 
-      33.  00:48D6                          DB $00,$00,$00,$00,$00,$00,$00,$00
-      33.  00:48D6  00 00 00 00 00 00 00 00 
-      34.  00:48DE                          DB $00,$E0,$80,$80,$00,$00,$00,$00
-      34.  00:48DE  00 E0 80 80 00 00 00 00 
-      35.  00:48E6                      
-      36.  00:48E6                      SPRITE_P1_DOWN:
-      37.  00:48E6                          ; DOWN 1 - 00h
-      38.  00:48E6                          DB $03,$0F,$00,$0A,$0E,$0D,$07,$03
-      38.  00:48E6  03 0F 00 0A 0E 0D 07 03 
-      39.  00:48EE                          DB $3E,$7B,$60,$60,$03,$03,$06,$0E
-      39.  00:48EE  3E 7B 60 60 03 03 06 0E 
-      40.  00:48F6                          DB $E0,$F0,$A0,$90,$70,$B0,$E0,$C0
-      40.  00:48F6  E0 F0 A0 90 70 B0 E0 C0 
-      41.  00:48FE                          DB $7E,$D8,$06,$00,$C0,$E0,$F0,$00
-      41.  00:48FE  7E D8 06 00 C0 E0 F0 00 
-      42.  00:4906                          ; mask 1 - 04h
-      43.  00:4906                          DB $00,$00,$1F,$15,$11,$32,$18,$0C
-      43.  00:4906  00 00 1F 15 11 32 18 0C 
-      44.  00:490E                          DB $01,$00,$03,$03,$01,$01,$00,$00
-      44.  00:490E  01 00 03 03 01 01 00 00 
-      45.  00:4916                          DB $00,$00,$58,$68,$8C,$48,$1C,$30
-      45.  00:4916  00 00 58 68 8C 48 1C 30 
-      46.  00:491E                          DB $80,$06,$C0,$C0,$80,$80,$80,$00
-      46.  00:491E  80 06 C0 C0 80 80 80 00 
-      47.  00:4926                          ; mask 2 - 08h
-      48.  00:4926                          DB $00,$00,$00,$00,$00,$30,$00,$00
-      48.  00:4926  00 00 00 00 00 30 00 00 
-      49.  00:492E                          DB $00,$04,$00,$00,$00,$00,$00,$00
-      49.  00:492E  00 04 00 00 00 00 00 00 
-      50.  00:4936                          DB $00,$00,$00,$00,$00,$08,$00,$00
-      50.  00:4936  00 00 00 00 00 08 00 00 
-      51.  00:493E                          DB $00,$20,$00,$00,$00,$00,$00,$00
-      51.  00:493E  00 20 00 00 00 00 00 00 
-      52.  00:4946                      
-      53.  00:4946                          ; DOWN 2
-      54.  00:4946                          ; mask 0 - 0Ch
-      55.  00:4946                          DB $03,$0F,$00,$0A,$0E,$0D,$07,$03
-      55.  00:4946  03 0F 00 0A 0E 0D 07 03 
-      56.  00:494E                          DB $7E,$1B,$60,$00,$03,$07,$0E,$00
-      56.  00:494E  7E 1B 60 00 03 07 0E 00 
-      57.  00:4956                          DB $E0,$F0,$A0,$90,$70,$B0,$E0,$C0
-      57.  00:4956  E0 F0 A0 90 70 B0 E0 C0 
-      58.  00:495E                          DB $7C,$DE,$06,$06,$C0,$C0,$E0,$70
-      58.  00:495E  7C DE 06 06 C0 C0 E0 70 
-      59.  00:4966                          ; mask 1 - 10h
-      60.  00:4966                          DB $00,$00,$1F,$15,$11,$32,$18,$0C
-      60.  00:4966  00 00 1F 15 11 32 18 0C 
-      61.  00:496E                          DB $01,$60,$03,$03,$01,$01,$00,$00
-      61.  00:496E  01 60 03 03 01 01 00 00 
-      62.  00:4976                          DB $00,$00,$58,$68,$8C,$48,$1C,$30
-      62.  00:4976  00 00 58 68 8C 48 1C 30 
-      63.  00:497E                          DB $80,$00,$C0,$C0,$80,$80,$80,$00
-      63.  00:497E  80 00 C0 C0 80 80 80 00 
-      64.  00:4986                          ; mask 2 - 14h
-      65.  00:4986                          DB $00,$00,$00,$00,$00,$30,$00,$00
-      65.  00:4986  00 00 00 00 00 30 00 00 
-      66.  00:498E                          DB $00,$04,$00,$00,$00,$00,$00,$00
-      66.  00:498E  00 04 00 00 00 00 00 00 
-      67.  00:4996                          DB $00,$00,$00,$00,$00,$08,$00,$00
-      67.  00:4996  00 00 00 00 00 08 00 00 
-      68.  00:499E                          DB $00,$20,$00,$00,$00,$00,$00,$00
-      68.  00:499E  00 20 00 00 00 00 00 00 
-      69.  00:49A6                      
-      70.  00:49A6                      SPRITE_P1_LEFT:         
-      71.  00:49A6                          ; --- Slot 1
-      72.  00:49A6                          ; mask 0
-      73.  00:49A6                          DB $07,$1F,$03,$07,$0B,$1F,$0F,$07
-      73.  00:49A6  07 1F 03 07 0B 1F 0F 07 
-      74.  00:49AE                          DB $03,$0F,$30,$30,$03,$01,$01,$03
-      74.  00:49AE  03 0F 30 30 03 01 01 03 
-      75.  00:49B6                          DB $C0,$E0,$00,$80,$C0,$C0,$80,$00
-      75.  00:49B6  C0 E0 00 80 C0 C0 80 00 
-      76.  00:49BE                          DB $C0,$80,$00,$00,$D8,$B0,$20,$00
-      76.  00:49BE  C0 80 00 00 D8 B0 20 00 
-      77.  00:49C6                          ; mask 1
-      78.  00:49C6                          DB $00,$00,$0C,$18,$34,$00,$00,$00
-      78.  00:49C6  00 00 0C 18 34 00 00 00 
-      79.  00:49CE                          DB $0C,$00,$09,$03,$00,$00,$00,$00
-      79.  00:49CE  0C 00 09 03 00 00 00 00 
-      80.  00:49D6                          DB $00,$00,$F0,$78,$38,$3C,$70,$F8
-      80.  00:49D6  00 00 F0 78 38 3C 70 F8 
-      81.  00:49DE                          DB $00,$78,$C0,$F8,$18,$10,$00,$00
-      81.  00:49DE  00 78 C0 F8 18 10 00 00 
-      82.  00:49E6                          ; mask 2
-      83.  00:49E6                          DB $00,$00,$00,$00,$30,$00,$00,$00
-      83.  00:49E6  00 00 00 00 30 00 00 00 
-      84.  00:49EE                          DB $00,$00,$01,$00,$00,$00,$00,$00
-      84.  00:49EE  00 00 01 00 00 00 00 00 
-      85.  00:49F6                          DB $00,$00,$00,$00,$38,$00,$00,$00
-      85.  00:49F6  00 00 00 00 38 00 00 00 
-      86.  00:49FE                          DB $3C,$00,$F0,$38,$00,$00,$00,$00
-      86.  00:49FE  3C 00 F0 38 00 00 00 00 
-      87.  00:4A06                              
-      88.  00:4A06                          ; --- Slot 3
-      89.  00:4A06                          ; mask 0
-      90.  00:4A06                          DB $07,$1F,$03,$07,$0B,$1F,$0F,$07
-      90.  00:4A06  07 1F 03 07 0B 1F 0F 07 
-      91.  00:4A0E                          DB $03,$0F,$01,$03,$03,$01,$03,$06
-      91.  00:4A0E  03 0F 01 03 03 01 03 06 
-      92.  00:4A16                          DB $C0,$E0,$00,$80,$C0,$C0,$80,$00
-      92.  00:4A16  C0 E0 00 80 C0 C0 80 00 
-      93.  00:4A1E                          DB $C0,$80,$F0,$F8,$D8,$D0,$40,$C0
-      93.  00:4A1E  C0 80 F0 F8 D8 D0 40 C0 
-      94.  00:4A26                          ; mask 1
-      95.  00:4A26                          DB $00,$00,$0C,$18,$34,$00,$00,$00
-      95.  00:4A26  00 00 0C 18 34 00 00 00 
-      96.  00:4A2E                          DB $0C,$30,$31,$00,$00,$00,$00,$00
-      96.  00:4A2E  0C 30 31 00 00 00 00 00 
-      97.  00:4A36                          DB $00,$00,$F0,$78,$38,$3C,$70,$F8
-      97.  00:4A36  00 00 F0 78 38 3C 70 F8 
-      98.  00:4A3E                          DB $00,$00,$C0,$38,$18,$10,$00,$00
-      98.  00:4A3E  00 00 C0 38 18 10 00 00 
-      99.  00:4A46                          ; mask 2
-     100.  00:4A46                          DB $00,$00,$00,$00,$30,$00,$00,$00
-     100.  00:4A46  00 00 00 00 30 00 00 00 
-     101.  00:4A4E                          DB $00,$00,$30,$00,$00,$00,$00,$00
-     101.  00:4A4E  00 00 30 00 00 00 00 00 
-     102.  00:4A56                          DB $00,$00,$00,$00,$38,$00,$00,$00
-     102.  00:4A56  00 00 00 00 38 00 00 00 
-     103.  00:4A5E                          DB $3C,$78,$00,$00,$00,$00,$00,$00
-     103.  00:4A5E  3C 78 00 00 00 00 00 00 
-     104.  00:4A66                      
-     105.  00:4A66                      SPRITE_P1_RIGHT:
-     106.  00:4A66                          ; --- Slot 0
-     107.  00:4A66                          ; mask 0
-     108.  00:4A66                          DB $03,$07,$00,$01,$03,$03,$01,$00
-     108.  00:4A66  03 07 00 01 03 03 01 00 
-     109.  00:4A6E                          DB $03,$01,$00,$00,$1B,$0D,$04,$00
-     109.  00:4A6E  03 01 00 00 1B 0D 04 00 
-     110.  00:4A76                          DB $E0,$F8,$C0,$E0,$D0,$F8,$F0,$E0
-     110.  00:4A76  E0 F8 C0 E0 D0 F8 F0 E0 
-     111.  00:4A7E                          DB $C0,$F0,$0C,$0C,$C0,$80,$80,$C0
-     111.  00:4A7E  C0 F0 0C 0C C0 80 80 C0 
-     112.  00:4A86                          ; mask 1
-     113.  00:4A86                          DB $00,$00,$0F,$1E,$1C,$3C,$0E,$1F
-     113.  00:4A86  00 00 0F 1E 1C 3C 0E 1F 
-     114.  00:4A8E                          DB $00,$1E,$03,$1F,$18,$08,$00,$00
-     114.  00:4A8E  00 1E 03 1F 18 08 00 00 
-     115.  00:4A96                          DB $00,$00,$30,$18,$2C,$00,$00,$00
-     115.  00:4A96  00 00 30 18 2C 00 00 00 
-     116.  00:4A9E                          DB $30,$00,$90,$C0,$00,$00,$00,$00
-     116.  00:4A9E  30 00 90 C0 00 00 00 00 
-     117.  00:4AA6                          ; mask 2
-     118.  00:4AA6                          DB $00,$00,$00,$00,$1C,$00,$00,$00
-     118.  00:4AA6  00 00 00 00 1C 00 00 00 
-     119.  00:4AAE                          DB $3C,$00,$0F,$1C,$00,$00,$00,$00
-     119.  00:4AAE  3C 00 0F 1C 00 00 00 00 
-     120.  00:4AB6                          DB $00,$00,$00,$00,$0C,$00,$00,$00
-     120.  00:4AB6  00 00 00 00 0C 00 00 00 
-     121.  00:4ABE                          DB $00,$00,$80,$00,$00,$00,$00,$00
-     121.  00:4ABE  00 00 80 00 00 00 00 00 
-     122.  00:4AC6                      
-     123.  00:4AC6                          ; --- Slot 2
-     124.  00:4AC6                          ; mask 0
-     125.  00:4AC6                          DB $03,$07,$00,$01,$03,$03,$01,$00
-     125.  00:4AC6  03 07 00 01 03 03 01 00 
-     126.  00:4ACE                          DB $03,$01,$0F,$1F,$1B,$0B,$02,$03
-     126.  00:4ACE  03 01 0F 1F 1B 0B 02 03 
-     127.  00:4AD6                          DB $E0,$F8,$C0,$E0,$D0,$F8,$F0,$E0
-     127.  00:4AD6  E0 F8 C0 E0 D0 F8 F0 E0 
-     128.  00:4ADE                          DB $C0,$F0,$80,$C0,$C0,$80,$C0,$60
-     128.  00:4ADE  C0 F0 80 C0 C0 80 C0 60 
-     129.  00:4AE6                          ; mask 1
-     130.  00:4AE6                          DB $00,$00,$0F,$1E,$1C,$3C,$0E,$1F
-     130.  00:4AE6  00 00 0F 1E 1C 3C 0E 1F 
-     131.  00:4AEE                          DB $00,$00,$03,$1C,$18,$08,$00,$00
-     131.  00:4AEE  00 00 03 1C 18 08 00 00 
-     132.  00:4AF6                          DB $00,$00,$30,$18,$2C,$00,$00,$00
-     132.  00:4AF6  00 00 30 18 2C 00 00 00 
-     133.  00:4AFE                          DB $30,$0C,$8C,$00,$00,$00,$00,$00
-     133.  00:4AFE  30 0C 8C 00 00 00 00 00 
-     134.  00:4B06                          ; mask 2
-     135.  00:4B06                          DB $00,$00,$00,$00,$1C,$00,$00,$00
-     135.  00:4B06  00 00 00 00 1C 00 00 00 
-     136.  00:4B0E                          DB $3C,$1E,$00,$00,$00,$00,$00,$00
-     136.  00:4B0E  3C 1E 00 00 00 00 00 00 
-     137.  00:4B16                          DB $00,$00,$00,$00,$0C,$00,$00,$00
-     137.  00:4B16  00 00 00 00 0C 00 00 00 
-     138.  00:4B1E                          DB $00,$00,$0C,$00,$00,$00,$00,$00
-     138.  00:4B1E  00 00 0C 00 00 00 00 00 
-     139.  00:4B26                      
-     140.  00:4B26                      SPRITE_PATTERN:    
-     141.  00:4B26                          ; P1 - DOWN 1 
-     142.  00:4B26                          ; mask 0 - 00h
-     143.  00:4B26                          DB $03,$0F,$00,$0A,$0E,$0D,$07,$03
-     143.  00:4B26  03 0F 00 0A 0E 0D 07 03 
-     144.  00:4B2E                          DB $3E,$7B,$60,$60,$03,$03,$06,$0E
-     144.  00:4B2E  3E 7B 60 60 03 03 06 0E 
-     145.  00:4B36                          DB $E0,$F0,$A0,$90,$70,$B0,$E0,$C0
-     145.  00:4B36  E0 F0 A0 90 70 B0 E0 C0 
-     146.  00:4B3E                          DB $7E,$D8,$06,$00,$C0,$E0,$F0,$00
-     146.  00:4B3E  7E D8 06 00 C0 E0 F0 00 
-     147.  00:4B46                          ; mask 1 - 04h
-     148.  00:4B46                          DB $00,$00,$1F,$15,$11,$32,$18,$0C
-     148.  00:4B46  00 00 1F 15 11 32 18 0C 
-     149.  00:4B4E                          DB $01,$00,$03,$03,$01,$01,$00,$00
-     149.  00:4B4E  01 00 03 03 01 01 00 00 
-     150.  00:4B56                          DB $00,$00,$58,$68,$8C,$48,$1C,$30
-     150.  00:4B56  00 00 58 68 8C 48 1C 30 
-     151.  00:4B5E                          DB $80,$06,$C0,$C0,$80,$80,$80,$00
-     151.  00:4B5E  80 06 C0 C0 80 80 80 00 
-     152.  00:4B66                          ; mask 2 - 08h
-     153.  00:4B66                          DB $00,$00,$00,$00,$00,$30,$00,$00
-     153.  00:4B66  00 00 00 00 00 30 00 00 
-     154.  00:4B6E                          DB $00,$04,$00,$00,$00,$00,$00,$00
-     154.  00:4B6E  00 04 00 00 00 00 00 00 
-     155.  00:4B76                          DB $00,$00,$00,$00,$00,$08,$00,$00
-     155.  00:4B76  00 00 00 00 00 08 00 00 
-     156.  00:4B7E                          DB $00,$20,$00,$00,$00,$00,$00,$00
-     156.  00:4B7E  00 20 00 00 00 00 00 00 
-     157.  00:4B86                      
-     158.  00:4B86                          ; P1 - DOWN 2 
-     159.  00:4B86                          ; mask 0 - 0Ch
-     160.  00:4B86                          DB $03,$0F,$00,$0A,$0E,$0D,$07,$03
-     160.  00:4B86  03 0F 00 0A 0E 0D 07 03 
-     161.  00:4B8E                          DB $7E,$1B,$60,$00,$03,$07,$0E,$00
-     161.  00:4B8E  7E 1B 60 00 03 07 0E 00 
-     162.  00:4B96                          DB $E0,$F0,$A0,$90,$70,$B0,$E0,$C0
-     162.  00:4B96  E0 F0 A0 90 70 B0 E0 C0 
-     163.  00:4B9E                          DB $7C,$DE,$06,$06,$C0,$C0,$E0,$70
-     163.  00:4B9E  7C DE 06 06 C0 C0 E0 70 
-     164.  00:4BA6                          ; mask 1 - 10h
-     165.  00:4BA6                          DB $00,$00,$1F,$15,$11,$32,$18,$0C
-     165.  00:4BA6  00 00 1F 15 11 32 18 0C 
-     166.  00:4BAE                          DB $01,$60,$03,$03,$01,$01,$00,$00
-     166.  00:4BAE  01 60 03 03 01 01 00 00 
-     167.  00:4BB6                          DB $00,$00,$58,$68,$8C,$48,$1C,$30
-     167.  00:4BB6  00 00 58 68 8C 48 1C 30 
-     168.  00:4BBE                          DB $80,$00,$C0,$C0,$80,$80,$80,$00
-     168.  00:4BBE  80 00 C0 C0 80 80 80 00 
-     169.  00:4BC6                          ; mask 2 - 14h
-     170.  00:4BC6                          DB $00,$00,$00,$00,$00,$30,$00,$00
-     170.  00:4BC6  00 00 00 00 00 30 00 00 
-     171.  00:4BCE                          DB $00,$04,$00,$00,$00,$00,$00,$00
-     171.  00:4BCE  00 04 00 00 00 00 00 00 
-     172.  00:4BD6                          DB $00,$00,$00,$00,$00,$08,$00,$00
-     172.  00:4BD6  00 00 00 00 00 08 00 00 
-     173.  00:4BDE                          DB $00,$20,$00,$00,$00,$00,$00,$00
-     173.  00:4BDE  00 20 00 00 00 00 00 00 
-     174.  00:4BE6                          
-     175.  00:4BE6                          ;Ghost 1 Left - 18H
-     176.  00:4BE6                          DB 00h,01h,07h,0fh,1fh,3fh,7fh,01h
-     176.  00:4BE6  00 01 07 0F 1F 3F 7F 01 
-     177.  00:4BEE                          DB $15,$14,$7f,$3f,$3f,$3f,$3f,$7f
-     177.  00:4BEE  15 14 7F 3F 3F 3F 3F 7F 
-     178.  00:4BF6                          DB $00,$e0,$80,$00,$00,$80,$80,$c0
-     178.  00:4BF6  00 E0 80 00 00 80 80 C0 
-     179.  00:4BFE                          DB $c0,$e0,$f0,$f8,$fc,$fc,$fe,$ff  
-     179.  00:4BFE  C0 E0 F0 F8 FC FC FE FF 
-     180.  00:4C06                          
-     181.  00:4C06                          ; Ghost 2 Left - 1Ch
-     182.  00:4C06                          DB $00,$01,$07,$0f,$1f,$3f,$7f,$01
-     182.  00:4C06  00 01 07 0F 1F 3F 7F 01 
-     183.  00:4C0E                          DB $15,$14,$7f,$3f,$3f,$7f,$7f,$83
-     183.  00:4C0E  15 14 7F 3F 3F 7F 7F 83 
-     184.  00:4C16                          DB $00,$e0,$80,$00,$00,$80,$80,$c0
-     184.  00:4C16  00 E0 80 00 00 80 80 C0 
-     185.  00:4C1E                          DB $c0,$e0,$e0,$f0,$f8,$fc,$fe,$ff      
-     185.  00:4C1E  C0 E0 E0 F0 F8 FC FE FF 
-     186.  00:4C26                      
-     187.  00:4C26                          ; Ghost 1 Right - 20h
-     188.  00:4C26                          DB $00,$07,$01,$00,$00,$01,$01,$03
-     188.  00:4C26  00 07 01 00 00 01 01 03 
-     189.  00:4C2E                          DB $03,$07,$07,$0f,$1f,$3f,$7f,$ff
-     189.  00:4C2E  03 07 07 0F 1F 3F 7F FF 
-     190.  00:4C36                          DB $00,$80,$e0,$f0,$f8,$fc,$fe,$80
-     190.  00:4C36  00 80 E0 F0 F8 FC FE 80 
-     191.  00:4C3E                          DB $a8,$28,$fe,$fc,$fc,$fe,$fe,$c1
-     191.  00:4C3E  A8 28 FE FC FC FE FE C1 
-     192.  00:4C46                          
-     193.  00:4C46                          ; Ghost 2 Right - 24h
-     194.  00:4C46                          DB $00,$07,$01,$00,$00,$01,$01,$03
-     194.  00:4C46  00 07 01 00 00 01 01 03 
-     195.  00:4C4E                          DB $03,$07,$0f,$1f,$3f,$3f,$7f,$ff
-     195.  00:4C4E  03 07 0F 1F 3F 3F 7F FF 
-     196.  00:4C56                          DB $00,$80,$e0,$f0,$f8,$fc,$fe,$80
-     196.  00:4C56  00 80 E0 F0 F8 FC FE 80 
-     197.  00:4C5E                          DB $a8,$28,$fe,$fc,$fc,$fc,$fc,$fe  
-     197.  00:4C5E  A8 28 FE FC FC FC FC FE 
-     198.  00:4C66                      
-     199.  00:4C66                          ; Antichrist - RIGHT
-     200.  00:4C66                          ; mask 0 - 28h
-     201.  00:4C66                          ;DB $00,$00,$00,$03,$07,$0F,$1E,$1E
-     202.  00:4C66                          ;DB $1E,$1C,$1E,$0F,$07,$03,$00,$00
-     203.  00:4C66                          ;DB $00,$00,$00,$00,$80,$C0,$E0,$F0
-     204.  00:4C66                          ;DB $F8,$70,$E0,$C0,$80,$00,$00,$00
-     205.  00:4C66                          DB $00,$00,$00,$01,$01,$01,$01,$01
-     205.  00:4C66  00 00 00 01 01 01 01 01 
-     206.  00:4C6E                          DB $01,$01,$07,$07,$01,$01,$00,$00
-     206.  00:4C6E  01 01 07 07 01 01 00 00 
-     207.  00:4C76                          DB $00,$00,$00,$80,$80,$80,$80,$80
-     207.  00:4C76  00 00 00 80 80 80 80 80 
-     208.  00:4C7E                          DB $80,$80,$E0,$E0,$80,$80,$00,$00
-     208.  00:4C7E  80 80 E0 E0 80 80 00 00 
-     209.  00:4C86                      
-     210.  00:4C86                          ; Esqueleto Left - 1
-     211.  00:4C86                          ; mask 0 - 2Ch
-     212.  00:4C86                          DB $1F,$1B,$2E,$24,$3F,$1F,$1F,$00
-     212.  00:4C86  1F 1B 2E 24 3F 1F 1F 00 
-     213.  00:4C8E                          DB $03,$05,$09,$04,$01,$02,$02,$04
-     213.  00:4C8E  03 05 09 04 01 02 02 04 
-     214.  00:4C96                          DB $80,$C0,$C0,$C0,$80,$00,$00,$80
-     214.  00:4C96  80 C0 C0 C0 80 00 00 80 
-     215.  00:4C9E                          DB $E0,$D0,$C8,$C4,$C0,$20,$20,$40
-     215.  00:4C9E  E0 D0 C8 C4 C0 20 20 40 
-     216.  00:4CA6                          ; mask 1 - 30h
-     217.  00:4CA6                          DB $1F,$1F,$3F,$3F,$3F,$1E,$0A,$00
-     217.  00:4CA6  1F 1F 3F 3F 3F 1E 0A 00 
-     218.  00:4CAE                          DB $03,$05,$09,$04,$01,$00,$00,$00
-     218.  00:4CAE  03 05 09 04 01 00 00 00 
-     219.  00:4CB6                          DB $00,$80,$80,$80,$00,$00,$00,$00
-     219.  00:4CB6  00 80 80 80 00 00 00 00 
-     220.  00:4CBE                          DB $80,$10,$88,$84,$80,$00,$00,$00
-     220.  00:4CBE  80 10 88 84 80 00 00 00 
-     221.  00:4CC6                      
-     222.  00:4CC6                          ; Esqueleto Left - 2
-     223.  00:4CC6                          ; mask 0 - 34h
-     224.  00:4CC6                          ; mask 0
-     225.  00:4CC6                          DB $0F,$0D,$17,$12,$1F,$0F,$0F,$00
-     225.  00:4CC6  0F 0D 17 12 1F 0F 0F 00 
-     226.  00:4CCE                          DB $03,$05,$09,$10,$01,$06,$08,$00
-     226.  00:4CCE  03 05 09 10 01 06 08 00 
-     227.  00:4CD6                          DB $C0,$E0,$60,$60,$C0,$80,$80,$80
-     227.  00:4CD6  C0 E0 60 60 C0 80 80 80 
-     228.  00:4CDE                          DB $E0,$D0,$C8,$D0,$C0,$20,$20,$50
-     228.  00:4CDE  E0 D0 C8 D0 C0 20 20 50 
-     229.  00:4CE6                          ; mask 1 - 38h
-     230.  00:4CE6                          DB $0F,$0F,$1F,$1F,$1F,$0F,$05,$00
-     230.  00:4CE6  0F 0F 1F 1F 1F 0F 05 00 
-     231.  00:4CEE                          DB $03,$05,$09,$10,$01,$00,$00,$00
-     231.  00:4CEE  03 05 09 10 01 00 00 00 
-     232.  00:4CF6                          DB $80,$C0,$C0,$C0,$80,$00,$00,$00
-     232.  00:4CF6  80 C0 C0 C0 80 00 00 00 
-     233.  00:4CFE                          DB $80,$10,$88,$90,$80,$00,$20,$40
-     233.  00:4CFE  80 10 88 90 80 00 20 40 
-     234.  00:4D06                          
-     235.  00:4D06                          ; Esqueleto Right - 1
-     236.  00:4D06                          ; mask 0 - 3Ch
-     237.  00:4D06                          DB $01,$03,$03,$03,$01,$00,$00,$01
-     237.  00:4D06  01 03 03 03 01 00 00 01 
-     238.  00:4D0E                          DB $07,$0B,$13,$23,$03,$04,$04,$02
-     238.  00:4D0E  07 0B 13 23 03 04 04 02 
-     239.  00:4D16                          DB $F8,$D8,$74,$24,$FC,$F8,$F8,$00
-     239.  00:4D16  F8 D8 74 24 FC F8 F8 00 
-     240.  00:4D1E                          DB $C0,$A0,$90,$20,$80,$40,$40,$20
-     240.  00:4D1E  C0 A0 90 20 80 40 40 20 
-     241.  00:4D26                          ; mask 1 - 40h
-     242.  00:4D26                          DB $00,$01,$01,$01,$00,$00,$00,$00
-     242.  00:4D26  00 01 01 01 00 00 00 00 
-     243.  00:4D2E                          DB $01,$08,$11,$21,$01,$00,$00,$00
-     243.  00:4D2E  01 08 11 21 01 00 00 00 
-     244.  00:4D36                          DB $F8,$F8,$FC,$FC,$FC,$78,$50,$00
-     244.  00:4D36  F8 F8 FC FC FC 78 50 00 
-     245.  00:4D3E                          DB $C0,$A0,$90,$20,$80,$00,$00,$00
-     245.  00:4D3E  C0 A0 90 20 80 00 00 00 
-     246.  00:4D46                          
-     247.  00:4D46                          ; Esqueleto Right - 2
-     248.  00:4D46                          ; mask 0 - 44h
-     249.  00:4D46                          DB $03,$07,$06,$06,$03,$01,$01,$01
-     249.  00:4D46  03 07 06 06 03 01 01 01 
-     250.  00:4D4E                          DB $07,$0B,$13,$0B,$03,$04,$04,$0A
-     250.  00:4D4E  07 0B 13 0B 03 04 04 0A 
-     251.  00:4D56                          DB $F0,$B0,$E8,$48,$F8,$F0,$F0,$00
-     251.  00:4D56  F0 B0 E8 48 F8 F0 F0 00 
-     252.  00:4D5E                          DB $C0,$A0,$90,$08,$80,$60,$10,$00
-     252.  00:4D5E  C0 A0 90 08 80 60 10 00 
-     253.  00:4D66                          ; mask 1 - 48h
-     254.  00:4D66                          DB $01,$03,$03,$03,$01,$00,$00,$00
-     254.  00:4D66  01 03 03 03 01 00 00 00 
-     255.  00:4D6E                          DB $01,$08,$11,$09,$01,$00,$04,$02
-     255.  00:4D6E  01 08 11 09 01 00 04 02 
-     256.  00:4D76                          DB $F0,$F0,$F8,$F8,$F8,$F0,$A0,$00
-     256.  00:4D76  F0 F0 F8 F8 F8 F0 A0 00 
-     257.  00:4D7E                          DB $C0,$A0,$90,$08,$80,$00,$00,$00
-     257.  00:4D7E  C0 A0 90 08 80 00 00 00 
-     258.  00:4D86                      
-     259.  00:4D86                      
-     260.  00:4D86                      SPRITE_COLOR_TABLE:       
-     261.  00:4D86                           ;P1 - DOWN 1
-     262.  00:4D86                          ; attr 0
-     263.  00:4D86                          DB $06,$06,$0B,$0B,$0B,$0B,$0B,$0B
-     263.  00:4D86  06 06 0B 0B 0B 0B 0B 0B 
-     264.  00:4D8E                          DB $0C,$0C,$0B,$0B,$04,$04,$04,$04
-     264.  00:4D8E  0C 0C 0B 0B 04 04 04 04 
-     265.  00:4D96                          ; attr 1
-     266.  00:4D96                          DB $00,$00,$46,$46,$46,$44,$46,$46
-     266.  00:4D96  00 00 46 46 46 44 46 46 
-     267.  00:4D9E                          DB $4B,$4B,$44,$44,$42,$42,$42,$00
-     267.  00:4D9E  4B 4B 44 44 42 42 42 00 
-     268.  00:4DA6                          ; attr 2
-     269.  00:4DA6                          DB $00,$00,$00,$00,$00,$42,$00,$00
-     269.  00:4DA6  00 00 00 00 00 42 00 00 
-     270.  00:4DAE                          DB $00,$46,$00,$00,$00,$00,$00,$00
-     270.  00:4DAE  00 46 00 00 00 00 00 00 
-     271.  00:4DB6                               
-     272.  00:4DB6                          ; Cada posición ha de corresponder con la tabla de atributos    
-     273.  00:4DB6                      
-     274.  00:4DB6                          ; Fantasma
-     275.  00:4DB6                          DB $08,$08,$08,$08,$08,$08,$08,$08
-     275.  00:4DB6  08 08 08 08 08 08 08 08 
-     276.  00:4DBE                          DB $08,$08,$08,$08,$08,$08,$08,$08
-     276.  00:4DBE  08 08 08 08 08 08 08 08 
-     277.  00:4DC6                          ; Fantasma
-     278.  00:4DC6                          ;DB $08,$08,$08,$08,$08,$08,$08,$08
-     279.  00:4DC6                          ;DB $08,$08,$08,$08,$08,$08,$08,$08
-     280.  00:4DC6                          ; Fantasma
-     281.  00:4DC6                          ;DB $08,$08,$08,$08,$08,$08,$08,$08
-     282.  00:4DC6                          ;DB $08,$08,$08,$08,$08,$08,$08,$08
-     283.  00:4DC6                          ; Fantasma
-     284.  00:4DC6                          ;DB $08,$08,$08,$08,$08,$08,$08,$08
-     285.  00:4DC6                          ;DB $08,$08,$08,$08,$08,$08,$08,$08    
-     286.  00:4DC6                          ; Me ahorro los colores del fantasma, la 4a posicion del array de atributos será para el disparo
-     287.  00:4DC6                          ; Boomerang
-     288.  00:4DC6                          ;DB $08,$08,$08,$08,$08,$08,$08,$08
-     289.  00:4DC6                          ;DB $08,$08,$08,$08,$08,$08,$08,$08
-     290.  00:4DC6                          DB $00,$00,$00,$0F,$0F,$0F,$0F,$0F
-     290.  00:4DC6  00 00 00 0F 0F 0F 0F 0F 
-     291.  00:4DCE                          DB $0F,$0F,$0F,$0F,$0F,$0F,$00,$00
-     291.  00:4DCE  0F 0F 0F 0F 0F 0F 00 00 
-     292.  00:4DD6                          
-     293.  00:4DD6                          ; Esqueleto Left 1
-     294.  00:4DD6                          ; attr 0
-     295.  00:4DD6                          DB $0E,$0E,$0E,$0E,$0E,$0E,$0E,$0E
-     295.  00:4DD6  0E 0E 0E 0E 0E 0E 0E 0E 
-     296.  00:4DDE                          DB $0E,$0E,$0E,$0E,$0E,$0F,$0F,$0F
-     296.  00:4DDE  0E 0E 0E 0E 0E 0F 0F 0F 
-     297.  00:4DE6                          ; attr 1
-     298.  00:4DE6                          DB $41,$49,$49,$49,$41,$41,$41,$00
-     298.  00:4DE6  41 49 49 49 41 41 41 00 
-     299.  00:4DEE                          DB $41,$41,$41,$41,$41,$00,$00,$00
-     299.  00:4DEE  41 41 41 41 41 00 00 00 
-     300.  00:4DF6                          ; Esqueleto Left 2
-     301.  00:4DF6                          ; attr 0
-     302.  00:4DF6                          DB $0E,$0E,$0E,$0E,$0E,$0E,$0E,$0E
-     302.  00:4DF6  0E 0E 0E 0E 0E 0E 0E 0E 
-     303.  00:4DFE                          DB $0E,$0E,$0E,$0E,$0E,$0F,$0E,$0E
-     303.  00:4DFE  0E 0E 0E 0E 0E 0F 0E 0E 
-     304.  00:4E06                          ; attr 1
-     305.  00:4E06                          DB $41,$49,$49,$49,$41,$41,$41,$00
-     305.  00:4E06  41 49 49 49 41 41 41 00 
-     306.  00:4E0E                          DB $41,$41,$41,$41,$41,$00,$41,$41
-     306.  00:4E0E  41 41 41 41 41 00 41 41 
-     307.  00:4E16                      
-     308.  00:4E16                          ; Esqueleto Right 1
-     309.  00:4E16                          ; attr 0
-     310.  00:4E16                          ;DB $0E,$0E,$0E,$0E,$0E,$0E,$0E,$0E
-     311.  00:4E16                          ;DB $0E,$0E,$0E,$0E,$0E,$0F,$0E,$0E    
-     312.  00:4E16                          ; attr 1
-     313.  00:4E16                          ;DB $41,$49,$49,$49,$41,$41,$41,$41
-     314.  00:4E16                          ;DB $41,$41,$41,$41,$41,$00,$41,$41
-     315.  00:4E16                          ; Esqueleto Right 2
-     316.  00:4E16                          ; attr 0
-     317.  00:4E16                          ;DB $0E,$0E,$0E,$0E,$0E,$0E,$0E,$0E
-     318.  00:4E16                          ;DB $0E,$0E,$0E,$0E,$0E,$0F,$0F,$0F
-     319.  00:4E16                          ; attr 1
-     320.  00:4E16                          ;DB $41,$49,$49,$49,$41,$41,$41,$41
-     321.  00:4E16                          ;DB $41,$41,$41,$41,$41,$00,$00,$00
-     322.  00:4E16                      
-     323.  00:4E16                      SPRITE_COLOR_P1_UP:
-     324.  00:4E16                          ;UP 1
-     325.  00:4E16                          ; attr 0
-     326.  00:4E16                          DB $06,$06,$06,$06,$06,$06,$06,$06
-     326.  00:4E16  06 06 06 06 06 06 06 06 
-     327.  00:4E1E                          DB $0C,$0C,$0B,$0B,$04,$04,$04,$04
-     327.  00:4E1E  0C 0C 0B 0B 04 04 04 04 
-     328.  00:4E26                          ; attr 1
-     329.  00:4E26                          DB $00,$00,$00,$00,$00,$00,$00,$00
-     329.  00:4E26  00 00 00 00 00 00 00 00 
-     330.  00:4E2E                          DB $46,$4B,$44,$44,$42,$42,$42,$00
-     330.  00:4E2E  46 4B 44 44 42 42 42 00 
-     331.  00:4E36                          ; attr 2
-     332.  00:4E36                          DB $00,$00,$00,$00,$00,$00,$00,$00
-     332.  00:4E36  00 00 00 00 00 00 00 00 
-     333.  00:4E3E                          DB $00,$46,$42,$42,$00,$00,$00,$00   
-     333.  00:4E3E  00 46 42 42 00 00 00 00 
-     334.  00:4E46                          
-     335.  00:4E46                          ;SPRITE_COLOR_P1_UP2:
-     336.  00:4E46                          ;UP 1
-     337.  00:4E46                          ; attr 0
-     338.  00:4E46                          DB $06,$06,$06,$06,$06,$06,$06,$06
-     338.  00:4E46  06 06 06 06 06 06 06 06 
-     339.  00:4E4E                          DB $0C,$0C,$0B,$0B,$04,$04,$04,$04
-     339.  00:4E4E  0C 0C 0B 0B 04 04 04 04 
-     340.  00:4E56                          ; attr 1
-     341.  00:4E56                          DB $00,$00,$00,$00,$00,$00,$00,$00
-     341.  00:4E56  00 00 00 00 00 00 00 00 
-     342.  00:4E5E                          DB $46,$4B,$44,$44,$42,$42,$42,$00
-     342.  00:4E5E  46 4B 44 44 42 42 42 00 
-     343.  00:4E66                          ; attr 2
-     344.  00:4E66                          DB $00,$00,$00,$00,$00,$00,$00,$00
-     344.  00:4E66  00 00 00 00 00 00 00 00 
-     345.  00:4E6E                          DB $00,$46,$42,$42,$00,$00,$00,$00   
-     345.  00:4E6E  00 46 42 42 00 00 00 00 
-     346.  00:4E76                      
-     347.  00:4E76                      SPRITE_COLOR_P1_DOWN:
-     348.  00:4E76                          ;DOWN 1
-     349.  00:4E76                          ; attr 0
-     350.  00:4E76                          DB $06,$06,$0B,$0B,$0B,$0B,$0B,$0B
-     350.  00:4E76  06 06 0B 0B 0B 0B 0B 0B 
-     351.  00:4E7E                          DB $0C,$0C,$0B,$0B,$04,$04,$04,$04
-     351.  00:4E7E  0C 0C 0B 0B 04 04 04 04 
-     352.  00:4E86                          ; attr 1
-     353.  00:4E86                          DB $00,$00,$46,$46,$46,$44,$46,$46
-     353.  00:4E86  00 00 46 46 46 44 46 46 
-     354.  00:4E8E                          DB $4B,$4B,$44,$44,$42,$42,$42,$00
-     354.  00:4E8E  4B 4B 44 44 42 42 42 00 
-     355.  00:4E96                          ; attr 2
-     356.  00:4E96                          DB $00,$00,$00,$00,$00,$42,$00,$00
-     356.  00:4E96  00 00 00 00 00 42 00 00 
-     357.  00:4E9E                          DB $00,$46,$00,$00,$00,$00,$00,$00        
-     357.  00:4E9E  00 46 00 00 00 00 00 00 
-     358.  00:4EA6                      
-     359.  00:4EA6                          ;SPRITE_COLOR_P1_DOWN2:
-     360.  00:4EA6                          ;DOWN 1
-     361.  00:4EA6                          ; attr 0
-     362.  00:4EA6                          DB $06,$06,$0B,$0B,$0B,$0B,$0B,$0B
-     362.  00:4EA6  06 06 0B 0B 0B 0B 0B 0B 
-     363.  00:4EAE                          DB $0C,$0C,$0B,$0B,$04,$04,$04,$04
-     363.  00:4EAE  0C 0C 0B 0B 04 04 04 04 
-     364.  00:4EB6                          ; attr 1
-     365.  00:4EB6                          DB $00,$00,$46,$46,$46,$44,$46,$46
-     365.  00:4EB6  00 00 46 46 46 44 46 46 
-     366.  00:4EBE                          DB $4B,$4B,$44,$44,$42,$42,$42,$00
-     366.  00:4EBE  4B 4B 44 44 42 42 42 00 
-     367.  00:4EC6                          ; attr 2
-     368.  00:4EC6                          DB $00,$00,$00,$00,$00,$42,$00,$00
-     368.  00:4EC6  00 00 00 00 00 42 00 00 
-     369.  00:4ECE                          DB $00,$46,$00,$00,$00,$00,$00,$00        
-     369.  00:4ECE  00 46 00 00 00 00 00 00 
-     370.  00:4ED6                      
-     371.  00:4ED6                      SPRITE_COLOR_P1_RIGHT:
-     372.  00:4ED6                          ; attr 0
-     373.  00:4ED6                          DB $06,$06,$0B,$0B,$0B,$0B,$0B,$0B
-     373.  00:4ED6  06 06 0B 0B 0B 0B 0B 0B 
-     374.  00:4EDE                          DB $0C,$0C,$0B,$0B,$04,$04,$04,$04
-     374.  00:4EDE  0C 0C 0B 0B 04 04 04 04 
-     375.  00:4EE6                          ; attr 1
-     376.  00:4EE6                          DB $00,$00,$46,$46,$44,$46,$46,$46
-     376.  00:4EE6  00 00 46 46 44 46 46 46 
-     377.  00:4EEE                          DB $4B,$46,$4C,$44,$42,$42,$00,$00
-     377.  00:4EEE  4B 46 4C 44 42 42 00 00 
-     378.  00:4EF6                          ; attr 2
-     379.  00:4EF6                          DB $00,$00,$00,$00,$42,$00,$00,$00
-     379.  00:4EF6  00 00 00 00 42 00 00 00 
-     380.  00:4EFE                          DB $46,$00,$46,$42,$00,$00,$00,$00
-     380.  00:4EFE  46 00 46 42 00 00 00 00 
-     381.  00:4F06                          ; attr 0
-     382.  00:4F06                          DB $06,$06,$0B,$0B,$0B,$0B,$0B,$0B
-     382.  00:4F06  06 06 0B 0B 0B 0B 0B 0B 
-     383.  00:4F0E                          DB $0C,$0C,$06,$04,$04,$04,$04,$04
-     383.  00:4F0E  0C 0C 06 04 04 04 04 04 
-     384.  00:4F16                          ; attr 1
-     385.  00:4F16                          DB $00,$00,$46,$46,$44,$46,$46,$46
-     385.  00:4F16  00 00 46 46 44 46 46 46 
-     386.  00:4F1E                          DB $4B,$4B,$4A,$42,$42,$42,$00,$00
-     386.  00:4F1E  4B 4B 4A 42 42 42 00 00 
-     387.  00:4F26                          ; attr 2
-     388.  00:4F26                          DB $00,$00,$00,$00,$42,$00,$00,$00
-     388.  00:4F26  00 00 00 00 42 00 00 00 
-     389.  00:4F2E                          DB $46,$46,$41,$00,$00,$00,$00,$00
-     389.  00:4F2E  46 46 41 00 00 00 00 00 
-     390.  00:4F36                      
-     391.  00:4F36                      mapa1:
-     392.  00:4F36                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#00,#00,#00,#00,#00,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
-     392.  00:4F36  01 01 01 01 01 01 01 01 01 01 01 01 01 00 00 00 
-     392.  00:4F46  00 00 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-     393.  00:4F56                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#00,#00,#00,#00,#00,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
-     393.  00:4F56  01 01 01 01 01 01 01 01 01 01 01 01 01 00 00 00 
-     393.  00:4F66  00 00 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-     394.  00:4F76                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
-     394.  00:4F76  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     394.  00:4F86  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
-     395.  00:4F96                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
-     395.  00:4F96  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     395.  00:4FA6  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
-     396.  00:4FB6                            db #01,#01,#00,#00,#01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
-     396.  00:4FB6  01 01 00 00 01 01 00 00 00 00 00 00 00 00 00 00 
-     396.  00:4FC6  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
-     397.  00:4FD6                            db #01,#01,#00,#00,#01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
-     397.  00:4FD6  01 01 00 00 01 01 00 00 00 00 00 00 00 00 00 00 
-     397.  00:4FE6  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
-     398.  00:4FF6                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
-     398.  00:4FF6  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     398.  00:5006  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
-     399.  00:5016                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
-     399.  00:5016  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     399.  00:5026  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
-     400.  00:5036                          
-     401.  00:5036                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
-     401.  00:5036  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     401.  00:5046  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
-     402.  00:5056                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
-     402.  00:5056  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     402.  00:5066  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
-     403.  00:5076                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01,#00,#00,#00,#00,#00,#00,#01,#01,#00,#00,#00,#00,#01,#01        
-     403.  00:5076  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     403.  00:5086  01 01 00 00 00 00 00 00 01 01 00 00 00 00 01 01 
-     404.  00:5096                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01,#00,#00,#00,#00,#00,#00,#01,#01,#00,#00,#00,#00,#01,#01        
-     404.  00:5096  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     404.  00:50A6  01 01 00 00 00 00 00 00 01 01 00 00 00 00 01 01 
-     405.  00:50B6                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
-     405.  00:50B6  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     405.  00:50C6  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
-     406.  00:50D6                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
-     406.  00:50D6  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     406.  00:50E6  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
-     407.  00:50F6                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
-     407.  00:50F6  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     407.  00:5106  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
-     408.  00:5116                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
-     408.  00:5116  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     408.  00:5126  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
-     409.  00:5136                      
-     410.  00:5136                            db #01,#01,#00,#00,#00,#00,#01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
-     410.  00:5136  01 01 00 00 00 00 01 01 00 00 00 00 00 00 00 00 
-     410.  00:5146  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
-     411.  00:5156                            db #01,#01,#00,#00,#00,#00,#01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
-     411.  00:5156  01 01 00 00 00 00 01 01 00 00 00 00 00 00 00 00 
-     411.  00:5166  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
-     412.  00:5176                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
-     412.  00:5176  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     412.  00:5186  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
-     413.  00:5196                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
-     413.  00:5196  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     413.  00:51A6  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
-     414.  00:51B6                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
-     414.  00:51B6  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-     414.  00:51C6  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-     415.  00:51D6                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
-     415.  00:51D6  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-     415.  00:51E6  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-     416.  00:51F6                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
-     416.  00:51F6  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-     416.  00:5206  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-     417.  00:5216                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
-     417.  00:5216  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-     417.  00:5226  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-     418.  00:5236                      
-     419.  00:5236                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
-     419.  00:5236  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-     419.  00:5246  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-     420.  00:5256                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
-     420.  00:5256  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-     420.  00:5266  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-     421.  00:5276                      
-     422.  00:5276                      mapa2:
-     423.  00:5276                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
-     423.  00:5276  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-     423.  00:5286  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-     424.  00:5296                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     424.  00:5296  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     424.  00:52A6  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     425.  00:52B6                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     425.  00:52B6  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     425.  00:52C6  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     426.  00:52D6                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     426.  00:52D6  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     426.  00:52E6  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     427.  00:52F6                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     427.  00:52F6  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     427.  00:5306  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     428.  00:5316                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     428.  00:5316  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     428.  00:5326  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     429.  00:5336                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     429.  00:5336  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     429.  00:5346  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     430.  00:5356                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     430.  00:5356  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     430.  00:5366  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     431.  00:5376                            
-     432.  00:5376                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     432.  00:5376  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     432.  00:5386  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     433.  00:5396                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     433.  00:5396  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     433.  00:53A6  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     434.  00:53B6                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     434.  00:53B6  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     434.  00:53C6  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     435.  00:53D6                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     435.  00:53D6  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     435.  00:53E6  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     436.  00:53F6                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     436.  00:53F6  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     436.  00:5406  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     437.  00:5416                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     437.  00:5416  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     437.  00:5426  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     438.  00:5436                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     438.  00:5436  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     438.  00:5446  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     439.  00:5456                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     439.  00:5456  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     439.  00:5466  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     440.  00:5476                      
-     441.  00:5476                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     441.  00:5476  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     441.  00:5486  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     442.  00:5496                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     442.  00:5496  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     442.  00:54A6  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     443.  00:54B6                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     443.  00:54B6  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     443.  00:54C6  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     444.  00:54D6                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     444.  00:54D6  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     444.  00:54E6  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     445.  00:54F6                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     445.  00:54F6  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     445.  00:5506  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     446.  00:5516                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     446.  00:5516  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     446.  00:5526  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     447.  00:5536                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     447.  00:5536  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     447.  00:5546  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     448.  00:5556                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     448.  00:5556  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     448.  00:5566  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     449.  00:5576                            
-     450.  00:5576                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01              
-     450.  00:5576  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     450.  00:5586  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     451.  00:5596                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#00,#00,#00,#00,#00,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
-     451.  00:5596  01 01 01 01 01 01 01 01 01 01 01 01 01 00 00 00 
-     451.  00:55A6  00 00 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-     452.  00:55B6                      
-     453.  00:55B6                      
-     454.  00:55B6                      mapa0:      
-     455.  00:55B6                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#00,#00,#00,#00,#00,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
-     455.  00:55B6  01 01 01 01 01 01 01 01 01 01 01 01 01 00 00 00 
-     455.  00:55C6  00 00 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-     456.  00:55D6                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     456.  00:55D6  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     456.  00:55E6  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     457.  00:55F6                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     457.  00:55F6  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     457.  00:5606  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     458.  00:5616                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     458.  00:5616  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     458.  00:5626  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     459.  00:5636                            db #01,#00,#00,#00,#01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     459.  00:5636  01 00 00 00 01 01 00 00 00 00 00 00 00 00 00 00 
-     459.  00:5646  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     460.  00:5656                            db #01,#00,#00,#00,#01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     460.  00:5656  01 00 00 00 01 01 00 00 00 00 00 00 00 00 00 00 
-     460.  00:5666  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     461.  00:5676                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01       
-     461.  00:5676  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     461.  00:5686  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     462.  00:5696                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     462.  00:5696  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     462.  00:56A6  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     463.  00:56B6                            
-     464.  00:56B6                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     464.  00:56B6  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     464.  00:56C6  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     465.  00:56D6                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     465.  00:56D6  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     465.  00:56E6  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     466.  00:56F6                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01,#00,#00,#00,#00,#01        
-     466.  00:56F6  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     466.  00:5706  00 00 00 00 00 00 00 00 00 01 01 00 00 00 00 01 
-     467.  00:5716                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01,#00,#00,#00,#00,#01        
-     467.  00:5716  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     467.  00:5726  00 00 00 00 00 00 00 00 00 01 01 00 00 00 00 01 
-     468.  00:5736                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     468.  00:5736  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     468.  00:5746  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     469.  00:5756                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     469.  00:5756  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     469.  00:5766  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     470.  00:5776                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     470.  00:5776  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     470.  00:5786  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     471.  00:5796                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     471.  00:5796  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     471.  00:57A6  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     472.  00:57B6                      
-     473.  00:57B6                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     473.  00:57B6  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     473.  00:57C6  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     474.  00:57D6                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     474.  00:57D6  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     474.  00:57E6  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     475.  00:57F6                            db #01,#00,#00,#00,#01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     475.  00:57F6  01 00 00 00 01 01 00 00 00 00 00 00 00 00 00 00 
-     475.  00:5806  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     476.  00:5816                            db #01,#00,#00,#00,#01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     476.  00:5816  01 00 00 00 01 01 00 00 00 00 00 00 00 00 00 00 
-     476.  00:5826  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     477.  00:5836                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     477.  00:5836  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     477.  00:5846  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     478.  00:5856                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     478.  00:5856  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     478.  00:5866  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     479.  00:5876                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
-     479.  00:5876  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     479.  00:5886  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
-     480.  00:5896                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
-     480.  00:5896  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-     480.  00:58A6  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-     481.  00:58B6                            
-     482.  00:58B6                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
-     482.  00:58B6  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-     482.  00:58C6  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-     483.  00:58D6                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
-     483.  00:58D6  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-     483.  00:58E6  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-     484.  00:58F6                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
-     484.  00:58F6  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-     484.  00:5906  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-     485.  00:5916                          
-     486.  00:5916                      
-     487.  00:5916                      SPRITE_COLOR_P1_LEFT:
-     488.  00:5916                          ; attr 0
-     489.  00:5916                          DB $06,$06,$0B,$0B,$0B,$0B,$0B,$0B
-     489.  00:5916  06 06 0B 0B 0B 0B 0B 0B 
-     490.  00:591E                          DB $0C,$0C,$0B,$0B,$04,$04,$04,$04
-     490.  00:591E  0C 0C 0B 0B 04 04 04 04 
-     491.  00:5926                          ; attr 1
-     492.  00:5926                          DB $00,$00,$46,$46,$44,$46,$46,$46
-     492.  00:5926  00 00 46 46 44 46 46 46 
-     493.  00:592E                          DB $4B,$46,$4C,$44,$42,$42,$00,$00
-     493.  00:592E  4B 46 4C 44 42 42 00 00 
-     494.  00:5936                          ; attr 2
-     495.  00:5936                          DB $00,$00,$00,$00,$42,$00,$00,$00
-     495.  00:5936  00 00 00 00 42 00 00 00 
-     496.  00:593E                          DB $46,$00,$46,$42,$00,$00,$00,$00
-     496.  00:593E  46 00 46 42 00 00 00 00 
-     497.  00:5946                          
-     498.  00:5946                          ;SPRITE_COLOR_P1_LEFT2:
-     499.  00:5946                          ; attr 0
-     500.  00:5946                          DB $06,$06,$0B,$0B,$0B,$0B,$0B,$0B
-     500.  00:5946  06 06 0B 0B 0B 0B 0B 0B 
-     501.  00:594E                          DB $0C,$0C,$06,$04,$04,$04,$04,$04
-     501.  00:594E  0C 0C 06 04 04 04 04 04 
-     502.  00:5956                          ; attr 1
-     503.  00:5956                          DB $00,$00,$46,$46,$44,$46,$46,$46
-     503.  00:5956  00 00 46 46 44 46 46 46 
-     504.  00:595E                          DB $4B,$4B,$4A,$42,$42,$42,$00,$00
-     504.  00:595E  4B 4B 4A 42 42 42 00 00 
-     505.  00:5966                          ; attr 2
-     506.  00:5966                          DB $00,$00,$00,$00,$42,$00,$00,$00
-     506.  00:5966  00 00 00 00 42 00 00 00 
-     507.  00:596E                          DB $46,$46,$41,$00,$00,$00,$00,$00
-     507.  00:596E  46 46 41 00 00 00 00 00 
-     508.  00:5976                      
-     509.  00:5976                      BLANK_DATA:
-     510.  00:5976                          DB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-     510.  00:5976  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     510.  00:5986  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     511.  00:5996                          DB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-     511.  00:5996  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     511.  00:59A6  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     512.  00:59B6                          DB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-     512.  00:59B6  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-     512.  00:59C6  00 00 00 00 
-     513.  00:59CA                          
-     459   00:59CA                      
-     460   00:59CA  (01)                 PAGE 1
+     128   00:45C4                          ;LD (SHOWING_DIALOG), A
+     129   00:45C4                      
+     130   00:45C4                      .animate_ghost
+     131   00:45C4  3A 0C C0                LD A,(CHAR_GHOST_DEAD)
+     132   00:45C7  FE 01                   CP $01
+     133   00:45C9  CA 2A 46                JP Z,.continue
+     134   00:45CC  DD 7E 0D                LD A, (ix+13)          ;cargamos la X del Fantasma
+     135   00:45CF  2A 0A C0            	LD HL, (CHAR_SPEED_X_GHOST)
+     136   00:45D2  85                  	ADD L					; Actualizamos la posicion en base a la velocidad
+     137   00:45D3                          
+     138   00:45D3  DD 77 0D            	LD (ix+13), A	
+     139   00:45D6  FE 16                   CP $16
+     140   00:45D8  CA E3 45                JP Z,.CHANGE_DIR_RIGHT
+     141   00:45DB  FE B9                   CP $B9
+     142   00:45DD  CA F0 45                JP Z,.CHANGE_DIR_LEFT
+     143   00:45E0                          		
+     144   00:45E0  C3 F9 45                JP .check_pattern
+     145   00:45E3                      
+     146   00:45E3                      .CHANGE_DIR_RIGHT:
+     147   00:45E3  3E 01                   LD A, MOV_SPEED_GHOST
+     148   00:45E5  32 0A C0            	LD (CHAR_SPEED_X_GHOST), A
+     149   00:45E8  3E FF                   LD A,$FF
+     150   00:45EA  32 0F C0                LD (CHAR_DIR_GHOST1),A
+     151   00:45ED  C3 F9 45                JP .check_pattern
+     152   00:45F0                      
+     153   00:45F0                      .CHANGE_DIR_LEFT:
+     154   00:45F0  3E FF                   LD A, -MOV_SPEED_GHOST
+     155   00:45F2  32 0A C0            	LD (CHAR_SPEED_X_GHOST), A
+     156   00:45F5  AF                      XOR A   ; Pone A a 0
+     157   00:45F6  32 0F C0                LD (CHAR_DIR_GHOST1),A
+     158   00:45F9                      
+     159   00:45F9                      .check_pattern:
+     160   00:45F9  3A 0F C0                LD A,(CHAR_DIR_GHOST1)
+     161   00:45FC  FE FF                   CP $FF
+     162   00:45FE  CA 17 46                JP Z,.check_pattern_RIGHT
+     163   00:4601  DD 7E 0E                LD A, (ix+14)       ; Cargamos el patrón y lo cambiamos
+     164   00:4604  FE 18                   CP $18
+     165   00:4606  CA 10 46                jp z,.change_pattern_L
+     166   00:4609  DD 36 0E 18             LD (ix+14),$18
+     167   00:460D  C3 2A 46                jp .continue
+     168   00:4610                      .change_pattern_L:
+     169   00:4610  DD 36 0E 1C             LD (ix+14),$1C
+     170   00:4614  C3 2A 46                jp .continue
+     171   00:4617                      
+     172   00:4617                      .check_pattern_RIGHT
+     173   00:4617  DD 7E 0E                LD A, (ix+14)       ; Cargamos el patrón y lo cambiamos
+     174   00:461A  FE 20                   CP $20
+     175   00:461C  CA 26 46                jp z,.change_pattern_R
+     176   00:461F  DD 36 0E 20             LD (ix+14),$20
+     177   00:4623  C3 2A 46                jp .continue
+     178   00:4626                      .change_pattern_R:
+     179   00:4626  DD 36 0E 24             LD (ix+14),$24
+     180   00:462A                      
+     181   00:462A                      .continue:    
+     182   00:462A  CD C2 43                CALL MOVE_SHOOT
+     183   00:462D                      .CHECK_GHOST:
+     184   00:462D                          ; Comprobamos si hay colision con el fantasma
+     185   00:462D  3A 0C C0                LD A,(CHAR_GHOST_DEAD)  ; si está muerto,no lo miramos
+     186   00:4630  FE 01                   CP $01
+     187   00:4632  CA 52 46                JP Z,.check_KB
+     188   00:4635                      
+     189   00:4635  DD 46 10                LD B,(ix+16)         ; Y del disparo
+     190   00:4638  DD 4E 11                LD C,(ix+17)         ; X del disparo
+     191   00:463B  DD 56 0C                LD D,(ix+12)         ; Y del fantasma 
+     192   00:463E  DD 5E 0D                LD E,(ix+13)         ; X del fantasma
+     193   00:4641  CD 40 40                call check_spr_collision
+     194   00:4644  FE 01                   CP 1
+     195   00:4646  C2 52 46                JP NZ,.check_KB
+     196   00:4649                      
+     197   00:4649                      .KILL_GHOST:
+     198   00:4649  3E 01                   LD A,1
+     199   00:464B  32 0C C0                LD (CHAR_GHOST_DEAD),A
+     200   00:464E  DD 36 0C D9             LD (ix+12),217    
+     201   00:4652                      
+     202   00:4652                      .check_KB:
+     203   00:4652  76                      halt    
+     204   00:4653                      
+     205   00:4653  3A 06 C0                LD A, (OLD_KEY_PRESSED)
+     206   00:4656  47                      LD B, A
+     207   00:4657                      
+     208   00:4657  3E 08                   ld a, 8
+     209   00:4659  CD 41 01            	call SNSMAT   
+     210   00:465C                          
+     211   00:465C  32 06 C0                LD (OLD_KEY_PRESSED), A
+     212   00:465F                          ;XOR B
+     213   00:465F                          ;AND B
+     214   00:465F                      
+     215   00:465F  4F                      LD C,A    
+     216   00:4660                          
+     217   00:4660  CB 79                   BIT KB_RIGHT, C			; La tecla presionada es RIGHT?
+     218   00:4662  CC 2D 42                call z, move_right
+     219   00:4665                          
+     220   00:4665  CB 61                   BIT KB_LEFT, C			; La tecla presionada es LEFT?
+     221   00:4667  CC 7B 42                call z, move_left
+     222   00:466A                      
+     223   00:466A  CB 69                   BIT KB_UP, C			; La tecla presionada es UP?
+     224   00:466C  CC BE 41                call z, move_up
+     225   00:466F                      
+     226   00:466F  CB 71                   BIT KB_DOWN, C			; La tecla presionada es DOWN?
+     227   00:4671  CC F5 41                call z, move_down
+     228   00:4674                      
+     229   00:4674                      no_arrows:
+     230   00:4674  CB 41                   BIT KB_SPACE, C			; La tecla presionada es SPACE
+     231   00:4676  CC 7C 46                call z,SHOOT_MAIN_CHAR
+     232   00:4679                      
+     233   00:4679                          ;BIT KB_DEL, C			; La tecla presionada es DEL    
+     234   00:4679                          ;ret z
+     235   00:4679                      
+     236   00:4679  C3 A2 45                jp MAIN_LOOP
+     237   00:467C                      
+     238   00:467C                      SHOOT_MAIN_CHAR:    
+     239   00:467C  3A 13 C0                LD A, (CHAR_MAIN_SHOOT)
+     240   00:467F  FE 01                   CP $01                  ; Si ya está disparando esperamos a que termine
+     241   00:4681  C8                      RET Z;,MAIN_LOOP
+     242   00:4682  FE 02                   CP $02                  ; Si ya está disparando esperamos a que termine
+     243   00:4684  C8                      RET Z;,MAIN_LOOP
+     244   00:4685  FE 03                   CP $03                  ; Si ya está disparando esperamos a que termine
+     245   00:4687  C8                      RET Z;,MAIN_LOOP
+     246   00:4688  FE 04                   CP $04                  ; Si ya está disparando esperamos a que termine
+     247   00:468A  C8                      RET Z;,MAIN_LOOP
+     248   00:468B                      
+     249   00:468B  DD 36 12 28             ld (ix+18), $28     ; Sprite Disparo
+     250   00:468F                      
+     251   00:468F  DD 7E 00                LD A, (ix)          
+     252   00:4692  DD 77 10                ld (ix+16), A       ; Asignamos la Y del personaje    
+     253   00:4695                      
+     254   00:4695  3A 11 C0                LD A, (CHAR_DIR_MAIN)
+     255   00:4698  FE 03                   CP $03
+     256   00:469A  CA B6 46                JP Z,.SHOOT_RIGHT
+     257   00:469D  FE 00                   CP $00
+     258   00:469F  CA C5 46                JP Z,.SHOOT_UP
+     259   00:46A2  FE 01                   CP $01
+     260   00:46A4  CA D8 46                JP Z,.SHOOT_DOWN
+     261   00:46A7                          ; SHOOT LEFT
+     262   00:46A7  3E 01                   LD A,$01                ; SHOOT LEFT
+     263   00:46A9  32 13 C0                LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando izquierda
+     264   00:46AC  DD 7E 01                LD A, (ix+1)			;cargamos la X - Si no es derecha, debe ser izquierda
+     265   00:46AF  21 F4 FF            	LD HL, -12
+     266   00:46B2  85                  	ADD L
+     267   00:46B3                          
+     268   00:46B3  C3 E8 46                JP .CONTINUE
+     269   00:46B6                      
+     270   00:46B6                      .SHOOT_RIGHT:    
+     271   00:46B6  3E 02                   LD A,$02
+     272   00:46B8  32 13 C0                LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando derecha
+     273   00:46BB                          
+     274   00:46BB  DD 7E 01                LD A, (ix+1)			;cargamos la X
+     275   00:46BE  21 0C 00            	LD HL, 12
+     276   00:46C1  85                  	ADD L
+     277   00:46C2  C3 E8 46                JP .CONTINUE
+     278   00:46C5                      
+     279   00:46C5                      .SHOOT_UP:
+     280   00:46C5  3E 03                   LD A,$03
+     281   00:46C7  32 13 C0                LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando derecha
+     282   00:46CA                          
+     283   00:46CA                          ; Sumamos el desplazamiento a la Y
+     284   00:46CA  DD 7E 10                LD A, (ix+16)
+     285   00:46CD  D6 10                   SUB 16
+     286   00:46CF  DD 77 10                LD (ix+16), A    
+     287   00:46D2                          ;LD (ix+17), D
+     288   00:46D2  DD 7E 01                LD A, (ix+1)			;cargamos la X    
+     289   00:46D5  C3 E8 46                JP .CONTINUE
+     290   00:46D8                      
+     291   00:46D8                      .SHOOT_DOWN
+     292   00:46D8  3E 04               	LD A,$04
+     293   00:46DA  32 13 C0                LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando derecha
+     294   00:46DD                          
+     295   00:46DD                          ; Sumamos el desplazamiento a la Y
+     296   00:46DD  DD 7E 10                LD A, (ix+16)
+     297   00:46E0  C6 10                   ADD 16
+     298   00:46E2  DD 77 10                LD (ix+16), A    
+     299   00:46E5                          ;LD (ix+17), D
+     300   00:46E5  DD 7E 01                LD A, (ix+1)			;cargamos la X    
+     301   00:46E8                      
+     302   00:46E8                      .CONTINUE:
+     303   00:46E8                          ;ld (ix+16), B       ; Asignamos la Y del personaje
+     304   00:46E8  DD 77 11                ld (ix+17), A       ; Asignamos la X del personaje + el desplazamiento        
+     305   00:46EB                          ;jp MAIN_LOOP
+     306   00:46EB  C9                      ret
+     307   00:46EC                      
+     308   00:46EC                      STAGE2:
+     309   00:46EC  CD 41 00                CALL DISSCR
+     310   00:46EF  21 00 80                LD HL, CEMENTER2
+     311   00:46F2  22 A2 C0                LD (BITMAP), HL
+     312   00:46F5  06 0D                   LD B, :CEMENTER2
+     313   00:46F7                      
+     314   00:46F7  CD D7 40                call load_screen
+     315   00:46FA  21 73 52                LD HL, mapa2
+     316   00:46FD  22 A0 C0                LD (MAPA), HL
+     317   00:4700                      
+     318   00:4700  DD 36 00 C4             LD (ix), 196    ; Ponemos el P1 abajo
+     319   00:4704  DD 36 04 C4             LD (ix+4), 196    
+     320   00:4708  DD 36 08 C4             LD (ix+8), 196    
+     321   00:470C                          
+     322   00:470C  DD 36 0C D9             LD (ix+12),217  ; ocultamos el fantasma
+     323   00:4710                          
+     324   00:4710  CD 61 41                call DUMP_SPR_ALL    
+     325   00:4713  CD A1 41                CALL DUMP_SPR_P1
+     326   00:4716                          ; Esqueleto
+     327   00:4716  DD 36 14 10             LD (ix+20), 10h
+     328   00:471A  DD 36 15 10             LD (ix+21), 10h
+     329   00:471E  DD 36 16 3C             LD (ix+22), 3Ch
+     330   00:4722                      
+     331   00:4722  DD 36 18 10             LD (ix+24), 10h
+     332   00:4726  DD 36 19 10             LD (ix+25), 10h
+     333   00:472A  DD 36 1A 40             LD (ix+26), 40h
+     334   00:472E                      
+     335   00:472E  AF                      XOR A
+     336   00:472F  32 0D C0                LD (CHAR_GHOST_DEAD_STG2), A
+     337   00:4732  32 0E C0                LD (CHAR_MIN_STEP_STG2), A
+     338   00:4735  3E FF                   LD A, $FF
+     339   00:4737  32 10 C0                LD (CHAR_DIR_GHOST_STG2), A
+     340   00:473A  3E 01                   LD A, MOV_SPEED_GHOST
+     341   00:473C  32 0B C0            	LD (CHAR_SPEED_X_GHOST_STG2), A
+     342   00:473F                      
+     343   00:473F  CD 44 00                CALL ENASCR
+     344   00:4742                          
+     345   00:4742                      MAIN_LOOP2:
+     346   00:4742  76                      halt    
+     347   00:4743                      
+     348   00:4743  DD 7E 00                LD A, (ix)    
+     349   00:4746  FE C6                   CP 198
+     350   00:4748  C2 6E 47                JP NZ, .no_screen_change
+     351   00:474B                          ; Ponemos el SP1 al principio de la pantalla 1
+     352   00:474B  DD 36 00 01             LD (ix), 1          ; SP1 - Y = 1
+     353   00:474F  DD 36 04 01             LD (ix+4), 1
+     354   00:4753  DD 36 08 01             LD (ix+8), 1
+     355   00:4757                      
+     356   00:4757  3A 0C C0                LD A, (CHAR_GHOST_DEAD)
+     357   00:475A  FE 01                   CP $01
+     358   00:475C  CA 63 47                JP Z, .GHOST_DEAD
+     359   00:475F  DD 36 0C 0F             ld (ix+12), $0F      ; Sprite 1 - Ghost
+     360   00:4763                      .GHOST_DEAD:
+     361   00:4763  DD 36 14 D9             LD (ix+20),217  ; ocultamos el esqueleto
+     362   00:4767  DD 36 18 D9             LD (ix+24),217  ; ocultamos el esqueleto
+     363   00:476B  CD 85 45                CALL STAGE1
+     364   00:476E                      
+     365   00:476E                      .no_screen_change:
+     366   00:476E                      
+     367   00:476E  CD 86 41                call DUMP_SPR_ATTS    
+     368   00:4771                          ; Movemos el esqueleto
+     369   00:4771  3A 0D C0                LD A,(CHAR_GHOST_DEAD_STG2)
+     370   00:4774  FE 01                   CP $01
+     371   00:4776  CA FB 47                JP Z,.continue
+     372   00:4779  DD 7E 15                LD A, (ix+21)          ;cargamos la X del Esqueleto
+     373   00:477C  2A 0B C0            	LD HL, (CHAR_SPEED_X_GHOST_STG2)
+     374   00:477F  85                  	ADD L					; Actualizamos la posicion en base a la velocidad
+     375   00:4780                          
+     376   00:4780  DD 77 15            	LD (ix+21), A	
+     377   00:4783  DD 77 19                LD (ix+25), A
+     378   00:4786  FE 16                   CP $16
+     379   00:4788  CA A0 47                JP Z,.CHANGE_DIR_RIGHT
+     380   00:478B  FE B9                   CP $B9
+     381   00:478D  CA AD 47                JP Z,.CHANGE_DIR_LEFT
+     382   00:4790                      
+     383   00:4790  3A 0E C0                LD A, (CHAR_MIN_STEP_STG2)		
+     384   00:4793  FE 06                   CP MAX_CHAR_STEPS_STG2
+     385   00:4795  CA B6 47                JP Z,.check_pattern
+     386   00:4798  C6 01                   ADD 1
+     387   00:479A  32 0E C0                LD (CHAR_MIN_STEP_STG2), A
+     388   00:479D  C3 FB 47                JP .continue
+     389   00:47A0                      
+     390   00:47A0                      .CHANGE_DIR_RIGHT:
+     391   00:47A0  3E 01                   LD A, MOV_SPEED_GHOST
+     392   00:47A2  32 0B C0            	LD (CHAR_SPEED_X_GHOST_STG2), A
+     393   00:47A5  3E FF                   LD A,$FF
+     394   00:47A7  32 10 C0                LD (CHAR_DIR_GHOST_STG2),A
+     395   00:47AA  C3 B6 47                JP .check_pattern
+     396   00:47AD                      
+     397   00:47AD                      .CHANGE_DIR_LEFT:
+     398   00:47AD  3E FF                   LD A, -MOV_SPEED_GHOST
+     399   00:47AF  32 0B C0            	LD (CHAR_SPEED_X_GHOST_STG2), A
+     400   00:47B2  AF                      XOR A   ; Pone A a 0
+     401   00:47B3  32 10 C0                LD (CHAR_DIR_GHOST_STG2),A
+     402   00:47B6                      
+     403   00:47B6                      .check_pattern:
+     404   00:47B6  AF                      XOR A
+     405   00:47B7  32 0E C0                LD (CHAR_MIN_STEP_STG2), A
+     406   00:47BA  3A 10 C0                LD A,(CHAR_DIR_GHOST_STG2)
+     407   00:47BD  FE FF                   CP $FF
+     408   00:47BF  CA E0 47                JP Z,.check_pattern_RIGHT
+     409   00:47C2  DD 7E 16                LD A, (ix+22)       ; Cargamos el patrón y lo cambiamos
+     410   00:47C5  FE 2C                   CP $2C
+     411   00:47C7  CA D5 47                jp z,.change_pattern_L
+     412   00:47CA  DD 36 16 2C             LD (ix+22),$2C
+     413   00:47CE  DD 36 1A 30             LD (ix+26),$30
+     414   00:47D2  C3 FB 47                jp .continue
+     415   00:47D5                      .change_pattern_L:
+     416   00:47D5  DD 36 16 34             LD (ix+22),$34
+     417   00:47D9  DD 36 1A 38             LD (ix+26),$38
+     418   00:47DD  C3 FB 47                jp .continue
+     419   00:47E0                      
+     420   00:47E0                      .check_pattern_RIGHT
+     421   00:47E0  DD 7E 16                LD A, (ix+22)       ; Cargamos el patrón y lo cambiamos
+     422   00:47E3  FE 3C                   CP $3C
+     423   00:47E5  CA F3 47                jp z,.change_pattern_R
+     424   00:47E8  DD 36 16 3C             LD (ix+22),$3C
+     425   00:47EC  DD 36 1A 40             LD (ix+26),$40
+     426   00:47F0  C3 FB 47                jp .continue
+     427   00:47F3                      .change_pattern_R:
+     428   00:47F3  DD 36 16 44             LD (ix+22),$44
+     429   00:47F7  DD 36 1A 48             LD (ix+26),$48
+     430   00:47FB                      
+     431   00:47FB                      .continue:
+     432   00:47FB  CD C2 43                CALL MOVE_SHOOT    
+     433   00:47FE                      
+     434   00:47FE  3E 08                   ld a, 8
+     435   00:4800  CD 41 01            	call SNSMAT   
+     436   00:4803  4F                      LD C,A    
+     437   00:4804                              
+     438   00:4804  CB 79                   BIT KB_RIGHT, C			; La tecla presionada es RIGHT?
+     439   00:4806  CC 2D 42                call z, move_right
+     440   00:4809                          
+     441   00:4809  CB 61                   BIT KB_LEFT, C			; La tecla presionada es LEFT?
+     442   00:480B  CC 7B 42                call z, move_left
+     443   00:480E                      
+     444   00:480E  CB 69                   BIT KB_UP, C			; La tecla presionada es UP?
+     445   00:4810  CC BE 41                call z, move_up
+     446   00:4813                      
+     447   00:4813  CB 71                   BIT KB_DOWN, C			; La tecla presionada es DOWN?
+     448   00:4815  CC F5 41                call z, move_down
+     449   00:4818                      
+     450   00:4818  CB 41                   BIT KB_SPACE, C			; La tecla presionada es SPACE
+     451   00:481A  CC 7C 46                call z,SHOOT_MAIN_CHAR
+     452   00:481D                      
+     453   00:481D  CB 59                   BIT KB_DEL, C			; La tecla presionada es DEL    
+     454   00:481F  C8                      ret z
+     455   00:4820                      
+     456   00:4820  C3 42 47                jp MAIN_LOOP2
+     457   00:4823                      
+     458   00:4823                      include "include\BTH_data.asm"
+       1.  00:4823                      SPRITE_P1_UP:
+       2.  00:4823                          ; UP 1        
+       3.  00:4823                          ; mask 0
+       4.  00:4823                          DB $03,$0F,$1F,$1F,$1F,$3F,$1F,$0F
+       4.  00:4823  03 0F 1F 1F 1F 3F 1F 0F 
+       5.  00:482B                          DB $30,$78,$60,$60,$03,$03,$06,$0E
+       5.  00:482B  30 78 60 60 03 03 06 0E 
+       6.  00:4833                          DB $E0,$F0,$F8,$F8,$FC,$F8,$FC,$F0
+       6.  00:4833  E0 F0 F8 F8 FC F8 FC F0 
+       7.  00:483B                          DB $0E,$18,$06,$00,$C0,$E0,$F0,$00    
+       7.  00:483B  0E 18 06 00 C0 E0 F0 00 
+       8.  00:4843                          ; mask 1
+       9.  00:4843                          DB $00,$00,$00,$00,$00,$00,$00,$00
+       9.  00:4843  00 00 00 00 00 00 00 00 
+      10.  00:484B                          DB $0F,$00,$03,$03,$01,$01,$00,$00
+      10.  00:484B  0F 00 03 03 01 01 00 00 
+      11.  00:4853                          DB $00,$00,$00,$00,$00,$00,$00,$00
+      11.  00:4853  00 00 00 00 00 00 00 00 
+      12.  00:485B                          DB $F0,$06,$C0,$C0,$80,$80,$80,$00
+      12.  00:485B  F0 06 C0 C0 80 80 80 00 
+      13.  00:4863                          ; mask 2
+      14.  00:4863                          DB $00,$00,$00,$00,$00,$00,$00,$00
+      14.  00:4863  00 00 00 00 00 00 00 00 
+      15.  00:486B                          DB $00,$07,$01,$01,$00,$00,$00,$00
+      15.  00:486B  00 07 01 01 00 00 00 00 
+      16.  00:4873                          DB $00,$00,$00,$00,$00,$00,$00,$00
+      16.  00:4873  00 00 00 00 00 00 00 00 
+      17.  00:487B                          DB $00,$E0,$80,$80,$00,$00,$00,$00    
+      17.  00:487B  00 E0 80 80 00 00 00 00 
+      18.  00:4883                      
+      19.  00:4883                          ; UP 2
+      20.  00:4883                          ; mask 0
+      21.  00:4883                          DB $03,$0F,$1F,$1F,$1F,$3F,$1F,$0F
+      21.  00:4883  03 0F 1F 1F 1F 3F 1F 0F 
+      22.  00:488B                          DB $70,$18,$60,$00,$03,$07,$0E,$00
+      22.  00:488B  70 18 60 00 03 07 0E 00 
+      23.  00:4893                          DB $E0,$F0,$F8,$F8,$FC,$F8,$FC,$F0
+      23.  00:4893  E0 F0 F8 F8 FC F8 FC F0 
+      24.  00:489B                          DB $0C,$1E,$06,$06,$C0,$C0,$E0,$70    
+      24.  00:489B  0C 1E 06 06 C0 C0 E0 70 
+      25.  00:48A3                          ; mask 1
+      26.  00:48A3                          DB $00,$00,$00,$00,$00,$00,$00,$00
+      26.  00:48A3  00 00 00 00 00 00 00 00 
+      27.  00:48AB                          DB $0F,$60,$03,$03,$01,$01,$00,$00
+      27.  00:48AB  0F 60 03 03 01 01 00 00 
+      28.  00:48B3                          DB $00,$00,$00,$00,$00,$00,$00,$00
+      28.  00:48B3  00 00 00 00 00 00 00 00 
+      29.  00:48BB                          DB $F0,$00,$C0,$C0,$80,$80,$80,$00
+      29.  00:48BB  F0 00 C0 C0 80 80 80 00 
+      30.  00:48C3                          ; mask 2
+      31.  00:48C3                          DB $00,$00,$00,$00,$00,$00,$00,$00
+      31.  00:48C3  00 00 00 00 00 00 00 00 
+      32.  00:48CB                          DB $00,$07,$01,$01,$00,$00,$00,$00
+      32.  00:48CB  00 07 01 01 00 00 00 00 
+      33.  00:48D3                          DB $00,$00,$00,$00,$00,$00,$00,$00
+      33.  00:48D3  00 00 00 00 00 00 00 00 
+      34.  00:48DB                          DB $00,$E0,$80,$80,$00,$00,$00,$00
+      34.  00:48DB  00 E0 80 80 00 00 00 00 
+      35.  00:48E3                      
+      36.  00:48E3                      SPRITE_P1_DOWN:
+      37.  00:48E3                          ; DOWN 1 - 00h
+      38.  00:48E3                          DB $03,$0F,$00,$0A,$0E,$0D,$07,$03
+      38.  00:48E3  03 0F 00 0A 0E 0D 07 03 
+      39.  00:48EB                          DB $3E,$7B,$60,$60,$03,$03,$06,$0E
+      39.  00:48EB  3E 7B 60 60 03 03 06 0E 
+      40.  00:48F3                          DB $E0,$F0,$A0,$90,$70,$B0,$E0,$C0
+      40.  00:48F3  E0 F0 A0 90 70 B0 E0 C0 
+      41.  00:48FB                          DB $7E,$D8,$06,$00,$C0,$E0,$F0,$00
+      41.  00:48FB  7E D8 06 00 C0 E0 F0 00 
+      42.  00:4903                          ; mask 1 - 04h
+      43.  00:4903                          DB $00,$00,$1F,$15,$11,$32,$18,$0C
+      43.  00:4903  00 00 1F 15 11 32 18 0C 
+      44.  00:490B                          DB $01,$00,$03,$03,$01,$01,$00,$00
+      44.  00:490B  01 00 03 03 01 01 00 00 
+      45.  00:4913                          DB $00,$00,$58,$68,$8C,$48,$1C,$30
+      45.  00:4913  00 00 58 68 8C 48 1C 30 
+      46.  00:491B                          DB $80,$06,$C0,$C0,$80,$80,$80,$00
+      46.  00:491B  80 06 C0 C0 80 80 80 00 
+      47.  00:4923                          ; mask 2 - 08h
+      48.  00:4923                          DB $00,$00,$00,$00,$00,$30,$00,$00
+      48.  00:4923  00 00 00 00 00 30 00 00 
+      49.  00:492B                          DB $00,$04,$00,$00,$00,$00,$00,$00
+      49.  00:492B  00 04 00 00 00 00 00 00 
+      50.  00:4933                          DB $00,$00,$00,$00,$00,$08,$00,$00
+      50.  00:4933  00 00 00 00 00 08 00 00 
+      51.  00:493B                          DB $00,$20,$00,$00,$00,$00,$00,$00
+      51.  00:493B  00 20 00 00 00 00 00 00 
+      52.  00:4943                      
+      53.  00:4943                          ; DOWN 2
+      54.  00:4943                          ; mask 0 - 0Ch
+      55.  00:4943                          DB $03,$0F,$00,$0A,$0E,$0D,$07,$03
+      55.  00:4943  03 0F 00 0A 0E 0D 07 03 
+      56.  00:494B                          DB $7E,$1B,$60,$00,$03,$07,$0E,$00
+      56.  00:494B  7E 1B 60 00 03 07 0E 00 
+      57.  00:4953                          DB $E0,$F0,$A0,$90,$70,$B0,$E0,$C0
+      57.  00:4953  E0 F0 A0 90 70 B0 E0 C0 
+      58.  00:495B                          DB $7C,$DE,$06,$06,$C0,$C0,$E0,$70
+      58.  00:495B  7C DE 06 06 C0 C0 E0 70 
+      59.  00:4963                          ; mask 1 - 10h
+      60.  00:4963                          DB $00,$00,$1F,$15,$11,$32,$18,$0C
+      60.  00:4963  00 00 1F 15 11 32 18 0C 
+      61.  00:496B                          DB $01,$60,$03,$03,$01,$01,$00,$00
+      61.  00:496B  01 60 03 03 01 01 00 00 
+      62.  00:4973                          DB $00,$00,$58,$68,$8C,$48,$1C,$30
+      62.  00:4973  00 00 58 68 8C 48 1C 30 
+      63.  00:497B                          DB $80,$00,$C0,$C0,$80,$80,$80,$00
+      63.  00:497B  80 00 C0 C0 80 80 80 00 
+      64.  00:4983                          ; mask 2 - 14h
+      65.  00:4983                          DB $00,$00,$00,$00,$00,$30,$00,$00
+      65.  00:4983  00 00 00 00 00 30 00 00 
+      66.  00:498B                          DB $00,$04,$00,$00,$00,$00,$00,$00
+      66.  00:498B  00 04 00 00 00 00 00 00 
+      67.  00:4993                          DB $00,$00,$00,$00,$00,$08,$00,$00
+      67.  00:4993  00 00 00 00 00 08 00 00 
+      68.  00:499B                          DB $00,$20,$00,$00,$00,$00,$00,$00
+      68.  00:499B  00 20 00 00 00 00 00 00 
+      69.  00:49A3                      
+      70.  00:49A3                      SPRITE_P1_LEFT:         
+      71.  00:49A3                          ; --- Slot 1
+      72.  00:49A3                          ; mask 0
+      73.  00:49A3                          DB $07,$1F,$03,$07,$0B,$1F,$0F,$07
+      73.  00:49A3  07 1F 03 07 0B 1F 0F 07 
+      74.  00:49AB                          DB $03,$0F,$30,$30,$03,$01,$01,$03
+      74.  00:49AB  03 0F 30 30 03 01 01 03 
+      75.  00:49B3                          DB $C0,$E0,$00,$80,$C0,$C0,$80,$00
+      75.  00:49B3  C0 E0 00 80 C0 C0 80 00 
+      76.  00:49BB                          DB $C0,$80,$00,$00,$D8,$B0,$20,$00
+      76.  00:49BB  C0 80 00 00 D8 B0 20 00 
+      77.  00:49C3                          ; mask 1
+      78.  00:49C3                          DB $00,$00,$0C,$18,$34,$00,$00,$00
+      78.  00:49C3  00 00 0C 18 34 00 00 00 
+      79.  00:49CB                          DB $0C,$00,$09,$03,$00,$00,$00,$00
+      79.  00:49CB  0C 00 09 03 00 00 00 00 
+      80.  00:49D3                          DB $00,$00,$F0,$78,$38,$3C,$70,$F8
+      80.  00:49D3  00 00 F0 78 38 3C 70 F8 
+      81.  00:49DB                          DB $00,$78,$C0,$F8,$18,$10,$00,$00
+      81.  00:49DB  00 78 C0 F8 18 10 00 00 
+      82.  00:49E3                          ; mask 2
+      83.  00:49E3                          DB $00,$00,$00,$00,$30,$00,$00,$00
+      83.  00:49E3  00 00 00 00 30 00 00 00 
+      84.  00:49EB                          DB $00,$00,$01,$00,$00,$00,$00,$00
+      84.  00:49EB  00 00 01 00 00 00 00 00 
+      85.  00:49F3                          DB $00,$00,$00,$00,$38,$00,$00,$00
+      85.  00:49F3  00 00 00 00 38 00 00 00 
+      86.  00:49FB                          DB $3C,$00,$F0,$38,$00,$00,$00,$00
+      86.  00:49FB  3C 00 F0 38 00 00 00 00 
+      87.  00:4A03                              
+      88.  00:4A03                          ; --- Slot 3
+      89.  00:4A03                          ; mask 0
+      90.  00:4A03                          DB $07,$1F,$03,$07,$0B,$1F,$0F,$07
+      90.  00:4A03  07 1F 03 07 0B 1F 0F 07 
+      91.  00:4A0B                          DB $03,$0F,$01,$03,$03,$01,$03,$06
+      91.  00:4A0B  03 0F 01 03 03 01 03 06 
+      92.  00:4A13                          DB $C0,$E0,$00,$80,$C0,$C0,$80,$00
+      92.  00:4A13  C0 E0 00 80 C0 C0 80 00 
+      93.  00:4A1B                          DB $C0,$80,$F0,$F8,$D8,$D0,$40,$C0
+      93.  00:4A1B  C0 80 F0 F8 D8 D0 40 C0 
+      94.  00:4A23                          ; mask 1
+      95.  00:4A23                          DB $00,$00,$0C,$18,$34,$00,$00,$00
+      95.  00:4A23  00 00 0C 18 34 00 00 00 
+      96.  00:4A2B                          DB $0C,$30,$31,$00,$00,$00,$00,$00
+      96.  00:4A2B  0C 30 31 00 00 00 00 00 
+      97.  00:4A33                          DB $00,$00,$F0,$78,$38,$3C,$70,$F8
+      97.  00:4A33  00 00 F0 78 38 3C 70 F8 
+      98.  00:4A3B                          DB $00,$00,$C0,$38,$18,$10,$00,$00
+      98.  00:4A3B  00 00 C0 38 18 10 00 00 
+      99.  00:4A43                          ; mask 2
+     100.  00:4A43                          DB $00,$00,$00,$00,$30,$00,$00,$00
+     100.  00:4A43  00 00 00 00 30 00 00 00 
+     101.  00:4A4B                          DB $00,$00,$30,$00,$00,$00,$00,$00
+     101.  00:4A4B  00 00 30 00 00 00 00 00 
+     102.  00:4A53                          DB $00,$00,$00,$00,$38,$00,$00,$00
+     102.  00:4A53  00 00 00 00 38 00 00 00 
+     103.  00:4A5B                          DB $3C,$78,$00,$00,$00,$00,$00,$00
+     103.  00:4A5B  3C 78 00 00 00 00 00 00 
+     104.  00:4A63                      
+     105.  00:4A63                      SPRITE_P1_RIGHT:
+     106.  00:4A63                          ; --- Slot 0
+     107.  00:4A63                          ; mask 0
+     108.  00:4A63                          DB $03,$07,$00,$01,$03,$03,$01,$00
+     108.  00:4A63  03 07 00 01 03 03 01 00 
+     109.  00:4A6B                          DB $03,$01,$00,$00,$1B,$0D,$04,$00
+     109.  00:4A6B  03 01 00 00 1B 0D 04 00 
+     110.  00:4A73                          DB $E0,$F8,$C0,$E0,$D0,$F8,$F0,$E0
+     110.  00:4A73  E0 F8 C0 E0 D0 F8 F0 E0 
+     111.  00:4A7B                          DB $C0,$F0,$0C,$0C,$C0,$80,$80,$C0
+     111.  00:4A7B  C0 F0 0C 0C C0 80 80 C0 
+     112.  00:4A83                          ; mask 1
+     113.  00:4A83                          DB $00,$00,$0F,$1E,$1C,$3C,$0E,$1F
+     113.  00:4A83  00 00 0F 1E 1C 3C 0E 1F 
+     114.  00:4A8B                          DB $00,$1E,$03,$1F,$18,$08,$00,$00
+     114.  00:4A8B  00 1E 03 1F 18 08 00 00 
+     115.  00:4A93                          DB $00,$00,$30,$18,$2C,$00,$00,$00
+     115.  00:4A93  00 00 30 18 2C 00 00 00 
+     116.  00:4A9B                          DB $30,$00,$90,$C0,$00,$00,$00,$00
+     116.  00:4A9B  30 00 90 C0 00 00 00 00 
+     117.  00:4AA3                          ; mask 2
+     118.  00:4AA3                          DB $00,$00,$00,$00,$1C,$00,$00,$00
+     118.  00:4AA3  00 00 00 00 1C 00 00 00 
+     119.  00:4AAB                          DB $3C,$00,$0F,$1C,$00,$00,$00,$00
+     119.  00:4AAB  3C 00 0F 1C 00 00 00 00 
+     120.  00:4AB3                          DB $00,$00,$00,$00,$0C,$00,$00,$00
+     120.  00:4AB3  00 00 00 00 0C 00 00 00 
+     121.  00:4ABB                          DB $00,$00,$80,$00,$00,$00,$00,$00
+     121.  00:4ABB  00 00 80 00 00 00 00 00 
+     122.  00:4AC3                      
+     123.  00:4AC3                          ; --- Slot 2
+     124.  00:4AC3                          ; mask 0
+     125.  00:4AC3                          DB $03,$07,$00,$01,$03,$03,$01,$00
+     125.  00:4AC3  03 07 00 01 03 03 01 00 
+     126.  00:4ACB                          DB $03,$01,$0F,$1F,$1B,$0B,$02,$03
+     126.  00:4ACB  03 01 0F 1F 1B 0B 02 03 
+     127.  00:4AD3                          DB $E0,$F8,$C0,$E0,$D0,$F8,$F0,$E0
+     127.  00:4AD3  E0 F8 C0 E0 D0 F8 F0 E0 
+     128.  00:4ADB                          DB $C0,$F0,$80,$C0,$C0,$80,$C0,$60
+     128.  00:4ADB  C0 F0 80 C0 C0 80 C0 60 
+     129.  00:4AE3                          ; mask 1
+     130.  00:4AE3                          DB $00,$00,$0F,$1E,$1C,$3C,$0E,$1F
+     130.  00:4AE3  00 00 0F 1E 1C 3C 0E 1F 
+     131.  00:4AEB                          DB $00,$00,$03,$1C,$18,$08,$00,$00
+     131.  00:4AEB  00 00 03 1C 18 08 00 00 
+     132.  00:4AF3                          DB $00,$00,$30,$18,$2C,$00,$00,$00
+     132.  00:4AF3  00 00 30 18 2C 00 00 00 
+     133.  00:4AFB                          DB $30,$0C,$8C,$00,$00,$00,$00,$00
+     133.  00:4AFB  30 0C 8C 00 00 00 00 00 
+     134.  00:4B03                          ; mask 2
+     135.  00:4B03                          DB $00,$00,$00,$00,$1C,$00,$00,$00
+     135.  00:4B03  00 00 00 00 1C 00 00 00 
+     136.  00:4B0B                          DB $3C,$1E,$00,$00,$00,$00,$00,$00
+     136.  00:4B0B  3C 1E 00 00 00 00 00 00 
+     137.  00:4B13                          DB $00,$00,$00,$00,$0C,$00,$00,$00
+     137.  00:4B13  00 00 00 00 0C 00 00 00 
+     138.  00:4B1B                          DB $00,$00,$0C,$00,$00,$00,$00,$00
+     138.  00:4B1B  00 00 0C 00 00 00 00 00 
+     139.  00:4B23                      
+     140.  00:4B23                      SPRITE_PATTERN:    
+     141.  00:4B23                          ; P1 - DOWN 1 
+     142.  00:4B23                          ; mask 0 - 00h
+     143.  00:4B23                          DB $03,$0F,$00,$0A,$0E,$0D,$07,$03
+     143.  00:4B23  03 0F 00 0A 0E 0D 07 03 
+     144.  00:4B2B                          DB $3E,$7B,$60,$60,$03,$03,$06,$0E
+     144.  00:4B2B  3E 7B 60 60 03 03 06 0E 
+     145.  00:4B33                          DB $E0,$F0,$A0,$90,$70,$B0,$E0,$C0
+     145.  00:4B33  E0 F0 A0 90 70 B0 E0 C0 
+     146.  00:4B3B                          DB $7E,$D8,$06,$00,$C0,$E0,$F0,$00
+     146.  00:4B3B  7E D8 06 00 C0 E0 F0 00 
+     147.  00:4B43                          ; mask 1 - 04h
+     148.  00:4B43                          DB $00,$00,$1F,$15,$11,$32,$18,$0C
+     148.  00:4B43  00 00 1F 15 11 32 18 0C 
+     149.  00:4B4B                          DB $01,$00,$03,$03,$01,$01,$00,$00
+     149.  00:4B4B  01 00 03 03 01 01 00 00 
+     150.  00:4B53                          DB $00,$00,$58,$68,$8C,$48,$1C,$30
+     150.  00:4B53  00 00 58 68 8C 48 1C 30 
+     151.  00:4B5B                          DB $80,$06,$C0,$C0,$80,$80,$80,$00
+     151.  00:4B5B  80 06 C0 C0 80 80 80 00 
+     152.  00:4B63                          ; mask 2 - 08h
+     153.  00:4B63                          DB $00,$00,$00,$00,$00,$30,$00,$00
+     153.  00:4B63  00 00 00 00 00 30 00 00 
+     154.  00:4B6B                          DB $00,$04,$00,$00,$00,$00,$00,$00
+     154.  00:4B6B  00 04 00 00 00 00 00 00 
+     155.  00:4B73                          DB $00,$00,$00,$00,$00,$08,$00,$00
+     155.  00:4B73  00 00 00 00 00 08 00 00 
+     156.  00:4B7B                          DB $00,$20,$00,$00,$00,$00,$00,$00
+     156.  00:4B7B  00 20 00 00 00 00 00 00 
+     157.  00:4B83                      
+     158.  00:4B83                          ; P1 - DOWN 2 
+     159.  00:4B83                          ; mask 0 - 0Ch
+     160.  00:4B83                          DB $03,$0F,$00,$0A,$0E,$0D,$07,$03
+     160.  00:4B83  03 0F 00 0A 0E 0D 07 03 
+     161.  00:4B8B                          DB $7E,$1B,$60,$00,$03,$07,$0E,$00
+     161.  00:4B8B  7E 1B 60 00 03 07 0E 00 
+     162.  00:4B93                          DB $E0,$F0,$A0,$90,$70,$B0,$E0,$C0
+     162.  00:4B93  E0 F0 A0 90 70 B0 E0 C0 
+     163.  00:4B9B                          DB $7C,$DE,$06,$06,$C0,$C0,$E0,$70
+     163.  00:4B9B  7C DE 06 06 C0 C0 E0 70 
+     164.  00:4BA3                          ; mask 1 - 10h
+     165.  00:4BA3                          DB $00,$00,$1F,$15,$11,$32,$18,$0C
+     165.  00:4BA3  00 00 1F 15 11 32 18 0C 
+     166.  00:4BAB                          DB $01,$60,$03,$03,$01,$01,$00,$00
+     166.  00:4BAB  01 60 03 03 01 01 00 00 
+     167.  00:4BB3                          DB $00,$00,$58,$68,$8C,$48,$1C,$30
+     167.  00:4BB3  00 00 58 68 8C 48 1C 30 
+     168.  00:4BBB                          DB $80,$00,$C0,$C0,$80,$80,$80,$00
+     168.  00:4BBB  80 00 C0 C0 80 80 80 00 
+     169.  00:4BC3                          ; mask 2 - 14h
+     170.  00:4BC3                          DB $00,$00,$00,$00,$00,$30,$00,$00
+     170.  00:4BC3  00 00 00 00 00 30 00 00 
+     171.  00:4BCB                          DB $00,$04,$00,$00,$00,$00,$00,$00
+     171.  00:4BCB  00 04 00 00 00 00 00 00 
+     172.  00:4BD3                          DB $00,$00,$00,$00,$00,$08,$00,$00
+     172.  00:4BD3  00 00 00 00 00 08 00 00 
+     173.  00:4BDB                          DB $00,$20,$00,$00,$00,$00,$00,$00
+     173.  00:4BDB  00 20 00 00 00 00 00 00 
+     174.  00:4BE3                          
+     175.  00:4BE3                          ;Ghost 1 Left - 18H
+     176.  00:4BE3                          DB 00h,01h,07h,0fh,1fh,3fh,7fh,01h
+     176.  00:4BE3  00 01 07 0F 1F 3F 7F 01 
+     177.  00:4BEB                          DB $15,$14,$7f,$3f,$3f,$3f,$3f,$7f
+     177.  00:4BEB  15 14 7F 3F 3F 3F 3F 7F 
+     178.  00:4BF3                          DB $00,$e0,$80,$00,$00,$80,$80,$c0
+     178.  00:4BF3  00 E0 80 00 00 80 80 C0 
+     179.  00:4BFB                          DB $c0,$e0,$f0,$f8,$fc,$fc,$fe,$ff  
+     179.  00:4BFB  C0 E0 F0 F8 FC FC FE FF 
+     180.  00:4C03                          
+     181.  00:4C03                          ; Ghost 2 Left - 1Ch
+     182.  00:4C03                          DB $00,$01,$07,$0f,$1f,$3f,$7f,$01
+     182.  00:4C03  00 01 07 0F 1F 3F 7F 01 
+     183.  00:4C0B                          DB $15,$14,$7f,$3f,$3f,$7f,$7f,$83
+     183.  00:4C0B  15 14 7F 3F 3F 7F 7F 83 
+     184.  00:4C13                          DB $00,$e0,$80,$00,$00,$80,$80,$c0
+     184.  00:4C13  00 E0 80 00 00 80 80 C0 
+     185.  00:4C1B                          DB $c0,$e0,$e0,$f0,$f8,$fc,$fe,$ff      
+     185.  00:4C1B  C0 E0 E0 F0 F8 FC FE FF 
+     186.  00:4C23                      
+     187.  00:4C23                          ; Ghost 1 Right - 20h
+     188.  00:4C23                          DB $00,$07,$01,$00,$00,$01,$01,$03
+     188.  00:4C23  00 07 01 00 00 01 01 03 
+     189.  00:4C2B                          DB $03,$07,$07,$0f,$1f,$3f,$7f,$ff
+     189.  00:4C2B  03 07 07 0F 1F 3F 7F FF 
+     190.  00:4C33                          DB $00,$80,$e0,$f0,$f8,$fc,$fe,$80
+     190.  00:4C33  00 80 E0 F0 F8 FC FE 80 
+     191.  00:4C3B                          DB $a8,$28,$fe,$fc,$fc,$fe,$fe,$c1
+     191.  00:4C3B  A8 28 FE FC FC FE FE C1 
+     192.  00:4C43                          
+     193.  00:4C43                          ; Ghost 2 Right - 24h
+     194.  00:4C43                          DB $00,$07,$01,$00,$00,$01,$01,$03
+     194.  00:4C43  00 07 01 00 00 01 01 03 
+     195.  00:4C4B                          DB $03,$07,$0f,$1f,$3f,$3f,$7f,$ff
+     195.  00:4C4B  03 07 0F 1F 3F 3F 7F FF 
+     196.  00:4C53                          DB $00,$80,$e0,$f0,$f8,$fc,$fe,$80
+     196.  00:4C53  00 80 E0 F0 F8 FC FE 80 
+     197.  00:4C5B                          DB $a8,$28,$fe,$fc,$fc,$fc,$fc,$fe  
+     197.  00:4C5B  A8 28 FE FC FC FC FC FE 
+     198.  00:4C63                      
+     199.  00:4C63                          ; Antichrist - RIGHT
+     200.  00:4C63                          ; mask 0 - 28h
+     201.  00:4C63                          ;DB $00,$00,$00,$03,$07,$0F,$1E,$1E
+     202.  00:4C63                          ;DB $1E,$1C,$1E,$0F,$07,$03,$00,$00
+     203.  00:4C63                          ;DB $00,$00,$00,$00,$80,$C0,$E0,$F0
+     204.  00:4C63                          ;DB $F8,$70,$E0,$C0,$80,$00,$00,$00
+     205.  00:4C63                          DB $00,$00,$00,$01,$01,$01,$01,$01
+     205.  00:4C63  00 00 00 01 01 01 01 01 
+     206.  00:4C6B                          DB $01,$01,$07,$07,$01,$01,$00,$00
+     206.  00:4C6B  01 01 07 07 01 01 00 00 
+     207.  00:4C73                          DB $00,$00,$00,$80,$80,$80,$80,$80
+     207.  00:4C73  00 00 00 80 80 80 80 80 
+     208.  00:4C7B                          DB $80,$80,$E0,$E0,$80,$80,$00,$00
+     208.  00:4C7B  80 80 E0 E0 80 80 00 00 
+     209.  00:4C83                      
+     210.  00:4C83                          ; Esqueleto Left - 1
+     211.  00:4C83                          ; mask 0 - 2Ch
+     212.  00:4C83                          DB $1F,$1B,$2E,$24,$3F,$1F,$1F,$00
+     212.  00:4C83  1F 1B 2E 24 3F 1F 1F 00 
+     213.  00:4C8B                          DB $03,$05,$09,$04,$01,$02,$02,$04
+     213.  00:4C8B  03 05 09 04 01 02 02 04 
+     214.  00:4C93                          DB $80,$C0,$C0,$C0,$80,$00,$00,$80
+     214.  00:4C93  80 C0 C0 C0 80 00 00 80 
+     215.  00:4C9B                          DB $E0,$D0,$C8,$C4,$C0,$20,$20,$40
+     215.  00:4C9B  E0 D0 C8 C4 C0 20 20 40 
+     216.  00:4CA3                          ; mask 1 - 30h
+     217.  00:4CA3                          DB $1F,$1F,$3F,$3F,$3F,$1E,$0A,$00
+     217.  00:4CA3  1F 1F 3F 3F 3F 1E 0A 00 
+     218.  00:4CAB                          DB $03,$05,$09,$04,$01,$00,$00,$00
+     218.  00:4CAB  03 05 09 04 01 00 00 00 
+     219.  00:4CB3                          DB $00,$80,$80,$80,$00,$00,$00,$00
+     219.  00:4CB3  00 80 80 80 00 00 00 00 
+     220.  00:4CBB                          DB $80,$10,$88,$84,$80,$00,$00,$00
+     220.  00:4CBB  80 10 88 84 80 00 00 00 
+     221.  00:4CC3                      
+     222.  00:4CC3                          ; Esqueleto Left - 2
+     223.  00:4CC3                          ; mask 0 - 34h
+     224.  00:4CC3                          ; mask 0
+     225.  00:4CC3                          DB $0F,$0D,$17,$12,$1F,$0F,$0F,$00
+     225.  00:4CC3  0F 0D 17 12 1F 0F 0F 00 
+     226.  00:4CCB                          DB $03,$05,$09,$10,$01,$06,$08,$00
+     226.  00:4CCB  03 05 09 10 01 06 08 00 
+     227.  00:4CD3                          DB $C0,$E0,$60,$60,$C0,$80,$80,$80
+     227.  00:4CD3  C0 E0 60 60 C0 80 80 80 
+     228.  00:4CDB                          DB $E0,$D0,$C8,$D0,$C0,$20,$20,$50
+     228.  00:4CDB  E0 D0 C8 D0 C0 20 20 50 
+     229.  00:4CE3                          ; mask 1 - 38h
+     230.  00:4CE3                          DB $0F,$0F,$1F,$1F,$1F,$0F,$05,$00
+     230.  00:4CE3  0F 0F 1F 1F 1F 0F 05 00 
+     231.  00:4CEB                          DB $03,$05,$09,$10,$01,$00,$00,$00
+     231.  00:4CEB  03 05 09 10 01 00 00 00 
+     232.  00:4CF3                          DB $80,$C0,$C0,$C0,$80,$00,$00,$00
+     232.  00:4CF3  80 C0 C0 C0 80 00 00 00 
+     233.  00:4CFB                          DB $80,$10,$88,$90,$80,$00,$20,$40
+     233.  00:4CFB  80 10 88 90 80 00 20 40 
+     234.  00:4D03                          
+     235.  00:4D03                          ; Esqueleto Right - 1
+     236.  00:4D03                          ; mask 0 - 3Ch
+     237.  00:4D03                          DB $01,$03,$03,$03,$01,$00,$00,$01
+     237.  00:4D03  01 03 03 03 01 00 00 01 
+     238.  00:4D0B                          DB $07,$0B,$13,$23,$03,$04,$04,$02
+     238.  00:4D0B  07 0B 13 23 03 04 04 02 
+     239.  00:4D13                          DB $F8,$D8,$74,$24,$FC,$F8,$F8,$00
+     239.  00:4D13  F8 D8 74 24 FC F8 F8 00 
+     240.  00:4D1B                          DB $C0,$A0,$90,$20,$80,$40,$40,$20
+     240.  00:4D1B  C0 A0 90 20 80 40 40 20 
+     241.  00:4D23                          ; mask 1 - 40h
+     242.  00:4D23                          DB $00,$01,$01,$01,$00,$00,$00,$00
+     242.  00:4D23  00 01 01 01 00 00 00 00 
+     243.  00:4D2B                          DB $01,$08,$11,$21,$01,$00,$00,$00
+     243.  00:4D2B  01 08 11 21 01 00 00 00 
+     244.  00:4D33                          DB $F8,$F8,$FC,$FC,$FC,$78,$50,$00
+     244.  00:4D33  F8 F8 FC FC FC 78 50 00 
+     245.  00:4D3B                          DB $C0,$A0,$90,$20,$80,$00,$00,$00
+     245.  00:4D3B  C0 A0 90 20 80 00 00 00 
+     246.  00:4D43                          
+     247.  00:4D43                          ; Esqueleto Right - 2
+     248.  00:4D43                          ; mask 0 - 44h
+     249.  00:4D43                          DB $03,$07,$06,$06,$03,$01,$01,$01
+     249.  00:4D43  03 07 06 06 03 01 01 01 
+     250.  00:4D4B                          DB $07,$0B,$13,$0B,$03,$04,$04,$0A
+     250.  00:4D4B  07 0B 13 0B 03 04 04 0A 
+     251.  00:4D53                          DB $F0,$B0,$E8,$48,$F8,$F0,$F0,$00
+     251.  00:4D53  F0 B0 E8 48 F8 F0 F0 00 
+     252.  00:4D5B                          DB $C0,$A0,$90,$08,$80,$60,$10,$00
+     252.  00:4D5B  C0 A0 90 08 80 60 10 00 
+     253.  00:4D63                          ; mask 1 - 48h
+     254.  00:4D63                          DB $01,$03,$03,$03,$01,$00,$00,$00
+     254.  00:4D63  01 03 03 03 01 00 00 00 
+     255.  00:4D6B                          DB $01,$08,$11,$09,$01,$00,$04,$02
+     255.  00:4D6B  01 08 11 09 01 00 04 02 
+     256.  00:4D73                          DB $F0,$F0,$F8,$F8,$F8,$F0,$A0,$00
+     256.  00:4D73  F0 F0 F8 F8 F8 F0 A0 00 
+     257.  00:4D7B                          DB $C0,$A0,$90,$08,$80,$00,$00,$00
+     257.  00:4D7B  C0 A0 90 08 80 00 00 00 
+     258.  00:4D83                      
+     259.  00:4D83                      
+     260.  00:4D83                      SPRITE_COLOR_TABLE:       
+     261.  00:4D83                           ;P1 - DOWN 1
+     262.  00:4D83                          ; attr 0
+     263.  00:4D83                          DB $06,$06,$0B,$0B,$0B,$0B,$0B,$0B
+     263.  00:4D83  06 06 0B 0B 0B 0B 0B 0B 
+     264.  00:4D8B                          DB $0C,$0C,$0B,$0B,$04,$04,$04,$04
+     264.  00:4D8B  0C 0C 0B 0B 04 04 04 04 
+     265.  00:4D93                          ; attr 1
+     266.  00:4D93                          DB $00,$00,$46,$46,$46,$44,$46,$46
+     266.  00:4D93  00 00 46 46 46 44 46 46 
+     267.  00:4D9B                          DB $4B,$4B,$44,$44,$42,$42,$42,$00
+     267.  00:4D9B  4B 4B 44 44 42 42 42 00 
+     268.  00:4DA3                          ; attr 2
+     269.  00:4DA3                          DB $00,$00,$00,$00,$00,$42,$00,$00
+     269.  00:4DA3  00 00 00 00 00 42 00 00 
+     270.  00:4DAB                          DB $00,$46,$00,$00,$00,$00,$00,$00
+     270.  00:4DAB  00 46 00 00 00 00 00 00 
+     271.  00:4DB3                               
+     272.  00:4DB3                          ; Cada posición ha de corresponder con la tabla de atributos    
+     273.  00:4DB3                      
+     274.  00:4DB3                          ; Fantasma
+     275.  00:4DB3                          DB $08,$08,$08,$08,$08,$08,$08,$08
+     275.  00:4DB3  08 08 08 08 08 08 08 08 
+     276.  00:4DBB                          DB $08,$08,$08,$08,$08,$08,$08,$08
+     276.  00:4DBB  08 08 08 08 08 08 08 08 
+     277.  00:4DC3                          ; Fantasma
+     278.  00:4DC3                          ;DB $08,$08,$08,$08,$08,$08,$08,$08
+     279.  00:4DC3                          ;DB $08,$08,$08,$08,$08,$08,$08,$08
+     280.  00:4DC3                          ; Fantasma
+     281.  00:4DC3                          ;DB $08,$08,$08,$08,$08,$08,$08,$08
+     282.  00:4DC3                          ;DB $08,$08,$08,$08,$08,$08,$08,$08
+     283.  00:4DC3                          ; Fantasma
+     284.  00:4DC3                          ;DB $08,$08,$08,$08,$08,$08,$08,$08
+     285.  00:4DC3                          ;DB $08,$08,$08,$08,$08,$08,$08,$08    
+     286.  00:4DC3                          ; Me ahorro los colores del fantasma, la 4a posicion del array de atributos será para el disparo
+     287.  00:4DC3                          ; Boomerang
+     288.  00:4DC3                          ;DB $08,$08,$08,$08,$08,$08,$08,$08
+     289.  00:4DC3                          ;DB $08,$08,$08,$08,$08,$08,$08,$08
+     290.  00:4DC3                          DB $00,$00,$00,$0F,$0F,$0F,$0F,$0F
+     290.  00:4DC3  00 00 00 0F 0F 0F 0F 0F 
+     291.  00:4DCB                          DB $0F,$0F,$0F,$0F,$0F,$0F,$00,$00
+     291.  00:4DCB  0F 0F 0F 0F 0F 0F 00 00 
+     292.  00:4DD3                          
+     293.  00:4DD3                          ; Esqueleto Left 1
+     294.  00:4DD3                          ; attr 0
+     295.  00:4DD3                          DB $0E,$0E,$0E,$0E,$0E,$0E,$0E,$0E
+     295.  00:4DD3  0E 0E 0E 0E 0E 0E 0E 0E 
+     296.  00:4DDB                          DB $0E,$0E,$0E,$0E,$0E,$0F,$0F,$0F
+     296.  00:4DDB  0E 0E 0E 0E 0E 0F 0F 0F 
+     297.  00:4DE3                          ; attr 1
+     298.  00:4DE3                          DB $41,$49,$49,$49,$41,$41,$41,$00
+     298.  00:4DE3  41 49 49 49 41 41 41 00 
+     299.  00:4DEB                          DB $41,$41,$41,$41,$41,$00,$00,$00
+     299.  00:4DEB  41 41 41 41 41 00 00 00 
+     300.  00:4DF3                          ; Esqueleto Left 2
+     301.  00:4DF3                          ; attr 0
+     302.  00:4DF3                          DB $0E,$0E,$0E,$0E,$0E,$0E,$0E,$0E
+     302.  00:4DF3  0E 0E 0E 0E 0E 0E 0E 0E 
+     303.  00:4DFB                          DB $0E,$0E,$0E,$0E,$0E,$0F,$0E,$0E
+     303.  00:4DFB  0E 0E 0E 0E 0E 0F 0E 0E 
+     304.  00:4E03                          ; attr 1
+     305.  00:4E03                          DB $41,$49,$49,$49,$41,$41,$41,$00
+     305.  00:4E03  41 49 49 49 41 41 41 00 
+     306.  00:4E0B                          DB $41,$41,$41,$41,$41,$00,$41,$41
+     306.  00:4E0B  41 41 41 41 41 00 41 41 
+     307.  00:4E13                      
+     308.  00:4E13                          ; Esqueleto Right 1
+     309.  00:4E13                          ; attr 0
+     310.  00:4E13                          ;DB $0E,$0E,$0E,$0E,$0E,$0E,$0E,$0E
+     311.  00:4E13                          ;DB $0E,$0E,$0E,$0E,$0E,$0F,$0E,$0E    
+     312.  00:4E13                          ; attr 1
+     313.  00:4E13                          ;DB $41,$49,$49,$49,$41,$41,$41,$41
+     314.  00:4E13                          ;DB $41,$41,$41,$41,$41,$00,$41,$41
+     315.  00:4E13                          ; Esqueleto Right 2
+     316.  00:4E13                          ; attr 0
+     317.  00:4E13                          ;DB $0E,$0E,$0E,$0E,$0E,$0E,$0E,$0E
+     318.  00:4E13                          ;DB $0E,$0E,$0E,$0E,$0E,$0F,$0F,$0F
+     319.  00:4E13                          ; attr 1
+     320.  00:4E13                          ;DB $41,$49,$49,$49,$41,$41,$41,$41
+     321.  00:4E13                          ;DB $41,$41,$41,$41,$41,$00,$00,$00
+     322.  00:4E13                      
+     323.  00:4E13                      SPRITE_COLOR_P1_UP:
+     324.  00:4E13                          ;UP 1
+     325.  00:4E13                          ; attr 0
+     326.  00:4E13                          DB $06,$06,$06,$06,$06,$06,$06,$06
+     326.  00:4E13  06 06 06 06 06 06 06 06 
+     327.  00:4E1B                          DB $0C,$0C,$0B,$0B,$04,$04,$04,$04
+     327.  00:4E1B  0C 0C 0B 0B 04 04 04 04 
+     328.  00:4E23                          ; attr 1
+     329.  00:4E23                          DB $00,$00,$00,$00,$00,$00,$00,$00
+     329.  00:4E23  00 00 00 00 00 00 00 00 
+     330.  00:4E2B                          DB $46,$4B,$44,$44,$42,$42,$42,$00
+     330.  00:4E2B  46 4B 44 44 42 42 42 00 
+     331.  00:4E33                          ; attr 2
+     332.  00:4E33                          DB $00,$00,$00,$00,$00,$00,$00,$00
+     332.  00:4E33  00 00 00 00 00 00 00 00 
+     333.  00:4E3B                          DB $00,$46,$42,$42,$00,$00,$00,$00   
+     333.  00:4E3B  00 46 42 42 00 00 00 00 
+     334.  00:4E43                          
+     335.  00:4E43                          ;SPRITE_COLOR_P1_UP2:
+     336.  00:4E43                          ;UP 1
+     337.  00:4E43                          ; attr 0
+     338.  00:4E43                          DB $06,$06,$06,$06,$06,$06,$06,$06
+     338.  00:4E43  06 06 06 06 06 06 06 06 
+     339.  00:4E4B                          DB $0C,$0C,$0B,$0B,$04,$04,$04,$04
+     339.  00:4E4B  0C 0C 0B 0B 04 04 04 04 
+     340.  00:4E53                          ; attr 1
+     341.  00:4E53                          DB $00,$00,$00,$00,$00,$00,$00,$00
+     341.  00:4E53  00 00 00 00 00 00 00 00 
+     342.  00:4E5B                          DB $46,$4B,$44,$44,$42,$42,$42,$00
+     342.  00:4E5B  46 4B 44 44 42 42 42 00 
+     343.  00:4E63                          ; attr 2
+     344.  00:4E63                          DB $00,$00,$00,$00,$00,$00,$00,$00
+     344.  00:4E63  00 00 00 00 00 00 00 00 
+     345.  00:4E6B                          DB $00,$46,$42,$42,$00,$00,$00,$00   
+     345.  00:4E6B  00 46 42 42 00 00 00 00 
+     346.  00:4E73                      
+     347.  00:4E73                      SPRITE_COLOR_P1_DOWN:
+     348.  00:4E73                          ;DOWN 1
+     349.  00:4E73                          ; attr 0
+     350.  00:4E73                          DB $06,$06,$0B,$0B,$0B,$0B,$0B,$0B
+     350.  00:4E73  06 06 0B 0B 0B 0B 0B 0B 
+     351.  00:4E7B                          DB $0C,$0C,$0B,$0B,$04,$04,$04,$04
+     351.  00:4E7B  0C 0C 0B 0B 04 04 04 04 
+     352.  00:4E83                          ; attr 1
+     353.  00:4E83                          DB $00,$00,$46,$46,$46,$44,$46,$46
+     353.  00:4E83  00 00 46 46 46 44 46 46 
+     354.  00:4E8B                          DB $4B,$4B,$44,$44,$42,$42,$42,$00
+     354.  00:4E8B  4B 4B 44 44 42 42 42 00 
+     355.  00:4E93                          ; attr 2
+     356.  00:4E93                          DB $00,$00,$00,$00,$00,$42,$00,$00
+     356.  00:4E93  00 00 00 00 00 42 00 00 
+     357.  00:4E9B                          DB $00,$46,$00,$00,$00,$00,$00,$00        
+     357.  00:4E9B  00 46 00 00 00 00 00 00 
+     358.  00:4EA3                      
+     359.  00:4EA3                          ;SPRITE_COLOR_P1_DOWN2:
+     360.  00:4EA3                          ;DOWN 1
+     361.  00:4EA3                          ; attr 0
+     362.  00:4EA3                          DB $06,$06,$0B,$0B,$0B,$0B,$0B,$0B
+     362.  00:4EA3  06 06 0B 0B 0B 0B 0B 0B 
+     363.  00:4EAB                          DB $0C,$0C,$0B,$0B,$04,$04,$04,$04
+     363.  00:4EAB  0C 0C 0B 0B 04 04 04 04 
+     364.  00:4EB3                          ; attr 1
+     365.  00:4EB3                          DB $00,$00,$46,$46,$46,$44,$46,$46
+     365.  00:4EB3  00 00 46 46 46 44 46 46 
+     366.  00:4EBB                          DB $4B,$4B,$44,$44,$42,$42,$42,$00
+     366.  00:4EBB  4B 4B 44 44 42 42 42 00 
+     367.  00:4EC3                          ; attr 2
+     368.  00:4EC3                          DB $00,$00,$00,$00,$00,$42,$00,$00
+     368.  00:4EC3  00 00 00 00 00 42 00 00 
+     369.  00:4ECB                          DB $00,$46,$00,$00,$00,$00,$00,$00        
+     369.  00:4ECB  00 46 00 00 00 00 00 00 
+     370.  00:4ED3                      
+     371.  00:4ED3                      SPRITE_COLOR_P1_RIGHT:
+     372.  00:4ED3                          ; attr 0
+     373.  00:4ED3                          DB $06,$06,$0B,$0B,$0B,$0B,$0B,$0B
+     373.  00:4ED3  06 06 0B 0B 0B 0B 0B 0B 
+     374.  00:4EDB                          DB $0C,$0C,$0B,$0B,$04,$04,$04,$04
+     374.  00:4EDB  0C 0C 0B 0B 04 04 04 04 
+     375.  00:4EE3                          ; attr 1
+     376.  00:4EE3                          DB $00,$00,$46,$46,$44,$46,$46,$46
+     376.  00:4EE3  00 00 46 46 44 46 46 46 
+     377.  00:4EEB                          DB $4B,$46,$4C,$44,$42,$42,$00,$00
+     377.  00:4EEB  4B 46 4C 44 42 42 00 00 
+     378.  00:4EF3                          ; attr 2
+     379.  00:4EF3                          DB $00,$00,$00,$00,$42,$00,$00,$00
+     379.  00:4EF3  00 00 00 00 42 00 00 00 
+     380.  00:4EFB                          DB $46,$00,$46,$42,$00,$00,$00,$00
+     380.  00:4EFB  46 00 46 42 00 00 00 00 
+     381.  00:4F03                          ; attr 0
+     382.  00:4F03                          DB $06,$06,$0B,$0B,$0B,$0B,$0B,$0B
+     382.  00:4F03  06 06 0B 0B 0B 0B 0B 0B 
+     383.  00:4F0B                          DB $0C,$0C,$06,$04,$04,$04,$04,$04
+     383.  00:4F0B  0C 0C 06 04 04 04 04 04 
+     384.  00:4F13                          ; attr 1
+     385.  00:4F13                          DB $00,$00,$46,$46,$44,$46,$46,$46
+     385.  00:4F13  00 00 46 46 44 46 46 46 
+     386.  00:4F1B                          DB $4B,$4B,$4A,$42,$42,$42,$00,$00
+     386.  00:4F1B  4B 4B 4A 42 42 42 00 00 
+     387.  00:4F23                          ; attr 2
+     388.  00:4F23                          DB $00,$00,$00,$00,$42,$00,$00,$00
+     388.  00:4F23  00 00 00 00 42 00 00 00 
+     389.  00:4F2B                          DB $46,$46,$41,$00,$00,$00,$00,$00
+     389.  00:4F2B  46 46 41 00 00 00 00 00 
+     390.  00:4F33                      
+     391.  00:4F33                      mapa1:
+     392.  00:4F33                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#00,#00,#00,#00,#00,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
+     392.  00:4F33  01 01 01 01 01 01 01 01 01 01 01 01 01 00 00 00 
+     392.  00:4F43  00 00 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+     393.  00:4F53                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#00,#00,#00,#00,#00,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
+     393.  00:4F53  01 01 01 01 01 01 01 01 01 01 01 01 01 00 00 00 
+     393.  00:4F63  00 00 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+     394.  00:4F73                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
+     394.  00:4F73  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     394.  00:4F83  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
+     395.  00:4F93                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
+     395.  00:4F93  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     395.  00:4FA3  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
+     396.  00:4FB3                            db #01,#01,#00,#00,#01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
+     396.  00:4FB3  01 01 00 00 01 01 00 00 00 00 00 00 00 00 00 00 
+     396.  00:4FC3  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
+     397.  00:4FD3                            db #01,#01,#00,#00,#01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
+     397.  00:4FD3  01 01 00 00 01 01 00 00 00 00 00 00 00 00 00 00 
+     397.  00:4FE3  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
+     398.  00:4FF3                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
+     398.  00:4FF3  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     398.  00:5003  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
+     399.  00:5013                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
+     399.  00:5013  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     399.  00:5023  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
+     400.  00:5033                          
+     401.  00:5033                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
+     401.  00:5033  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     401.  00:5043  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
+     402.  00:5053                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
+     402.  00:5053  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     402.  00:5063  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
+     403.  00:5073                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01,#00,#00,#00,#00,#00,#00,#01,#01,#00,#00,#00,#00,#01,#01        
+     403.  00:5073  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     403.  00:5083  01 01 00 00 00 00 00 00 01 01 00 00 00 00 01 01 
+     404.  00:5093                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01,#00,#00,#00,#00,#00,#00,#01,#01,#00,#00,#00,#00,#01,#01        
+     404.  00:5093  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     404.  00:50A3  01 01 00 00 00 00 00 00 01 01 00 00 00 00 01 01 
+     405.  00:50B3                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
+     405.  00:50B3  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     405.  00:50C3  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
+     406.  00:50D3                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
+     406.  00:50D3  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     406.  00:50E3  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
+     407.  00:50F3                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
+     407.  00:50F3  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     407.  00:5103  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
+     408.  00:5113                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
+     408.  00:5113  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     408.  00:5123  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
+     409.  00:5133                      
+     410.  00:5133                            db #01,#01,#00,#00,#00,#00,#01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
+     410.  00:5133  01 01 00 00 00 00 01 01 00 00 00 00 00 00 00 00 
+     410.  00:5143  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
+     411.  00:5153                            db #01,#01,#00,#00,#00,#00,#01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
+     411.  00:5153  01 01 00 00 00 00 01 01 00 00 00 00 00 00 00 00 
+     411.  00:5163  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
+     412.  00:5173                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
+     412.  00:5173  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     412.  00:5183  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
+     413.  00:5193                            db #01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01        
+     413.  00:5193  01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     413.  00:51A3  00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 01 
+     414.  00:51B3                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
+     414.  00:51B3  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+     414.  00:51C3  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+     415.  00:51D3                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
+     415.  00:51D3  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+     415.  00:51E3  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+     416.  00:51F3                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
+     416.  00:51F3  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+     416.  00:5203  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+     417.  00:5213                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
+     417.  00:5213  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+     417.  00:5223  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+     418.  00:5233                      
+     419.  00:5233                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
+     419.  00:5233  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+     419.  00:5243  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+     420.  00:5253                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
+     420.  00:5253  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+     420.  00:5263  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+     421.  00:5273                      
+     422.  00:5273                      mapa2:
+     423.  00:5273                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
+     423.  00:5273  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+     423.  00:5283  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+     424.  00:5293                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     424.  00:5293  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     424.  00:52A3  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     425.  00:52B3                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     425.  00:52B3  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     425.  00:52C3  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     426.  00:52D3                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     426.  00:52D3  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     426.  00:52E3  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     427.  00:52F3                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     427.  00:52F3  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     427.  00:5303  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     428.  00:5313                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     428.  00:5313  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     428.  00:5323  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     429.  00:5333                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     429.  00:5333  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     429.  00:5343  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     430.  00:5353                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     430.  00:5353  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     430.  00:5363  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     431.  00:5373                            
+     432.  00:5373                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     432.  00:5373  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     432.  00:5383  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     433.  00:5393                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     433.  00:5393  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     433.  00:53A3  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     434.  00:53B3                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     434.  00:53B3  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     434.  00:53C3  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     435.  00:53D3                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     435.  00:53D3  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     435.  00:53E3  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     436.  00:53F3                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     436.  00:53F3  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     436.  00:5403  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     437.  00:5413                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     437.  00:5413  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     437.  00:5423  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     438.  00:5433                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     438.  00:5433  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     438.  00:5443  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     439.  00:5453                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     439.  00:5453  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     439.  00:5463  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     440.  00:5473                      
+     441.  00:5473                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     441.  00:5473  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     441.  00:5483  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     442.  00:5493                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     442.  00:5493  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     442.  00:54A3  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     443.  00:54B3                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     443.  00:54B3  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     443.  00:54C3  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     444.  00:54D3                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     444.  00:54D3  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     444.  00:54E3  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     445.  00:54F3                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     445.  00:54F3  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     445.  00:5503  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     446.  00:5513                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     446.  00:5513  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     446.  00:5523  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     447.  00:5533                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     447.  00:5533  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     447.  00:5543  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     448.  00:5553                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     448.  00:5553  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     448.  00:5563  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     449.  00:5573                            
+     450.  00:5573                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01              
+     450.  00:5573  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     450.  00:5583  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     451.  00:5593                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#00,#00,#00,#00,#00,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
+     451.  00:5593  01 01 01 01 01 01 01 01 01 01 01 01 01 00 00 00 
+     451.  00:55A3  00 00 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+     452.  00:55B3                      
+     453.  00:55B3                      
+     454.  00:55B3                      mapa0:      
+     455.  00:55B3                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#00,#00,#00,#00,#00,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
+     455.  00:55B3  01 01 01 01 01 01 01 01 01 01 01 01 01 00 00 00 
+     455.  00:55C3  00 00 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+     456.  00:55D3                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     456.  00:55D3  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     456.  00:55E3  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     457.  00:55F3                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     457.  00:55F3  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     457.  00:5603  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     458.  00:5613                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     458.  00:5613  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     458.  00:5623  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     459.  00:5633                            db #01,#00,#00,#00,#01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     459.  00:5633  01 00 00 00 01 01 00 00 00 00 00 00 00 00 00 00 
+     459.  00:5643  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     460.  00:5653                            db #01,#00,#00,#00,#01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     460.  00:5653  01 00 00 00 01 01 00 00 00 00 00 00 00 00 00 00 
+     460.  00:5663  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     461.  00:5673                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01       
+     461.  00:5673  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     461.  00:5683  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     462.  00:5693                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     462.  00:5693  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     462.  00:56A3  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     463.  00:56B3                            
+     464.  00:56B3                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     464.  00:56B3  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     464.  00:56C3  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     465.  00:56D3                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     465.  00:56D3  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     465.  00:56E3  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     466.  00:56F3                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01,#00,#00,#00,#00,#01        
+     466.  00:56F3  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     466.  00:5703  00 00 00 00 00 00 00 00 00 01 01 00 00 00 00 01 
+     467.  00:5713                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01,#01,#00,#00,#00,#00,#01        
+     467.  00:5713  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     467.  00:5723  00 00 00 00 00 00 00 00 00 01 01 00 00 00 00 01 
+     468.  00:5733                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     468.  00:5733  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     468.  00:5743  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     469.  00:5753                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     469.  00:5753  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     469.  00:5763  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     470.  00:5773                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     470.  00:5773  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     470.  00:5783  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     471.  00:5793                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     471.  00:5793  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     471.  00:57A3  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     472.  00:57B3                      
+     473.  00:57B3                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     473.  00:57B3  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     473.  00:57C3  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     474.  00:57D3                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     474.  00:57D3  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     474.  00:57E3  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     475.  00:57F3                            db #01,#00,#00,#00,#01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     475.  00:57F3  01 00 00 00 01 01 00 00 00 00 00 00 00 00 00 00 
+     475.  00:5803  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     476.  00:5813                            db #01,#00,#00,#00,#01,#01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     476.  00:5813  01 00 00 00 01 01 00 00 00 00 00 00 00 00 00 00 
+     476.  00:5823  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     477.  00:5833                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     477.  00:5833  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     477.  00:5843  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     478.  00:5853                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     478.  00:5853  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     478.  00:5863  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     479.  00:5873                            db #01,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#00,#01        
+     479.  00:5873  01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     479.  00:5883  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 
+     480.  00:5893                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
+     480.  00:5893  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+     480.  00:58A3  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+     481.  00:58B3                            
+     482.  00:58B3                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
+     482.  00:58B3  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+     482.  00:58C3  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+     483.  00:58D3                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
+     483.  00:58D3  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+     483.  00:58E3  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+     484.  00:58F3                            db #01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01,#01   
+     484.  00:58F3  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+     484.  00:5903  01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+     485.  00:5913                          
+     486.  00:5913                      
+     487.  00:5913                      SPRITE_COLOR_P1_LEFT:
+     488.  00:5913                          ; attr 0
+     489.  00:5913                          DB $06,$06,$0B,$0B,$0B,$0B,$0B,$0B
+     489.  00:5913  06 06 0B 0B 0B 0B 0B 0B 
+     490.  00:591B                          DB $0C,$0C,$0B,$0B,$04,$04,$04,$04
+     490.  00:591B  0C 0C 0B 0B 04 04 04 04 
+     491.  00:5923                          ; attr 1
+     492.  00:5923                          DB $00,$00,$46,$46,$44,$46,$46,$46
+     492.  00:5923  00 00 46 46 44 46 46 46 
+     493.  00:592B                          DB $4B,$46,$4C,$44,$42,$42,$00,$00
+     493.  00:592B  4B 46 4C 44 42 42 00 00 
+     494.  00:5933                          ; attr 2
+     495.  00:5933                          DB $00,$00,$00,$00,$42,$00,$00,$00
+     495.  00:5933  00 00 00 00 42 00 00 00 
+     496.  00:593B                          DB $46,$00,$46,$42,$00,$00,$00,$00
+     496.  00:593B  46 00 46 42 00 00 00 00 
+     497.  00:5943                          
+     498.  00:5943                          ;SPRITE_COLOR_P1_LEFT2:
+     499.  00:5943                          ; attr 0
+     500.  00:5943                          DB $06,$06,$0B,$0B,$0B,$0B,$0B,$0B
+     500.  00:5943  06 06 0B 0B 0B 0B 0B 0B 
+     501.  00:594B                          DB $0C,$0C,$06,$04,$04,$04,$04,$04
+     501.  00:594B  0C 0C 06 04 04 04 04 04 
+     502.  00:5953                          ; attr 1
+     503.  00:5953                          DB $00,$00,$46,$46,$44,$46,$46,$46
+     503.  00:5953  00 00 46 46 44 46 46 46 
+     504.  00:595B                          DB $4B,$4B,$4A,$42,$42,$42,$00,$00
+     504.  00:595B  4B 4B 4A 42 42 42 00 00 
+     505.  00:5963                          ; attr 2
+     506.  00:5963                          DB $00,$00,$00,$00,$42,$00,$00,$00
+     506.  00:5963  00 00 00 00 42 00 00 00 
+     507.  00:596B                          DB $46,$46,$41,$00,$00,$00,$00,$00
+     507.  00:596B  46 46 41 00 00 00 00 00 
+     508.  00:5973                      
+     509.  00:5973                      BLANK_DATA:
+     510.  00:5973                          DB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+     510.  00:5973  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     510.  00:5983  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     511.  00:5993                          DB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+     511.  00:5993  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     511.  00:59A3  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     512.  00:59B3                          DB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+     512.  00:59B3  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+     512.  00:59C3  00 00 00 00 
+     513.  00:59C7                          
+     459   00:59C7                      
+     460   00:59C7  (01)                 PAGE 1
      461   01:8000                      ; CODE O NO
      462   01:8000                      
      463   01:8000  (02)                 PAGE 2
@@ -2462,48 +2462,48 @@ Errors: 0
 00:00004514   INIT_CHARS_VARS
 00:00004585   STAGE1
 00:000045A2   MAIN_LOOP
-00:000045C7   MAIN_LOOP.animate_ghost
-00:000045E6   MAIN_LOOP.CHANGE_DIR_RIGHT
-00:000045F3   MAIN_LOOP.CHANGE_DIR_LEFT
-00:000045FC   MAIN_LOOP.check_pattern
-00:00004613   MAIN_LOOP.change_pattern_L
-00:0000461A   MAIN_LOOP.check_pattern_RIGHT
-00:00004629   MAIN_LOOP.change_pattern_R
-00:0000462D   MAIN_LOOP.continue
-00:00004630 X MAIN_LOOP.CHECK_GHOST
-00:0000464C X MAIN_LOOP.KILL_GHOST
-00:00004655   MAIN_LOOP.check_KB
-00:00004677 X no_arrows
-00:0000467F   SHOOT_MAIN_CHAR
-00:000046B9   SHOOT_MAIN_CHAR.SHOOT_RIGHT
-00:000046C8   SHOOT_MAIN_CHAR.SHOOT_UP
-00:000046DB   SHOOT_MAIN_CHAR.SHOOT_DOWN
-00:000046EB   SHOOT_MAIN_CHAR.CONTINUE
-00:000046EF   STAGE2
-00:00004745   MAIN_LOOP2
-00:00004766   MAIN_LOOP2.GHOST_DEAD
-00:00004771   MAIN_LOOP2.no_screen_change
-00:000047A3   MAIN_LOOP2.CHANGE_DIR_RIGHT
-00:000047B0   MAIN_LOOP2.CHANGE_DIR_LEFT
-00:000047B9   MAIN_LOOP2.check_pattern
-00:000047D8   MAIN_LOOP2.change_pattern_L
-00:000047E3   MAIN_LOOP2.check_pattern_RIGHT
-00:000047F6   MAIN_LOOP2.change_pattern_R
-00:000047FE   MAIN_LOOP2.continue
-00:00004826   SPRITE_P1_UP
-00:000048E6   SPRITE_P1_DOWN
-00:000049A6   SPRITE_P1_LEFT
-00:00004A66   SPRITE_P1_RIGHT
-00:00004B26   SPRITE_PATTERN
-00:00004D86   SPRITE_COLOR_TABLE
-00:00004E16   SPRITE_COLOR_P1_UP
-00:00004E76   SPRITE_COLOR_P1_DOWN
-00:00004ED6   SPRITE_COLOR_P1_RIGHT
-00:00004F36   mapa1
-00:00005276   mapa2
-00:000055B6 X mapa0
-00:00005916   SPRITE_COLOR_P1_LEFT
-00:00005976   BLANK_DATA
+00:000045C4   MAIN_LOOP.animate_ghost
+00:000045E3   MAIN_LOOP.CHANGE_DIR_RIGHT
+00:000045F0   MAIN_LOOP.CHANGE_DIR_LEFT
+00:000045F9   MAIN_LOOP.check_pattern
+00:00004610   MAIN_LOOP.change_pattern_L
+00:00004617   MAIN_LOOP.check_pattern_RIGHT
+00:00004626   MAIN_LOOP.change_pattern_R
+00:0000462A   MAIN_LOOP.continue
+00:0000462D X MAIN_LOOP.CHECK_GHOST
+00:00004649 X MAIN_LOOP.KILL_GHOST
+00:00004652   MAIN_LOOP.check_KB
+00:00004674 X no_arrows
+00:0000467C   SHOOT_MAIN_CHAR
+00:000046B6   SHOOT_MAIN_CHAR.SHOOT_RIGHT
+00:000046C5   SHOOT_MAIN_CHAR.SHOOT_UP
+00:000046D8   SHOOT_MAIN_CHAR.SHOOT_DOWN
+00:000046E8   SHOOT_MAIN_CHAR.CONTINUE
+00:000046EC   STAGE2
+00:00004742   MAIN_LOOP2
+00:00004763   MAIN_LOOP2.GHOST_DEAD
+00:0000476E   MAIN_LOOP2.no_screen_change
+00:000047A0   MAIN_LOOP2.CHANGE_DIR_RIGHT
+00:000047AD   MAIN_LOOP2.CHANGE_DIR_LEFT
+00:000047B6   MAIN_LOOP2.check_pattern
+00:000047D5   MAIN_LOOP2.change_pattern_L
+00:000047E0   MAIN_LOOP2.check_pattern_RIGHT
+00:000047F3   MAIN_LOOP2.change_pattern_R
+00:000047FB   MAIN_LOOP2.continue
+00:00004823   SPRITE_P1_UP
+00:000048E3   SPRITE_P1_DOWN
+00:000049A3   SPRITE_P1_LEFT
+00:00004A63   SPRITE_P1_RIGHT
+00:00004B23   SPRITE_PATTERN
+00:00004D83   SPRITE_COLOR_TABLE
+00:00004E13   SPRITE_COLOR_P1_UP
+00:00004E73   SPRITE_COLOR_P1_DOWN
+00:00004ED3   SPRITE_COLOR_P1_RIGHT
+00:00004F33   mapa1
+00:00005273   mapa2
+00:000055B3 X mapa0
+00:00005913   SPRITE_COLOR_P1_LEFT
+00:00005973   BLANK_DATA
 06:00008000   FONT
 07:00008000   CEMENTER1
 09:00008000   GRAPHIC
@@ -2555,12 +2555,12 @@ Errors: 0
 -------------------------------------------------
 
  Page: 00
-  Org: 00004000  Size: 00004000  Used: 000019D0
+  Org: 00004000  Size: 00004000  Used: 000019CD
 
    Address   Length Align   Label
-   00004000    6602         sardu01_strings
-   000059CA       6         
-   000059D0    9776       <empty>
+   00004000    6599         sardu01_strings
+   000059C7       6         
+   000059CD    9779       <empty>
 
  Page: 01
   Org: 00008000  Size: 00004000  Used: 00000000

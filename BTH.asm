@@ -125,7 +125,7 @@ MAIN_LOOP:
     LD IY, sardu01_strings
     CALL print_strings_dialog_box
     LD A,1
-    LD (SHOWING_DIALOG), A
+    ;LD (SHOWING_DIALOG), A
 
 .animate_ghost
     LD A,(CHAR_GHOST_DEAD)
