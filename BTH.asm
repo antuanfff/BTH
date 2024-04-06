@@ -43,6 +43,8 @@ START
     call INIT_CHARS_VARS
     LD A, -MOV_SPEED_GHOST
 	LD (CHAR_SPEED_X_GHOST), A
+    LD HL, PaletteData
+    CALL SetPalette
     CALL STAGE1
     ;call MAIN_LOOP
     ;CALL CHGET

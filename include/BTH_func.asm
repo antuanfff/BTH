@@ -367,3 +367,13 @@ DUMP_SPR_P1:
 
     ret
 
+SetPalette:
+	xor a
+	di
+	out ($99),a
+	ld a,16+128
+	out ($99),a
+	ld bc,$209A
+	otir
+	ei
+	ret
