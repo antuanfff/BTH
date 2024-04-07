@@ -1,4 +1,4 @@
-Sjasm Z80 Assembler v0.42c - www.xl2s.tk             [2024.04.06 - 19:30:55]
+Sjasm Z80 Assembler v0.42c - www.xl2s.tk             [2024.04.07 - 20:14:24]
 
 .\BTH.asm
 Errors: 0
@@ -2284,20 +2284,20 @@ Errors: 0
      514.  00:59DC                      PaletteData:
      515.  00:59DC                      			;  data 1 (red 0-7; blue 0-7); data 2 (0000; green 0-7)
      516.  00:59DC  00 00                   db 0x00, 0x00 ; Color index 0
-     517.  00:59DE  40 02                   db 0x40, 0x02 ; Color index 1
-     518.  00:59E0  45 04                   db 0x45, 0x04 ; Color index 2
-     519.  00:59E2  34 03                   db 0x34, 0x03 ; Color index 3
-     520.  00:59E4  23 02                   db 0x23, 0x02 ; Color index 4
-     521.  00:59E6  12 01                   db 0x12, 0x01 ; Color index 5
-     522.  00:59E8  30 00                   db 0x30, 0x00 ; Color index 6
-     523.  00:59EA  60 00                   db 0x60, 0x00 ; Color index 7
-     524.  00:59EC  36 04                   db 0x36, 0x04 ; Color index 8
-     525.  00:59EE  60 04                   db 0x60, 0x04 ; Color index 9
-     526.  00:59F0  70 07                   db 0x70, 0x07 ; Color index 10
-     527.  00:59F2  77 07                   db 0x77, 0x07 ; Color index 11
-     528.  00:59F4  14 02                   db 0x14, 0x02 ; Color index 12
-     529.  00:59F6  17 07                   db 0x17, 0x07 ; Color index 13
-     530.  00:59F8  75 06                   db 0x75, 0x06 ; Color index 14
+     517.  00:59DE  00 00                   db 0x00, 0x00 ; Color index 1
+     518.  00:59E0  40 03                   db 0x40, 0x03 ; Color index 2
+     519.  00:59E2  30 02                   db 0x30, 0x02 ; Color index 3
+     520.  00:59E4  11 01                   db 0x11, 0x01 ; Color index 4
+     521.  00:59E6  22 02                   db 0x22, 0x02 ; Color index 5
+     522.  00:59E8  33 03                   db 0x33, 0x03 ; Color index 6
+     523.  00:59EA  77 07                   db 0x77, 0x07 ; Color index 7
+     524.  00:59EC  33 03                   db 0x33, 0x03 ; Color index 8
+     525.  00:59EE  06 02                   db 0x06, 0x02 ; Color index 9
+     526.  00:59F0  70 00                   db 0x70, 0x00 ; Color index 10
+     527.  00:59F2  64 05                   db 0x64, 0x05 ; Color index 11
+     528.  00:59F4  50 00                   db 0x50, 0x00 ; Color index 12
+     529.  00:59F6  02 04                   db 0x02, 0x04 ; Color index 13
+     530.  00:59F8  01 02                   db 0x01, 0x02 ; Color index 14
      531.  00:59FA  00 00                   db 0x00, 0x00 ; Color index 15
      461   00:59FC                      
      462   00:59FC  (01)                 PAGE 1
@@ -2316,8 +2316,8 @@ Errors: 0
      475   07:8000                      CEMENTER1
      476   07:8000  (4000)               INCBIN "gfx\CEMENTER1.SC5",#7,#4000			; Cada página tiene 16K = 4000h
      477   07:C000  (08)                 PAGE 8
-     478   08:8000  (2A00)               INCBIN "gfx\CEMENTER1.SC5",#4007			; Cada página tiene 16K = 4000h 
-     479   08:AA00  (09)                 PAGE 9
+     478   08:8000  (4000)               INCBIN "gfx\CEMENTER1.SC5",#4007			; Cada página tiene 16K = 4000h 
+     479   08:C000  (09)                 PAGE 9
      480   09:8000                      GRAPHIC
      481   09:8000  (4000)               INCBIN "gfx\BTH.SR8",#7,#4000			; Cada página tiene 16K = 4000h
      482   09:C000  (0A)                 PAGE 10
@@ -2633,11 +2633,10 @@ Errors: 0
    00008000   16384         CEMENTER1
 
  Page: 08
-  Org: 00008000  Size: 00004000  Used: 00002A00
+  Org: 00008000  Size: 00004000  Used: 00004000
 
    Address   Length Align   Label
-   00008000   10752         
-   0000AA00    5632       <empty>
+   00008000   16384         
 
  Page: 09
   Org: 00008000  Size: 00004000  Used: 00004000
