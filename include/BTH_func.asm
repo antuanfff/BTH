@@ -244,9 +244,9 @@ SET_SCREEN5_MODE:
 	ld hl,FORCLR ; Variable del Sistema
 	ld [hl],15 ; Color del primer plano 15=blanco
 	inc hl ; FORCLR+1
-	ld [hl],1 ; Color de fondo 1=negro
+	ld [hl],15 ; Color de fondo 1=negro
 	inc hl ; FORCLR+2
-	ld [hl],1 ; Color del borde 1=negro
+	ld [hl],15 ; Color del borde 1=negro
 
     ld  a,5     ; La rutina CHGMOD nos obliga a poner en el registro A el modo de pantalla que queremos
     call CHGMOD ; Mira arriba, pone la explicación
