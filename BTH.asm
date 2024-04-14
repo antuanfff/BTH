@@ -120,16 +120,23 @@ MAIN_LOOP:
     
     LD A, (ix +1)   ; Cargamos la Y para mirar si hay colisión con la tumba
     CP 176
-    JR NZ, .animate_ghost
+    JR NZ, .check_dialog_box
     LD A, (SHOWING_DIALOG)
     CP 1
     JR Z, .animate_ghost
     LD IY, sardu01_strings
     CALL print_strings_dialog_box
     LD A,1
-    ;LD (SHOWING_DIALOG), A
+    LD (SHOWING_DIALOG), A
+    JR .animate_ghost
 
-.animate_ghost
+
+.check_dialog_box
+    LD A, (SHOWING_DIALOG)
+    CP 1
+    CALL Z, CLEAR_DIALOG_BOX
+
+.animate_ghost    
     LD A,(CHAR_GHOST_DEAD)
     CP $01
     JP Z,.continue
