@@ -118,7 +118,7 @@ MAIN_LOOP:
     JP Z, STAGE2
     call DUMP_SPR_ATTS    
     
-    LD A, (ix +1)   ; Cargamos la Y para mirar si hay colisión con la tumba
+    LD A, (ix +1)   ; Cargamos la X para mirar si hay colisión con la tumba
     CP 176
     JR NZ, .check_dialog_box
     LD A, (SHOWING_DIALOG)

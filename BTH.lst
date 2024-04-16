@@ -1,4 +1,4 @@
-Sjasm Z80 Assembler v0.42c - www.xl2s.tk             [2024.04.15 - 18:14:08]
+Sjasm Z80 Assembler v0.42c - www.xl2s.tk             [2024.04.16 - 14:09:53]
 
 .\BTH.asm
 Errors: 0
@@ -1028,7 +1028,7 @@ Errors: 0
      118   00:45C0  CA 12 47                JP Z, STAGE2
      119   00:45C3  CD 86 41                call DUMP_SPR_ATTS    
      120   00:45C6                          
-     121   00:45C6  DD 7E 01                LD A, (ix +1)   ; Cargamos la Y para mirar si hay colisión con la tumba
+     121   00:45C6  DD 7E 01                LD A, (ix +1)   ; Cargamos la X para mirar si hay colisión con la tumba
      122   00:45C9  FE B0                   CP 176
      123   00:45CB  20 15                   JR NZ, .check_dialog_box
      124   00:45CD  3A 00 C0                LD A, (SHOWING_DIALOG)
