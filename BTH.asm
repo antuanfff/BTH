@@ -66,9 +66,13 @@ INIT_CHARS_VARS:
     ld (ix+9), 7Fh
     ld (ix+10), 08h        
 
-    ld (ix+SPR_GHOST_STG1), $0f      ; Sprite 1 - Ghost
+    ld (ix+SPR_GHOST_STG1), $0f      ; Sprite 1 - Ghost - mask0
     ld (ix+SPR_GHOST_STG1+1), $B9
     ld (ix+SPR_GHOST_STG1+2), SPR_GHOST_STG1_PTRN_L1
+    
+    ld (ix+SPR_GHOST_STG1+4), $0f      ; Sprite 1 - Ghost - mask0
+    ld (ix+SPR_GHOST_STG1+5), $B9
+    ld (ix+SPR_GHOST_STG1+6), SPR_GHOST_STG1_PTRN_L1+4
     
     XOR A
     LD (JIFFY_TEMP),A
@@ -119,7 +123,7 @@ MAIN_LOOP:
     call DUMP_SPR_ATTS    
     
     LD A, (ix +1)   ; Cargamos la X para mirar si hay colisión con la tumba
-    CP 176
+    CP TOMB3_STG1_X
     JR NZ, .check_dialog_box
     LD A, (SHOWING_DIALOG)
     CP 1
@@ -144,7 +148,8 @@ MAIN_LOOP:
 	LD HL, (CHAR_SPEED_X_GHOST)
 	ADD L					; Actualizamos la posicion en base a la velocidad
     
-	LD (ix+SPR_GHOST_STG1+1), A	
+	LD (ix+SPR_GHOST_STG1+1), A
+    LD (ix+SPR_GHOST_STG1+5), A
     CP $16
     JP Z,.CHANGE_DIR_RIGHT
     CP $B9
@@ -173,9 +178,11 @@ MAIN_LOOP:
     CP SPR_GHOST_STG1_PTRN_L1
     jp z,.change_pattern_L
     LD (ix+SPR_GHOST_STG1+2),SPR_GHOST_STG1_PTRN_L1
+    LD (ix+SPR_GHOST_STG1+6),SPR_GHOST_STG1_PTRN_L1+4
     jp .continue
 .change_pattern_L:
     LD (ix+SPR_GHOST_STG1+2),SPR_GHOST_STG1_PTRN_L2
+    LD (ix+SPR_GHOST_STG1+6),SPR_GHOST_STG1_PTRN_L2+4
     jp .continue
 
 .check_pattern_RIGHT
@@ -183,9 +190,11 @@ MAIN_LOOP:
     CP SPR_GHOST_STG1_PTRN_R1
     jp z,.change_pattern_R
     LD (ix+SPR_GHOST_STG1+2),SPR_GHOST_STG1_PTRN_R1
+    LD (ix+SPR_GHOST_STG1+6),SPR_GHOST_STG1_PTRN_R1+4
     jp .continue
 .change_pattern_R:
     LD (ix+SPR_GHOST_STG1+2),SPR_GHOST_STG1_PTRN_R2
+    LD (ix+SPR_GHOST_STG1+6),SPR_GHOST_STG1_PTRN_R2+4
 
 .continue:    
     CALL MOVE_SHOOT
@@ -207,6 +216,7 @@ MAIN_LOOP:
     LD A,1
     LD (CHAR_GHOST_DEAD),A
     LD (ix+SPR_GHOST_STG1),217    
+    LD (ix+SPR_GHOST_STG1+4),217    
 
 .check_KB:
     halt    
@@ -329,6 +339,7 @@ STAGE2:
     LD (ix+8), 196    
     
     LD (ix+SPR_GHOST_STG1),217  ; ocultamos el fantasma
+    LD (ix+SPR_GHOST_STG1+4),217  ; ocultamos el fantasma
     
     call DUMP_SPR_ALL    
     CALL DUMP_SPR_P1
@@ -366,6 +377,7 @@ MAIN_LOOP2:
     CP $01
     JP Z, .GHOST_DEAD
     ld (ix+SPR_GHOST_STG1), $0F      ; Sprite 1 - Ghost
+    ld (ix+SPR_GHOST_STG1+4), $0F      ; Sprite 1 - Ghost
 .GHOST_DEAD:
     LD (ix+20),217  ; ocultamos el esqueleto
     LD (ix+24),217  ; ocultamos el esqueleto
