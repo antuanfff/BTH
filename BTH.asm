@@ -66,9 +66,9 @@ INIT_CHARS_VARS:
     ld (ix+9), 7Fh
     ld (ix+10), 08h        
 
-    ld (ix+12), $0f      ; Sprite 1 - Ghost
-    ld (ix+13), $B9
-    ld (ix+14), $18
+    ld (ix+SPR_GHOST_STG1), $0f      ; Sprite 1 - Ghost
+    ld (ix+SPR_GHOST_STG1+1), $B9
+    ld (ix+SPR_GHOST_STG1+2), SPR_GHOST_STG1_PTRN_L1
     
     XOR A
     LD (JIFFY_TEMP),A
@@ -140,11 +140,11 @@ MAIN_LOOP:
     LD A,(CHAR_GHOST_DEAD)
     CP $01
     JP Z,.continue
-    LD A, (ix+13)          ;cargamos la X del Fantasma
+    LD A, (ix+SPR_GHOST_STG1+1)          ;cargamos la X del Fantasma
 	LD HL, (CHAR_SPEED_X_GHOST)
 	ADD L					; Actualizamos la posicion en base a la velocidad
     
-	LD (ix+13), A	
+	LD (ix+SPR_GHOST_STG1+1), A	
     CP $16
     JP Z,.CHANGE_DIR_RIGHT
     CP $B9
@@ -169,23 +169,23 @@ MAIN_LOOP:
     LD A,(CHAR_DIR_GHOST1)
     CP $FF
     JP Z,.check_pattern_RIGHT
-    LD A, (ix+14)       ; Cargamos el patrón y lo cambiamos
-    CP $18
+    LD A, (ix+SPR_GHOST_STG1+2)       ; Cargamos el patrón y lo cambiamos
+    CP SPR_GHOST_STG1_PTRN_L1
     jp z,.change_pattern_L
-    LD (ix+14),$18
+    LD (ix+SPR_GHOST_STG1+2),SPR_GHOST_STG1_PTRN_L1
     jp .continue
 .change_pattern_L:
-    LD (ix+14),$1C
+    LD (ix+SPR_GHOST_STG1+2),SPR_GHOST_STG1_PTRN_L2
     jp .continue
 
 .check_pattern_RIGHT
-    LD A, (ix+14)       ; Cargamos el patrón y lo cambiamos
-    CP $20
+    LD A, (ix+SPR_GHOST_STG1+2)       ; Cargamos el patrón y lo cambiamos
+    CP SPR_GHOST_STG1_PTRN_R1
     jp z,.change_pattern_R
-    LD (ix+14),$20
+    LD (ix+SPR_GHOST_STG1+2),SPR_GHOST_STG1_PTRN_R1
     jp .continue
 .change_pattern_R:
-    LD (ix+14),$24
+    LD (ix+SPR_GHOST_STG1+2),SPR_GHOST_STG1_PTRN_R2
 
 .continue:    
     CALL MOVE_SHOOT
@@ -195,10 +195,10 @@ MAIN_LOOP:
     CP $01
     JP Z,.check_KB
 
-    LD B,(ix+16)         ; Y del disparo
-    LD C,(ix+17)         ; X del disparo
-    LD D,(ix+12)         ; Y del fantasma 
-    LD E,(ix+13)         ; X del fantasma
+    LD B,(ix+SPR_SHOOT_P1)         ; Y del disparo
+    LD C,(ix+SPR_SHOOT_P1+1)         ; X del disparo
+    LD D,(ix+SPR_GHOST_STG1)         ; Y del fantasma 
+    LD E,(ix+SPR_GHOST_STG1+1)         ; X del fantasma
     call check_spr_collision
     CP 1
     JP NZ,.check_KB
@@ -206,7 +206,7 @@ MAIN_LOOP:
 .KILL_GHOST:
     LD A,1
     LD (CHAR_GHOST_DEAD),A
-    LD (ix+12),217    
+    LD (ix+SPR_GHOST_STG1),217    
 
 .check_KB:
     halt    
@@ -255,10 +255,10 @@ SHOOT_MAIN_CHAR:
     CP $04                  ; Si ya está disparando esperamos a que termine
     RET Z;,MAIN_LOOP
 
-    ld (ix+18), $28     ; Sprite Disparo
+    ld (ix+SPR_SHOOT_P1+2), SPR_SHOOT_P1_PTRN     ; Sprite Disparo
 
     LD A, (ix)          
-    ld (ix+16), A       ; Asignamos la Y del personaje    
+    ld (ix+SPR_SHOOT_P1), A       ; Asignamos la Y del personaje    
 
     LD A, (CHAR_DIR_MAIN)
     CP $03
@@ -287,30 +287,30 @@ SHOOT_MAIN_CHAR:
 
 .SHOOT_UP:
     LD A,$03
-    LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando derecha
+    LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando arriba
     
     ; Sumamos el desplazamiento a la Y
-    LD A, (ix+16)
+    LD A, (ix+SPR_SHOOT_P1)
     SUB 16
-    LD (ix+16), A    
+    LD (ix+SPR_SHOOT_P1), A    
     ;LD (ix+17), D
     LD A, (ix+1)			;cargamos la X    
     JP .CONTINUE
 
 .SHOOT_DOWN
 	LD A,$04
-    LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando derecha
+    LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando abajo
     
     ; Sumamos el desplazamiento a la Y
-    LD A, (ix+16)
+    LD A, (ix+SPR_SHOOT_P1)
     ADD 16
-    LD (ix+16), A    
+    LD (ix+SPR_SHOOT_P1), A    
     ;LD (ix+17), D
     LD A, (ix+1)			;cargamos la X    
 
 .CONTINUE:
     ;ld (ix+16), B       ; Asignamos la Y del personaje
-    ld (ix+17), A       ; Asignamos la X del personaje + el desplazamiento        
+    ld (ix+SPR_SHOOT_P1+1), A       ; Asignamos la X del personaje + el desplazamiento        
     ;jp MAIN_LOOP
     ret
 
@@ -324,11 +324,11 @@ STAGE2:
     LD HL, mapa2
     LD (MAPA), HL
 
-    LD (ix), 196    ; Ponemos el P1 abajo
+    LD (ix), 160    ; Ponemos el P1 abajo
     LD (ix+4), 196    
     LD (ix+8), 196    
     
-    LD (ix+12),217  ; ocultamos el fantasma
+    LD (ix+SPR_GHOST_STG1),217  ; ocultamos el fantasma
     
     call DUMP_SPR_ALL    
     CALL DUMP_SPR_P1
@@ -365,7 +365,7 @@ MAIN_LOOP2:
     LD A, (CHAR_GHOST_DEAD)
     CP $01
     JP Z, .GHOST_DEAD
-    ld (ix+12), $0F      ; Sprite 1 - Ghost
+    ld (ix+SPR_GHOST_STG1), $0F      ; Sprite 1 - Ghost
 .GHOST_DEAD:
     LD (ix+20),217  ; ocultamos el esqueleto
     LD (ix+24),217  ; ocultamos el esqueleto

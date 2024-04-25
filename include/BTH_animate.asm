@@ -318,17 +318,17 @@ MOVE_SHOOT:
     SUB 3   ; Restar 3 a 1 o 2 provoca salto de carro, si es 3 o 4 no provoca el salto de carro
     JP NC,.ADD_SHOOT_Y
     ; Movemos el disparo
-    LD A, (ix+17)          ;cargamos la X del disparo
+    LD A, (ix+SPR_SHOOT_P1+1)          ;cargamos la X del disparo
 	LD HL, (CHAR_SPEED_SHOOT)
 	ADD L					; Actualizamos la posicion en base a la velocidad
-    LD (ix+17), A
+    LD (ix+SPR_SHOOT_P1+1), A
     JP .ADD_DISTANCE
 .ADD_SHOOT_Y
     ; Movemos el disparo
-    LD A, (ix+16)          ;cargamos la X del disparo
+    LD A, (ix+SPR_SHOOT_P1)          ;cargamos la X del disparo
 	LD HL, (CHAR_SPEED_SHOOT)
 	ADD L					; Actualizamos la posicion en base a la velocidad
-    LD (ix+16), A
+    LD (ix+SPR_SHOOT_P1), A
 
 .ADD_DISTANCE:
     LD A,(CHAR_DISTANCE_SHOOT)
@@ -338,7 +338,7 @@ MOVE_SHOOT:
     RET NZ
 
 .HIDE_SHOOT:
-    LD (ix+16),217          ; Y = 217 para ocultar el Sprite
+    LD (ix+SPR_SHOOT_P1),217          ; Y = 217 para ocultar el Sprite
     XOR A
     LD (CHAR_MAIN_SHOOT),A   ; Desactivo el estado disparando 
     LD (CHAR_DISTANCE_SHOOT),A

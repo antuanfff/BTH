@@ -26,3 +26,10 @@ PORT_3                  equ 0x9b
 RG15AV equ #F3E0 ; alamcena el valor del registro 1 de escritura del VDP, hay unas rutinas de la bios que guardan es entas direcciones valores globals del sistema
 FORCLR equ $F3E9 ; Foreground colour
 
+SPR_SHOOT_P1                equ 12  ; Offset de IX (SPRATT)S
+SPR_SHOOT_P1_PTRN           equ 18h
+SPR_GHOST_STG1              equ 16  ; Offset de IX (SPRATT)
+SPR_GHOST_STG1_PTRN_L1      equ 1Ch  ; Offset del Sprite Pattern Table
+SPR_GHOST_STG1_PTRN_L2      equ 20h  ; Offset del Sprite Pattern Table
+SPR_GHOST_STG1_PTRN_R1      equ 24h  ; Offset del Sprite Pattern Table
+SPR_GHOST_STG1_PTRN_R2      equ 28h  ; Offset del Sprite Pattern Table
