@@ -23,7 +23,7 @@ PORT_1                  equ 0x99
 PORT_2                  equ 0x9a
 PORT_3                  equ 0x9b
 
-RG15AV equ #F3E0 ; alamcena el valor del registro 1 de escritura del VDP, hay unas rutinas de la bios que guardan es entas direcciones valores globals del sistema
+RG15AV equ #F3E0 ; alamcena el valor del registro 1 de escritura del VDP, hay unas rutinas de la bios que guardan estas direcciones valores globals del sistema
 FORCLR equ $F3E9 ; Foreground colour
 
 TOMB3_STG1_X                equ 200
@@ -35,3 +35,10 @@ SPR_GHOST_STG1_PTRN_L1      equ 1Ch  ; Offset del Sprite Pattern Table
 SPR_GHOST_STG1_PTRN_L2      equ 24h  ; Offset del Sprite Pattern Table
 SPR_GHOST_STG1_PTRN_R1      equ 2Ch  ; Offset del Sprite Pattern Table
 SPR_GHOST_STG1_PTRN_R2      equ 34h  ; Offset del Sprite Pattern Table
+
+SPR_GHOST_STG2              equ 24  ; Offset de IX (SPRATT)
+SPR_GHOST_STG2_PTRN_L1      equ 3Ch  ; Offset del Sprite Pattern Table
+SPR_GHOST_STG2_PTRN_L2      equ 44h  ; Offset del Sprite Pattern Table
+SPR_GHOST_STG2_PTRN_R1      equ 4Ch  ; Offset del Sprite Pattern Table
+SPR_GHOST_STG2_PTRN_R2      equ 54h  ; Offset del Sprite Pattern Table
+

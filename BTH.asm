@@ -333,24 +333,26 @@ STAGE2:
     call load_screen
     LD HL, mapa2
     LD (MAPA), HL
-
-    LD (ix), 160    ; Ponemos el P1 abajo
-    LD (ix+4), 196    
-    LD (ix+8), 196    
+    
+    ; Ponemos el P1 por encima del marco
+    LD (ix), 161      ; mask 0
+    LD (ix+4), 161    ; mask 1
+    LD (ix+8), 161    ; mask 2
     
     LD (ix+SPR_GHOST_STG1),217  ; ocultamos el fantasma
     LD (ix+SPR_GHOST_STG1+4),217  ; ocultamos el fantasma
     
-    call DUMP_SPR_ALL    
+    CALL DUMP_SPR_ALL
     CALL DUMP_SPR_P1
+    
     ; Esqueleto
-    LD (ix+20), 10h
-    LD (ix+21), 10h
-    LD (ix+22), 3Ch
+    LD (ix+SPR_GHOST_STG2), 10h
+    LD (ix+SPR_GHOST_STG2+1), 10h
+    LD (ix+SPR_GHOST_STG2+2), SPR_GHOST_STG2_PTRN_L1
 
-    LD (ix+24), 10h
-    LD (ix+25), 10h
-    LD (ix+26), 40h
+    LD (ix+SPR_GHOST_STG2+4), 10h
+    LD (ix+SPR_GHOST_STG2+5), 10h
+    LD (ix+SPR_GHOST_STG2+6), SPR_GHOST_STG2_PTRN_L1+4
 
     XOR A
     LD (CHAR_GHOST_DEAD_STG2), A
@@ -366,7 +368,7 @@ MAIN_LOOP2:
     halt    
 
     LD A, (ix)    
-    CP 198
+    CP 162      ; Miramos si la Y es 160 para pasar a stg1
     JP NZ, .no_screen_change
     ; Ponemos el SP1 al principio de la pantalla 1
     LD (ix), 1          ; SP1 - Y = 1
@@ -379,8 +381,8 @@ MAIN_LOOP2:
     ld (ix+SPR_GHOST_STG1), $0F      ; Sprite 1 - Ghost
     ld (ix+SPR_GHOST_STG1+4), $0F      ; Sprite 1 - Ghost
 .GHOST_DEAD:
-    LD (ix+20),217  ; ocultamos el esqueleto
-    LD (ix+24),217  ; ocultamos el esqueleto
+    LD (ix+SPR_GHOST_STG2),217  ; ocultamos el esqueleto
+    LD (ix+SPR_GHOST_STG2+4),217  ; ocultamos el esqueleto
     CALL STAGE1
 
 .no_screen_change:
@@ -390,12 +392,12 @@ MAIN_LOOP2:
     LD A,(CHAR_GHOST_DEAD_STG2)
     CP $01
     JP Z,.continue
-    LD A, (ix+21)          ;cargamos la X del Esqueleto
+    LD A, (ix+SPR_GHOST_STG2+1)          ;cargamos la X del Esqueleto
 	LD HL, (CHAR_SPEED_X_GHOST_STG2)
 	ADD L					; Actualizamos la posicion en base a la velocidad
     
-	LD (ix+21), A	
-    LD (ix+25), A
+	LD (ix+SPR_GHOST_STG2+1), A	
+    LD (ix+SPR_GHOST_STG2+5), A
     CP $16
     JP Z,.CHANGE_DIR_RIGHT
     CP $B9
@@ -427,27 +429,27 @@ MAIN_LOOP2:
     LD A,(CHAR_DIR_GHOST_STG2)
     CP $FF
     JP Z,.check_pattern_RIGHT
-    LD A, (ix+22)       ; Cargamos el patrón y lo cambiamos
-    CP $2C
+    LD A, (ix+SPR_GHOST_STG2+2)       ; Cargamos el patrón y lo cambiamos
+    CP SPR_GHOST_STG2_PTRN_L1
     jp z,.change_pattern_L
-    LD (ix+22),$2C
-    LD (ix+26),$30
+    LD (ix+SPR_GHOST_STG2+2),SPR_GHOST_STG2_PTRN_L1
+    LD (ix+SPR_GHOST_STG2+6),SPR_GHOST_STG2_PTRN_L1+4
     jp .continue
 .change_pattern_L:
-    LD (ix+22),$34
-    LD (ix+26),$38
+    LD (ix+SPR_GHOST_STG2+2),SPR_GHOST_STG2_PTRN_L2
+    LD (ix+SPR_GHOST_STG2+6),SPR_GHOST_STG2_PTRN_L2+4
     jp .continue
 
 .check_pattern_RIGHT
-    LD A, (ix+22)       ; Cargamos el patrón y lo cambiamos
-    CP $3C
+    LD A, (ix+SPR_GHOST_STG2+2)       ; Cargamos el patrón y lo cambiamos
+    CP SPR_GHOST_STG2_PTRN_R1
     jp z,.change_pattern_R
-    LD (ix+22),$3C
-    LD (ix+26),$40
+    LD (ix+SPR_GHOST_STG2+2),SPR_GHOST_STG2_PTRN_R1
+    LD (ix+SPR_GHOST_STG2+6),SPR_GHOST_STG2_PTRN_R1+4
     jp .continue
 .change_pattern_R:
-    LD (ix+22),$44
-    LD (ix+26),$48
+    LD (ix+SPR_GHOST_STG2+2),SPR_GHOST_STG2_PTRN_R2
+    LD (ix+SPR_GHOST_STG2+6),SPR_GHOST_STG2_PTRN_R2+4
 
 .continue:
     CALL MOVE_SHOOT    

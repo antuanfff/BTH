@@ -274,7 +274,7 @@ DUMP_SPR_ALL:
 
     ld hl, SPRITE_PATTERN ; la rutina LDIRVM necesita haber cargado previamente la dirección de inicio de la RAM, para saber porqué he puesto 03800 fíjate este dibujo https://sites.google.com/site/multivac7/files-images/TMS9918_VRAMmap_G2_300dpi.png ,así es como está formado el VDP en screen 2
     ld de, #7800; la rutina necesita haber cargado previamente con de la dirección de inicio de la VRAM          
-    ld bc, 8*4*19; 8 byte de cada tile * 4 que son los sprites de 16x16 y * #sprites
+    ld bc, 8*4*23; 8 byte de cada tile * 4 que son los sprites de 16x16 y * #sprites
     call  LDIRVM ; Mira arriba, pone la explicación
 
 ;-----------------------------Definición de los atributos en #7600 y volcado a la VRAM------------------------------------
@@ -288,7 +288,7 @@ DUMP_SPR_ALL:
 
     ld hl, SPRITE_COLOR_TABLE ; la rutina LDIRVM necesita haber cargado previamente la dirección de inicio de la RAM, para saber porqué he puesto 0000 fíjate este dibujo https://sites.google.com/site/multivac7/files-images/TMS9918_VRAMmap_G2_300dpi.png ,así es como está formado el VDP en screen 2
     ld de, #7400; la rutina necesita haber cargado previamente con de la dirección de inicio de la VRAM          
-    ld bc,16*19; 16 x #Sprites
+    ld bc,16*23; 16 x #Sprites
     call  LDIRVM ; Mira arriba, pone la explicación
     ret
 	
@@ -298,7 +298,7 @@ DUMP_SPR_ATTS:
 
     ld hl, SPRITE_ATTRS ; la rutina LDIRVM necesita haber cargado previamente la dirección de inicio de la RAM, para saber porqué he puesto 0000 fíjate este dibujo https://sites.google.com/site/multivac7/files-images/TMS9918_VRAMmap_G2_300dpi.png ,así es como está formado el VDP en screen 2
     ld de, #7600	; la rutina necesita haber cargado previamente con de la dirección de inicio de la VRAM          
-    ld bc,28		; 6 x #Sprites
+    ld bc,32		; 4 x #Sprites mostrados
     call  LDIRVM 	; Mira arriba, pone la explicación
 
 ;	ld a, (SPRITE_COLOR_REPLACE2)
