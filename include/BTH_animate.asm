@@ -212,7 +212,7 @@ CHECK_DIRECTION_MAIN:
 
 .FINISH:
     XOR A   ; reseteamos el contador de pasos
-    LD (CHAR_MIN_STEP), A   
+    ;LD (CHAR_MIN_STEP), A   
     LD A, (CHAR_NEW_DIR_MAIN)   ; Actualizamos la nueva dirección del personaje
     LD (CHAR_DIR_MAIN),A    
 
