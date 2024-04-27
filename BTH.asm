@@ -25,9 +25,11 @@ _bank2	equ	7000h
 	include "include\BTH_func.asm"
     include "include\BTH_animate.asm"
 	include "include\VDP.asm"
-
+; SFX
+    include	"include\PT3_player.s"
 START
 	; CODE
+
 	;LD A,8
 	;CALL CHGMOD    	
     CALL SETPAGES32K
@@ -97,6 +99,8 @@ INIT_CHARS_VARS:
     ld hl, SPRITE_COLOR_P1_DOWN
     ld (SPRITE_COLOR_REPLACE), HL
     LD (SPRITE_COLOR_REPLACE2), HL
+
+    
     ret
 
 STAGE1:
@@ -108,15 +112,17 @@ STAGE1:
     
     call DUMP_SPR_ALL
     CALL DUMP_SPR_P1
-    LD HL, mapa1
+    LD HL, mapa0 
     LD (MAPA), HL
     
     CALL ENASCR
     ;CALL CHGET
     ;CALL CLEAR_DIALOG_BOX
     
+
 MAIN_LOOP:
     ;halt ; sincroniza el teclado y pantalla con el procesador (que va muy rápido)    
+
     LD A, (ix)  ; Cargamos la Y
     CP $00
     JP Z, STAGE2
@@ -220,17 +226,10 @@ MAIN_LOOP:
 
 .check_KB:
     halt    
-
-    LD A, (OLD_KEY_PRESSED)
-    LD B, A
-
+	
     ld a, 8
 	call SNSMAT   
     
-    LD (OLD_KEY_PRESSED), A
-    ;XOR B
-    ;AND B
-
     LD C,A    
     
     BIT KB_RIGHT, C			; La tecla presionada es RIGHT?
@@ -478,6 +477,10 @@ MAIN_LOOP2:
 
     jp MAIN_LOOP2
 
+
+SONG:
+	;incbin "musica_sin_cabacera.pt3"
+    incbin "sfx\test.pt3"
 include "include\BTH_data.asm"
 
  PAGE 1

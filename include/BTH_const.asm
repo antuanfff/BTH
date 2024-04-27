@@ -28,7 +28,7 @@ FORCLR equ $F3E9 ; Foreground colour
 
 TOMB3_STG1_X                equ 200
 
-SPR_SHOOT_P1                equ 12  ; Offset de IX (SPRATT)S
+SPR_SHOOT_P1                equ 12  ; Offset de IX (SPRATT)
 SPR_SHOOT_P1_PTRN           equ 18h
 SPR_GHOST_STG1              equ 16  ; Offset de IX (SPRATT)
 SPR_GHOST_STG1_PTRN_L1      equ 1Ch  ; Offset del Sprite Pattern Table

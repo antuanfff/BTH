@@ -28,6 +28,7 @@ move_up:
 	LD A, -MOV_SPEED
 	LD (CHAR_SPEED_Y), A
     call UPDATE_MOVEMENT   
+    call ANIMATE_P1
     ;JP no_arrows
     ret
 
@@ -60,16 +61,22 @@ move_down:
     LD A, MOV_SPEED
 	LD (CHAR_SPEED_Y), A
     call UPDATE_MOVEMENT    
+    call ANIMATE_P1
     ;JP no_arrows
     ret
 
 move_right:
     XOR C               ; Reseteamos la entrada del teclado
     ; Actualizamos la última tecla de dirección pulsada
+    BIT KB_UP, C
+    JR z, .KB_UPDOWN_PRESSED
+    BIT KB_DOWN, C
+    JR z, .KB_UPDOWN_PRESSED
     LD A,$03
     LD (CHAR_NEW_DIR_MAIN),A
     CALL CHECK_DIRECTION_MAIN
 
+.KB_UPDOWN_PRESSED:
     ld a,(ix+1); obtenemos el valor actual de la posicion x   
     add 16; incrementamos en 3 el valor
     ld d,a  ; Metemos el parametro X para verificar si hay colision
@@ -104,16 +111,25 @@ move_right:
     
     LD A, MOV_SPEED
 	LD (CHAR_SPEED_X), A
-    call UPDATE_MOVEMENT      
-    ;JP no_arrows
+    call UPDATE_MOVEMENT
+    BIT KB_UP, C
+    ret z
+    BIT KB_DOWN, C
+    ret z
+    call ANIMATE_P1    
     ret
 
 move_left:
     XOR C               ; Reseteamos la entrada del teclado
     ; Actualizamos la última tecla de dirección pulsada
+    BIT KB_UP, C
+    JR z, .KB_UPDOWN_PRESSED
+    BIT KB_DOWN, C
+    JR z, .KB_UPDOWN_PRESSED
     LD A,$02
     LD (CHAR_NEW_DIR_MAIN),A
     CALL CHECK_DIRECTION_MAIN
+.KB_UPDOWN_PRESSED:
     ld a,(ix+1); obetenemos el valor actual de la posicion x
     sub 2 ; decrementamos en 2 el valor
     ld d,a  ; Metemos el parametro X para verificar si hay colision
@@ -149,7 +165,11 @@ move_left:
     LD A, -MOV_SPEED
 	LD (CHAR_SPEED_X), A
     call UPDATE_MOVEMENT     
-    ;JP no_arrows
+    BIT KB_UP, C
+    ret z
+    BIT KB_DOWN, C
+    ret z
+    call ANIMATE_P1    
     ret
 
 CHECK_DIRECTION_MAIN:
@@ -212,7 +232,7 @@ CHECK_DIRECTION_MAIN:
 
 .FINISH:
     XOR A   ; reseteamos el contador de pasos
-    ;LD (CHAR_MIN_STEP), A   
+    LD (CHAR_MIN_STEP), A   
     LD A, (CHAR_NEW_DIR_MAIN)   ; Actualizamos la nueva dirección del personaje
     LD (CHAR_DIR_MAIN),A    
 
@@ -243,7 +263,9 @@ UPDATE_MOVEMENT:
     XOR A            ; reseteamos las variables de movimiento para el siguiente ciclo
     LD (CHAR_SPEED_X),A
     LD (CHAR_SPEED_Y),A	
+    RET
 
+ANIMATE_P1:
     ; Animación/pasos de personaje	
     LD A, (CHAR_MIN_STEP)
     CP MAX_CHAR_STEPS
