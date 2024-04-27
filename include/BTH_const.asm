@@ -26,7 +26,9 @@ PORT_3                  equ 0x9b
 RG15AV equ #F3E0 ; alamcena el valor del registro 1 de escritura del VDP, hay unas rutinas de la bios que guardan estas direcciones valores globals del sistema
 FORCLR equ $F3E9 ; Foreground colour
 
-TOMB3_STG1_X                equ 200
+MIKE_TOMB_STG1_X            equ 200
+JOHN_TOMB_STG1_X            equ 41
+GUS_TOMB_STG1_X             equ 73
 
 SPR_SHOOT_P1                equ 12  ; Offset de IX (SPRATT)
 SPR_SHOOT_P1_PTRN           equ 18h

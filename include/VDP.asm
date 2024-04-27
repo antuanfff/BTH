@@ -122,6 +122,4 @@ CLEAR_DIALOG_BOX:
 
 		DEC a
 		JR NZ,1b
-		XOR A
-    	LD (SHOWING_DIALOG), A
 		RET

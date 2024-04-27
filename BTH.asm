@@ -89,6 +89,10 @@ INIT_CHARS_VARS:
     LD (CHAR_GHOST_DEAD),A
     LD (CHAR_MIN_STEP), A
     LD (SPRITE_COLOR_REPLACE2), A
+    LD (SHOWING_GUS_DIALOG), A
+    LD (SHOWING_JOHN_DIALOG), A
+    LD (SHOWING_MIKE_DIALOG), A
+
    ; LD A,$FF
     LD (OLD_KEY_PRESSED), A
     LD A,$01
@@ -112,7 +116,7 @@ STAGE1:
     
     call DUMP_SPR_ALL
     CALL DUMP_SPR_P1
-    LD HL, mapa0 
+    LD HL, mapa1
     LD (MAPA), HL
     
     CALL ENASCR
@@ -127,24 +131,69 @@ MAIN_LOOP:
     CP $00
     JP Z, STAGE2
     call DUMP_SPR_ATTS    
-    
+
+.check_tombs:
     LD A, (ix +1)   ; Cargamos la X para mirar si hay colisión con la tumba
-    CP TOMB3_STG1_X
-    JR NZ, .check_dialog_box
-    LD A, (SHOWING_DIALOG)
+    CP MIKE_TOMB_STG1_X
+    JR NZ, .check_john_tomb
+    LD A, (SHOWING_MIKE_DIALOG)
     CP 1
     JR Z, .animate_ghost
-    LD IY, sardu01_strings
+    LD IY, mike_tomb_strings
     CALL print_strings_dialog_box
     LD A,1
-    LD (SHOWING_DIALOG), A
+    LD (SHOWING_MIKE_DIALOG), A
     JR .animate_ghost
 
+.check_john_tomb:
+    CP JOHN_TOMB_STG1_X
+    jr nz, .check_gus_tomb
+    LD A, (SHOWING_JOHN_DIALOG)
+    CP 1
+    JR Z, .animate_ghost
+    LD IY, john_tomb_strings
+    CALL print_strings_dialog_box
+    LD A,1
+    LD (SHOWING_JOHN_DIALOG), A
+    JR .animate_ghost
+
+.check_gus_tomb:
+    CP GUS_TOMB_STG1_X
+    jr nz, .check_dialog_box
+    LD A, (SHOWING_GUS_DIALOG)
+    CP 1
+    JR Z, .animate_ghost
+    LD IY, gus_tomb_strings
+    CALL print_strings_dialog_box
+    LD A,1
+    LD (SHOWING_GUS_DIALOG), A
+    JR .animate_ghost
 
 .check_dialog_box
-    LD A, (SHOWING_DIALOG)
+    LD A, (SHOWING_MIKE_DIALOG)
     CP 1
-    CALL Z, CLEAR_DIALOG_BOX
+    JR nz, .check_gus_dialog
+    CALL CLEAR_DIALOG_BOX
+    XOR A
+    LD (SHOWING_MIKE_DIALOG), A
+    JR .animate_ghost
+
+.check_gus_dialog
+    LD A, (SHOWING_GUS_DIALOG)
+    CP 1
+    JR nz, .check_john_dialog
+    CALL CLEAR_DIALOG_BOX
+    XOR A
+    LD (SHOWING_GUS_DIALOG), A
+    JR .animate_ghost
+
+.check_john_dialog
+    LD A, (SHOWING_JOHN_DIALOG)
+    CP 1
+    JR nz, .animate_ghost
+    CALL CLEAR_DIALOG_BOX
+    XOR A
+    LD (SHOWING_JOHN_DIALOG), A
 
 .animate_ghost    
     LD A,(CHAR_GHOST_DEAD)
