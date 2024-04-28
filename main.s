@@ -7,8 +7,6 @@ romheader:
 	word 0,0,0,0,0,0				
 		
 START:
-	LD A,8
-	CALL #005F 
 	di	
 	ld		hl,SONG-99		; hl vale la direccion donde se encuentra la cancion - 99
 	call	PT3_INIT			; Inicia el reproductor de PT3
@@ -44,7 +42,7 @@ Imprimir_mensaje_cacnion:
 SONG:
 	incbin "musica_sin_cabacera.pt3"			;musica de ejemplo
 mensaje: 
-    db "Cancion juego anti-independence-catalanis ",0	
+    db "Cancio Catalunya Lliure! ",0	
 relleno_de_bytes:
 	ds #8000-$		
 

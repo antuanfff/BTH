@@ -119,14 +119,10 @@ STAGE1:
     LD HL, mapa1
     LD (MAPA), HL
     
-    CALL ENASCR
-    ;CALL CHGET
-    ;CALL CLEAR_DIALOG_BOX
-    
+    CALL ENASCR    
 
 MAIN_LOOP:
     ;halt ; sincroniza el teclado y pantalla con el procesador (que va muy rápido)    
-
     LD A, (ix)  ; Cargamos la Y
     CP $00
     JP Z, STAGE2
@@ -163,6 +159,9 @@ MAIN_LOOP:
     LD A, (SHOWING_GUS_DIALOG)
     CP 1
     JR Z, .animate_ghost
+    LD A, (ix)
+    CP GUS_TOMB_STG1_Y
+    jr c, .animate_ghost
     LD IY, gus_tomb_strings
     CALL print_strings_dialog_box
     LD A,1
@@ -528,8 +527,8 @@ MAIN_LOOP2:
 
 
 SONG:
-	;incbin "musica_sin_cabacera.pt3"
-    incbin "sfx\test.pt3"
+	incbin "musica_sin_cabacera.pt3"
+    ;incbin "sfx\test.pt3"
 include "include\BTH_data.asm"
 
  PAGE 1

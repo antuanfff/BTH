@@ -29,6 +29,10 @@ FORCLR equ $F3E9 ; Foreground colour
 MIKE_TOMB_STG1_X            equ 200
 JOHN_TOMB_STG1_X            equ 41
 GUS_TOMB_STG1_X             equ 73
+GUS_TOMB_STG1_Y             equ 120
+SKULL_TOMB_STG1_X             equ 105
+SKULL_TOMB_STG1_Y1             equ 90
+SKULL_TOMB_STG1_Y2             equ 100
 
 SPR_SHOOT_P1                equ 12  ; Offset de IX (SPRATT)
 SPR_SHOOT_P1_PTRN           equ 18h
