@@ -29,14 +29,19 @@ _bank2	equ	7000h
     include	"include\PT3_player.s"
 START
 	; CODE
-
-	;LD A,8
-	;CALL CHGMOD    	
+    ld hl,FORCLR ; Variable del Sistema
+	ld [hl],0 ; Color del primer plano 15=blanco
+	inc hl ; FORCLR+1
+	ld [hl],0 ; Color de fondo 1=negro
+	inc hl ; FORCLR+2
+	ld [hl],0 ; Color del borde 1=negro
+	LD A,8
+	CALL CHGMOD    	
     CALL SETPAGES32K
-;	CALL opening_screen
+	CALL opening_screen
 	LD A,1
 	LD (_bank2),A
-;	CALL CHGET
+	CALL CHGET
 	; Empieza el juego    
 	call ClearVram_MSX2		
 	call SET_SCREEN5_MODE    
@@ -92,6 +97,7 @@ INIT_CHARS_VARS:
     LD (SHOWING_GUS_DIALOG), A
     LD (SHOWING_JOHN_DIALOG), A
     LD (SHOWING_MIKE_DIALOG), A
+    LD (SHOWING_SKULL_STG1_DIALOG), A
 
    ; LD A,$FF
     LD (OLD_KEY_PRESSED), A
@@ -116,7 +122,13 @@ STAGE1:
     
     call DUMP_SPR_ALL
     CALL DUMP_SPR_P1
+    
     LD HL, mapa1
+    LD DE, MAP_RAM
+    LD BC, 736
+    LDIR
+    
+    LD HL, MAP_RAM
     LD (MAPA), HL
     
     CALL ENASCR    
@@ -134,28 +146,28 @@ MAIN_LOOP:
     JR NZ, .check_john_tomb
     LD A, (SHOWING_MIKE_DIALOG)
     CP 1
-    JR Z, .animate_ghost
+    JP Z, .animate_ghost
     LD IY, mike_tomb_strings
     CALL print_strings_dialog_box
     LD A,1
     LD (SHOWING_MIKE_DIALOG), A
-    JR .animate_ghost
+    JP .animate_ghost
 
 .check_john_tomb:
     CP JOHN_TOMB_STG1_X
     jr nz, .check_gus_tomb
     LD A, (SHOWING_JOHN_DIALOG)
     CP 1
-    JR Z, .animate_ghost
+    JP Z, .animate_ghost
     LD IY, john_tomb_strings
     CALL print_strings_dialog_box
     LD A,1
     LD (SHOWING_JOHN_DIALOG), A
-    JR .animate_ghost
+    JP .animate_ghost
 
 .check_gus_tomb:
     CP GUS_TOMB_STG1_X
-    jr nz, .check_dialog_box
+    jr nz, .check_skull_hint
     LD A, (SHOWING_GUS_DIALOG)
     CP 1
     JR Z, .animate_ghost
@@ -168,7 +180,26 @@ MAIN_LOOP:
     LD (SHOWING_GUS_DIALOG), A
     JR .animate_ghost
 
-.check_dialog_box
+.check_skull_hint:
+    CP SKULL_TOMB_STG1_X
+    jr nz, .check_mike_dialog_box
+        
+    LD A, (ix)
+    CP SKULL_TOMB_STG1_Y1
+    jr c, .check_mike_dialog_box
+    CP SKULL_TOMB_STG1_Y2
+    jr nc, .check_mike_dialog_box
+
+    LD A, (SHOWING_SKULL_STG1_DIALOG)
+    CP 1
+    JR Z, .animate_ghost
+    LD IY, stg1_skull_strings
+    CALL print_strings_dialog_box
+    LD A,1
+    LD (SHOWING_SKULL_STG1_DIALOG), A
+    JR .animate_ghost
+
+.check_mike_dialog_box
     LD A, (SHOWING_MIKE_DIALOG)
     CP 1
     JR nz, .check_gus_dialog
@@ -189,10 +220,19 @@ MAIN_LOOP:
 .check_john_dialog
     LD A, (SHOWING_JOHN_DIALOG)
     CP 1
-    JR nz, .animate_ghost
+    JR nz, .check_skull_dialog
     CALL CLEAR_DIALOG_BOX
     XOR A
     LD (SHOWING_JOHN_DIALOG), A
+    JR .animate_ghost
+
+.check_skull_dialog
+    LD A, (SHOWING_SKULL_STG1_DIALOG)
+    CP 1
+    JR nz, .animate_ghost
+    CALL CLEAR_DIALOG_BOX
+    XOR A
+    LD (SHOWING_SKULL_STG1_DIALOG), A
 
 .animate_ghost    
     LD A,(CHAR_GHOST_DEAD)

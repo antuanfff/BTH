@@ -16,3 +16,9 @@ string01G: db 'GUS:',0
 string02G: db 'MIKE FUE EL TERCERO',0
 string03G: db 'EN MORIR',0
 
+stg1_skull_strings: dw string01Sk, string02Sk, string03Sk
+; Caben 23 caracteres en cada línea
+string01Sk: db 'MURRAY:',0
+string02Sk: db 'LA SANGRE TE DARA',0
+string03Sk: db 'EL ORDEN',0
+
