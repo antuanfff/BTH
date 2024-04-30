@@ -26,7 +26,7 @@ _bank2	equ	7000h
     include "include\BTH_animate.asm"
 	include "include\VDP.asm"
 ; SFX
-    include	"include\PT3_player.s"
+    include	"include\PT3_player.s"    
 START
 	; CODE
     ld hl,FORCLR ; Variable del Sistema
@@ -36,12 +36,12 @@ START
 	inc hl ; FORCLR+2
 	ld [hl],0 ; Color del borde 1=negro
 	LD A,8
-	CALL CHGMOD    	
+	;CALL CHGMOD    	
     CALL SETPAGES32K
-	CALL opening_screen
+	;CALL opening_screen
 	LD A,1
 	LD (_bank2),A
-	CALL CHGET
+	;CALL CHGET
 	; Empieza el juego    
 	call ClearVram_MSX2		
 	call SET_SCREEN5_MODE    
@@ -133,8 +133,18 @@ STAGE1:
     
     CALL ENASCR    
 
+   	di	
+	ld		hl,SONG-99		; hl vale la direccion donde se encuentra la cancion - 99
+    PUSH IX
+    call	PT3_INIT			; Inicia el reproductor de PT3
+	POP IX
+    ei
+
+
 MAIN_LOOP:
     ;halt ; sincroniza el teclado y pantalla con el procesador (que va muy rápido)    
+
+    
     LD A, (ix)  ; Cargamos la Y
     CP $00
     JP Z, STAGE2
@@ -315,6 +325,13 @@ MAIN_LOOP:
 .check_KB:
     halt    
 	
+	di       
+    PUSH IX
+	call	PT3_ROUT			;envia datos a al PSG 	   
+	call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
+	POP IX
+    ei
+
     ld a, 8
 	call SNSMAT   
     
@@ -338,7 +355,7 @@ no_arrows:
 
     ;BIT KB_DEL, C			; La tecla presionada es DEL    
     ;ret z
-
+    
     jp MAIN_LOOP
 
 SHOOT_MAIN_CHAR:    
@@ -567,8 +584,8 @@ MAIN_LOOP2:
 
 
 SONG:
-	incbin "musica_sin_cabacera.pt3"
-    ;incbin "sfx\test.pt3"
+	;incbin "musica_sin_cabacera.pt3"
+    incbin "sfx\test.pt3"
 include "include\BTH_data.asm"
 
  PAGE 1

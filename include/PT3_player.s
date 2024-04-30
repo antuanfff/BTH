@@ -997,7 +997,7 @@ T_PACK:		; First 12 values of tone tables (packed)
 	map		#f000
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;PT3 REPLAYER
-PT3_SETUP:		#1	;set bit0 to 1, if you want to play without looping
+PT3_SETUP:		#0	;set bit0 to 1, if you want to play without looping
 					;bit7 is set each time, when loop point is passed
 PT3_MODADDR:	#2
 PT3_CrPsPtr:		#2
