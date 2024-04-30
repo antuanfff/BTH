@@ -74,11 +74,11 @@ INIT_CHARS_VARS:
     ld (ix+10), 08h        
 
     ld (ix+SPR_GHOST_STG1), $0f      ; Sprite 1 - Ghost - mask0
-    ld (ix+SPR_GHOST_STG1+1), $B9
+    ld (ix+SPR_GHOST_STG1+1), $AF
     ld (ix+SPR_GHOST_STG1+2), SPR_GHOST_STG1_PTRN_L1
     
     ld (ix+SPR_GHOST_STG1+4), $0f      ; Sprite 1 - Ghost - mask0
-    ld (ix+SPR_GHOST_STG1+5), $B9
+    ld (ix+SPR_GHOST_STG1+5), $AF
     ld (ix+SPR_GHOST_STG1+6), SPR_GHOST_STG1_PTRN_L1+4
     
     XOR A
@@ -180,7 +180,7 @@ MAIN_LOOP:
     jr nz, .check_skull_hint
     LD A, (SHOWING_GUS_DIALOG)
     CP 1
-    JR Z, .animate_ghost
+    JP Z, .animate_ghost
     LD A, (ix)
     CP GUS_TOMB_STG1_Y
     jr c, .animate_ghost
@@ -254,9 +254,9 @@ MAIN_LOOP:
     
 	LD (ix+SPR_GHOST_STG1+1), A
     LD (ix+SPR_GHOST_STG1+5), A
-    CP $16
+    CP $50
     JP Z,.CHANGE_DIR_RIGHT
-    CP $B9
+    CP $AF
     JP Z,.CHANGE_DIR_LEFT
     		
     JP .check_pattern
@@ -469,8 +469,8 @@ STAGE2:
     CALL ENASCR
     
 MAIN_LOOP2:
-    halt    
-
+    ;halt    
+   
     LD A, (ix)    
     CP 162      ; Miramos si la Y es 160 para pasar a stg1
     JP NZ, .no_screen_change
@@ -580,6 +580,14 @@ MAIN_LOOP2:
     BIT KB_DEL, C			; La tecla presionada es DEL    
     ret z
 
+    halt
+	;di       
+    ;PUSH IX
+	;call	PT3_ROUT			;envia datos a al PSG 	   
+	;call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
+	;POP IX
+    ;ei
+
     jp MAIN_LOOP2
 
 
@@ -588,6 +596,8 @@ SONG:
     incbin "sfx\test.pt3"
 include "include\BTH_data.asm"
 
+SONG2:
+    incbin "sfx\Nostalgy_sincabecera.pt3"
  PAGE 1
 ; CODE O NO
 
@@ -600,6 +610,8 @@ include "include\BTH_data.asm"
  PAGE 6
 FONT:
  INCBIN "gfx\FONT.SC5",#7
+TILES:
+ INCBIN "gfx\tiles1.sc5",#7
  PAGE 7
 CEMENTER1
  INCBIN "gfx\CEMENTER1.SC5",#7,#4000			; Cada página tiene 16K = 4000h
