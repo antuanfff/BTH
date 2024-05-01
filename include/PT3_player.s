@@ -994,7 +994,7 @@ T_PACK:		; First 12 values of tone tables (packed)
 
 	;Variables del replayer... las coloco desde aqui.
 	;mirar que hace la directiva MAP del SJASM
-	map		#f000
+	map		#f200
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;PT3 REPLAYER
 PT3_SETUP:		#0	;set bit0 to 1, if you want to play without looping

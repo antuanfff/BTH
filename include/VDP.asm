@@ -123,3 +123,139 @@ CLEAR_DIALOG_BOX:
 		DEC a
 		JR NZ,1b
 		RET
+
+; -----------------------------------------------------------------------------------
+; https://www.msx.org/forum/development/msx-development/assembly-combined-basic
+; https://problemkaputt.de/portar.htm#vdpregisters20h2ehmsx2videocommandregisters
+; -----------------------------------------------------------------------------------
+VDP_01: EQU   $F3E0
+VDP_08: EQU   $FFE7
+VDP_09: EQU   $FFE8
+
+SETPAG:				; SETPAG [A]
+	RRCA
+	RRCA
+	RRCA
+	OR	%00011111
+	DI
+	OUT	($99),A
+	LD	A,$80+2
+	EI
+	OUT	($99),A
+	RET
+
+SET_WR:				; SET_WR [AHL]
+	RLC	H
+	RLA
+	RLC	H
+	RLA
+	SRL	H
+	SRL	H
+	DI
+	OUT	($99),A
+	LD	A,$80+14
+	OUT	($99),A
+	LD	A,L
+;	NOP				; MSX2+
+	OUT	($99),A
+	LD	A,H
+	OR	64
+	OUT	($99),A
+	EI
+	RET
+
+SET_RD:				; SET_RD [AHL]
+	RLC	H
+	RLA
+	RLC	H
+	RLA
+	SRL	H
+	SRL	H
+	DI
+	OUT	($99),A
+	LD	A,$80+14
+	OUT	($99),A
+	LD	A,L
+;	NOP				; MSX2+
+	OUT	($99),A
+	LD	A,H
+;	NOP				; MSX2+
+	OUT	($99),A
+	EI
+	RET
+
+VDPCMD:				; VDPCMD [HL]->[CMDTABLE]
+	CALL	WAITCE
+	DI
+	LD	A,$20
+	OUT	($99),A
+	LD	A,$80+17
+	OUT	($99),A
+	EI
+	LD	BC,$0F9B
+	OTIR
+	RET
+
+WAITCE:				; WAITCE
+	LD	A,$02
+	DI
+	OUT	($99),A
+	LD	A,$80+15
+	OUT	($99),A
+	IN	A,($99)
+	RRA
+	LD	A,$00
+	OUT	($99),A
+	LD	A,$80+15
+	EI
+	OUT	($99),A
+	JR	C,WAITCE
+	RET
+
+ENASCR:				; Enable Screen
+	LD	A,(VDP_01)
+	OR	%01000000
+	JR	DISSCR.OUT
+
+DISSCR:				; Disable Screen
+	LD	A,(VDP_01)
+	AND	%10111111
+.OUT:	LD	(VDP_01),A
+	DI
+	OUT	($99),A
+	LD	A,$80+1
+	EI
+	OUT	($99),A
+	RET
+
+ENASPR:				; Enable Sprites
+	LD	A,(VDP_08)
+	AND	%11111101
+	JR	DISSPR.OUT
+
+DISSPR:				; Disable Sprites
+	LD	A,(VDP_08)
+	OR	%00000010
+.OUT:	LD	(VDP_08),A
+	DI
+	OUT	($99),A
+	LD	A,$80+8
+	EI
+	OUT	($99),A
+	RET
+
+LIN192:				; Set 192 lines
+	LD	A,(VDP_09)
+	OR	%10000000
+	JR	LIN212.OUT
+
+LIN212:				; Set 212 lines
+	LD	A,(VDP_09)
+	AND	%01111111
+.OUT:	LD	(VDP_09),A
+	DI
+	OUT	($99),A
+	LD	A,$80+9
+	EI
+	OUT	($99),A
+	RET

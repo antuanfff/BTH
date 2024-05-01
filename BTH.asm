@@ -74,11 +74,11 @@ INIT_CHARS_VARS:
     ld (ix+10), 08h        
 
     ld (ix+SPR_GHOST_STG1), $0f      ; Sprite 1 - Ghost - mask0
-    ld (ix+SPR_GHOST_STG1+1), $B9
+    ld (ix+SPR_GHOST_STG1+1), $AF
     ld (ix+SPR_GHOST_STG1+2), SPR_GHOST_STG1_PTRN_L1
     
     ld (ix+SPR_GHOST_STG1+4), $0f      ; Sprite 1 - Ghost - mask0
-    ld (ix+SPR_GHOST_STG1+5), $B9
+    ld (ix+SPR_GHOST_STG1+5), $AF
     ld (ix+SPR_GHOST_STG1+6), SPR_GHOST_STG1_PTRN_L1+4
     
     XOR A
@@ -131,12 +131,16 @@ STAGE1:
     LD HL, MAP_RAM
     LD (MAPA), HL
     
+    ;We load the tiles on page 1 of VDP
+    LD HL, TILES1    
+    call load_tiles_vdp
+
     CALL ENASCR    
 
    	di	
 	ld		hl,SONG-99		; hl vale la direccion donde se encuentra la cancion - 99
     PUSH IX
-    call	PT3_INIT			; Inicia el reproductor de PT3
+    ;call	PT3_INIT			; Inicia el reproductor de PT3
 	POP IX
     ei
 
@@ -161,6 +165,29 @@ MAIN_LOOP:
     CALL print_strings_dialog_box
     LD A,1
     LD (SHOWING_MIKE_DIALOG), A
+    LD IY, COPY01
+    LD (IY), 0      ; SXL
+    LD (IY+1), 0      ; SXH - 0-1
+    LD (IY+2), 0      ; SYL
+    LD (IY+3), 1      ; SYH - Page 1
+
+    LD (IY+4), 112     ; DXL
+    LD (IY+5), 0      ; DXH
+    LD (IY+6), 0      ; DYL
+    LD (IY+7), 0      ; DYH - Page 0
+
+    LD (IY+8), 32      ; NXL
+    LD (IY+9), 0       ; NXH
+    LD (IY+10), 16      ; NYL
+    LD (IY+11), 0      ; NYH
+
+    LD (IY+12), 0      ; ARG
+    LD (IY+13), 0      ; CLR
+    LD (IY+14), $D0      ; CMD
+    
+    LD HL, COPY01
+    CALL VDPCMD
+
     JP .animate_ghost
 
 .check_john_tomb:
@@ -180,7 +207,7 @@ MAIN_LOOP:
     jr nz, .check_skull_hint
     LD A, (SHOWING_GUS_DIALOG)
     CP 1
-    JR Z, .animate_ghost
+    JP Z, .animate_ghost
     LD A, (ix)
     CP GUS_TOMB_STG1_Y
     jr c, .animate_ghost
@@ -254,9 +281,9 @@ MAIN_LOOP:
     
 	LD (ix+SPR_GHOST_STG1+1), A
     LD (ix+SPR_GHOST_STG1+5), A
-    CP $16
+    CP $50
     JP Z,.CHANGE_DIR_RIGHT
-    CP $B9
+    CP $AF
     JP Z,.CHANGE_DIR_LEFT
     		
     JP .check_pattern
@@ -327,8 +354,8 @@ MAIN_LOOP:
 	
 	di       
     PUSH IX
-	call	PT3_ROUT			;envia datos a al PSG 	   
-	call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
+	;call	PT3_ROUT			;envia datos a al PSG 	   
+	;call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
 	POP IX
     ei
 
@@ -469,8 +496,8 @@ STAGE2:
     CALL ENASCR
     
 MAIN_LOOP2:
-    halt    
-
+    ;halt    
+   
     LD A, (ix)    
     CP 162      ; Miramos si la Y es 160 para pasar a stg1
     JP NZ, .no_screen_change
@@ -580,6 +607,14 @@ MAIN_LOOP2:
     BIT KB_DEL, C			; La tecla presionada es DEL    
     ret z
 
+    halt
+	;di       
+    ;PUSH IX
+	;call	PT3_ROUT			;envia datos a al PSG 	   
+	;call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
+	;POP IX
+    ;ei
+
     jp MAIN_LOOP2
 
 
@@ -587,7 +622,8 @@ SONG:
 	;incbin "musica_sin_cabacera.pt3"
     incbin "sfx\test.pt3"
 include "include\BTH_data.asm"
-
+TILES1:
+ INCBIN "gfx\tiles1.sc5",#7
  PAGE 1
 ; CODE O NO
 

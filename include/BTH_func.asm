@@ -292,6 +292,14 @@ DUMP_SPR_ALL:
     call  LDIRVM ; Mira arriba, pone la explicación
     ret
 	
+load_tiles_vdp
+    
+	;ld hl, TILES1
+    ld de, 0x8000; la rutina necesita haber cargado previamente con de la dirección de inicio de la VRAM          
+    ld bc,128*16; 16 lineas
+    call  LDIRVM ; Mira arriba, pone la explicación
+	ret 
+
 DUMP_SPR_ATTS:
 
 ;-----------------------------Definición de los atributos en #1E00 y volcado a la VRAM------------------------------------
