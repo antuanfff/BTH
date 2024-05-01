@@ -1,6 +1,6 @@
-Sjasm Z80 Assembler v0.42c - www.xl2s.tk             [2024.04.30 - 17:17:34]
+Sjasm Z80 Assembler v0.42c - www.xl2s.tk             [2024.05.01 - 13:08:41]
 
-.\BTH.asm
+bth.asm
 Errors: 0
 
        1   00:0000                      	output "BTH.rom" 
@@ -4034,7 +4034,7 @@ Errors: 0
 0F:0000C0A7   MAP_RAM
 
 
- Output: .\BTH.out
+ Output: bth.out
 -------------------------------------------------
 
  Page: 00
