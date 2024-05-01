@@ -25,6 +25,7 @@ _bank2	equ	7000h
 	include "include\BTH_func.asm"
     include "include\BTH_animate.asm"
 	include "include\VDP.asm"
+    include "include\VDP_Data.asm"
 ; SFX
     include	"include\PT3_player.s"    
 START
@@ -48,6 +49,8 @@ START
     call Set212Lines
         
     call INIT_CHARS_VARS
+    call initVDPBuffers
+
     LD A, -MOV_SPEED_GHOST
 	LD (CHAR_SPEED_X_GHOST), A
     LD HL, PaletteData
@@ -192,27 +195,13 @@ MAIN_LOOP:
     CALL print_strings_dialog_box
     LD A,1
     LD (SHOWING_GUS_DIALOG), A
-    LD IY, COPY01
-    LD (IY), 32      ; SXL
-    LD (IY+1), 0      ; SXH - 0-1
-    LD (IY+2), 0      ; SYL
-    LD (IY+3), 1      ; SYH - Page 1
-
-    LD (IY+4), 112     ; DXL
-    LD (IY+5), 0      ; DXH
-    LD (IY+6), 0      ; DYL
-    LD (IY+7), 0      ; DYH - Page 0
-
-    LD (IY+8), 32      ; NXL
-    LD (IY+9), 0       ; NXH
-    LD (IY+10), 16      ; NYL
-    LD (IY+11), 0      ; NYH
-
-    LD (IY+12), 0      ; ARG
-    LD (IY+13), 0      ; CLR
-    LD (IY+14), $D0      ; CMD
-    
-    LD HL, COPY01
+    ; Open the gate!
+    LD IY, tileDat
+    LD (IY + VDP_SX), 32      ; SXL - Tile 1
+    LD (IY+VDP_SY), 0      ; SYL
+    LD (IY + VDP_DX), 112     ; DXL    
+    LD (IY + VDP_DY), 0      ; DYL    
+    LD HL, tileDat
     CALL VDPCMD
     JR .animate_ghost
 
