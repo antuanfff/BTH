@@ -7,8 +7,8 @@ WRTVDP                  equ #0047   ; Escribe en los registros del VDP
 CLIKSW                  equ $F3DB ; Keyboard click sound
 SNSMAT					equ #0141
 JIFFY 					equ #FC9E
-DISSCR                  equ #0041   ; Disable screen
-ENASCR                  equ #0044   ; Enable screen
+;DISSCR                  equ #0041   ; Disable screen
+;ENASCR                  equ #0044   ; Enable screen
 INIGRP                  equ #0072   ; Enable Screen 2
 RSLREG                  equ #0138   ; Leemos el contenido del registro de seleccion de slots
 ENASLT                  equ #0024   ; Switches indicated slot at indicated page on perpetually Input    : A - Slot ID, see RDSLT            H - Bit 6 and 7 must contain the page number (00-11)

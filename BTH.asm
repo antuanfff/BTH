@@ -131,12 +131,16 @@ STAGE1:
     LD HL, MAP_RAM
     LD (MAPA), HL
     
+    ;We load the tiles on page 1 of VDP
+    LD HL, TILES1    
+    call load_tiles_vdp
+
     CALL ENASCR    
 
    	di	
 	ld		hl,SONG-99		; hl vale la direccion donde se encuentra la cancion - 99
     PUSH IX
-    call	PT3_INIT			; Inicia el reproductor de PT3
+    ;call	PT3_INIT			; Inicia el reproductor de PT3
 	POP IX
     ei
 
@@ -161,6 +165,29 @@ MAIN_LOOP:
     CALL print_strings_dialog_box
     LD A,1
     LD (SHOWING_MIKE_DIALOG), A
+    LD IY, COPY01
+    LD (IY), 0      ; SXL
+    LD (IY+1), 0      ; SXH - 0-1
+    LD (IY+2), 0      ; SYL
+    LD (IY+3), 1      ; SYH - Page 1
+
+    LD (IY+4), 112     ; DXL
+    LD (IY+5), 0      ; DXH
+    LD (IY+6), 0      ; DYL
+    LD (IY+7), 0      ; DYH - Page 0
+
+    LD (IY+8), 32      ; NXL
+    LD (IY+9), 0       ; NXH
+    LD (IY+10), 16      ; NYL
+    LD (IY+11), 0      ; NYH
+
+    LD (IY+12), 0      ; ARG
+    LD (IY+13), 0      ; CLR
+    LD (IY+14), $D0      ; CMD
+    
+    LD HL, COPY01
+    CALL VDPCMD
+
     JP .animate_ghost
 
 .check_john_tomb:
@@ -327,8 +354,8 @@ MAIN_LOOP:
 	
 	di       
     PUSH IX
-	call	PT3_ROUT			;envia datos a al PSG 	   
-	call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
+	;call	PT3_ROUT			;envia datos a al PSG 	   
+	;call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
 	POP IX
     ei
 
@@ -595,9 +622,8 @@ SONG:
 	;incbin "musica_sin_cabacera.pt3"
     incbin "sfx\test.pt3"
 include "include\BTH_data.asm"
-
-SONG2:
-    incbin "sfx\Nostalgy_sincabecera.pt3"
+TILES1:
+ INCBIN "gfx\tiles1.sc5",#7
  PAGE 1
 ; CODE O NO
 
@@ -610,8 +636,6 @@ SONG2:
  PAGE 6
 FONT:
  INCBIN "gfx\FONT.SC5",#7
-TILES:
- INCBIN "gfx\tiles1.sc5",#7
  PAGE 7
 CEMENTER1
  INCBIN "gfx\CEMENTER1.SC5",#7,#4000			; Cada página tiene 16K = 4000h
