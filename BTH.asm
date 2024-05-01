@@ -165,8 +165,35 @@ MAIN_LOOP:
     CALL print_strings_dialog_box
     LD A,1
     LD (SHOWING_MIKE_DIALOG), A
+    JP .animate_ghost
+
+.check_john_tomb:
+    CP JOHN_TOMB_STG1_X
+    jr nz, .check_gus_tomb
+    LD A, (SHOWING_JOHN_DIALOG)
+    CP 1
+    JP Z, .animate_ghost
+    LD IY, john_tomb_strings
+    CALL print_strings_dialog_box
+    LD A,1
+    LD (SHOWING_JOHN_DIALOG), A
+    JP .animate_ghost
+
+.check_gus_tomb:
+    CP GUS_TOMB_STG1_X
+    JP nz, .check_skull_hint
+    LD A, (SHOWING_GUS_DIALOG)
+    CP 1
+    JP Z, .animate_ghost
+    LD A, (ix)
+    CP GUS_TOMB_STG1_Y
+    jp c, .animate_ghost
+    LD IY, gus_tomb_strings
+    CALL print_strings_dialog_box
+    LD A,1
+    LD (SHOWING_GUS_DIALOG), A
     LD IY, COPY01
-    LD (IY), 0      ; SXL
+    LD (IY), 32      ; SXL
     LD (IY+1), 0      ; SXH - 0-1
     LD (IY+2), 0      ; SYL
     LD (IY+3), 1      ; SYH - Page 1
@@ -187,34 +214,6 @@ MAIN_LOOP:
     
     LD HL, COPY01
     CALL VDPCMD
-
-    JP .animate_ghost
-
-.check_john_tomb:
-    CP JOHN_TOMB_STG1_X
-    jr nz, .check_gus_tomb
-    LD A, (SHOWING_JOHN_DIALOG)
-    CP 1
-    JP Z, .animate_ghost
-    LD IY, john_tomb_strings
-    CALL print_strings_dialog_box
-    LD A,1
-    LD (SHOWING_JOHN_DIALOG), A
-    JP .animate_ghost
-
-.check_gus_tomb:
-    CP GUS_TOMB_STG1_X
-    jr nz, .check_skull_hint
-    LD A, (SHOWING_GUS_DIALOG)
-    CP 1
-    JP Z, .animate_ghost
-    LD A, (ix)
-    CP GUS_TOMB_STG1_Y
-    jr c, .animate_ghost
-    LD IY, gus_tomb_strings
-    CALL print_strings_dialog_box
-    LD A,1
-    LD (SHOWING_GUS_DIALOG), A
     JR .animate_ghost
 
 .check_skull_hint:
