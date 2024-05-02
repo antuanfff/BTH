@@ -139,7 +139,7 @@ STAGE1:
 
     LD A, (stg1_puzzle_solved)
     CP 3
-    JR NZ, .backfromstg2
+    JR NZ, .nobackfromstg2
         ; Open the gate!
     LD IY, tileDat
     LD (IY + VDP_SX), 64      ; SXL - Tile 2
@@ -149,7 +149,18 @@ STAGE1:
     LD HL, tileDat
     CALL VDPCMD
 
-.backfromstg2
+    ; Modify MAP
+    LD HL,stg1_gate
+    LD DE, MAP_RAM+14
+    LD BC, 4
+    LDIR
+
+    LD HL,stg1_gate
+    LD DE, MAP_RAM+46
+    LD BC, 4
+    LDIR
+
+.nobackfromstg2
     CALL ENASCR    
 
    	di	
@@ -177,7 +188,7 @@ MAIN_LOOP:
 
     LD A, (ix +1)   ; Cargamos la X para mirar si hay colisión con la tumba
     CP MIKE_TOMB_STG1_X
-    JR NZ, .check_john_tomb    
+    JP NZ, .check_john_tomb    
     
     LD A, (stg1_puzzle_solved)
     CP 2
@@ -195,6 +206,17 @@ MAIN_LOOP:
 
     LD IY, stg1_puzzle_solved_strings
     CALL print_strings_dialog_box
+
+    ; Modify MAP
+    LD HL,stg1_gate
+    LD DE, MAP_RAM+14
+    LD BC, 4
+    LDIR
+
+    LD HL,stg1_gate
+    LD DE, MAP_RAM+46
+    LD BC, 4
+    LDIR
     JP .animate_ghost
 
 .puzzle_wrong_order
@@ -215,6 +237,11 @@ MAIN_LOOP:
     LD (IY + VDP_DY), 0      ; DYL    
     LD HL, tileDat
     CALL VDPCMD
+
+    LD HL,stg1_gate_blocked
+    LD DE, MAP_RAM+45
+    LD BC, 6
+    LDIR
 
     JP .animate_ghost
 
@@ -257,6 +284,11 @@ MAIN_LOOP:
     LD (IY + VDP_DY), 0      ; DYL    
     LD HL, tileDat
     CALL VDPCMD
+
+    LD HL,stg1_gate
+    LD DE, MAP_RAM+47
+    LD BC, 2
+    LDIR
     JR .animate_ghost
 
 .check_skull_hint:
