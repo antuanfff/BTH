@@ -39,6 +39,10 @@ TILES_START_ADDR 	equ $8000  ; Tiles in ROM will be loaded at $8000, so we can l
 BACK_BUFFER			equ 1		; we will draw to page 1
 FRONT_BUFFER		equ 0		; then copy to page 0
 
+; Dialog Box
+DIAGBOX_HEIGHT	equ 20
+DIAGBOX_WIDTH	equ 255
+
 ;---------------------------------------------------------------------------
 ; Init the RAM buffer used to draw a tile
 ;---------------------------------------------------------------------------
@@ -46,10 +50,19 @@ initVDPBuffers:
 		ld	hl,tileDatROM
 		ld	de,tileDat
 		ld	bc,15
-		ldir
+		ldir	
+
 		ret
 
 print_strings_dialog_box:
+	
+	LD HL, DiagBoxToBackBufROM
+	call VDPCMD
+	call VDP_Ready
+	
+	LD HL, DiagBoxClearROM
+	call VDPCMD
+	call VDP_Ready
 
 	LD H, (IY+1)
 	LD L, (IY)
@@ -150,7 +163,7 @@ print_char
 		jr	nz,1b		
 		ret 
 
-CLEAR_DIALOG_BOX_OLD:		
+CLEAR_DIALOG_BOX_v1:		
 		LD C,0
 		LD DE, 5C28H
 		LD (CHR_ACR), DE
@@ -175,7 +188,7 @@ CLEAR_DIALOG_BOX_OLD:
 		JR NZ,1b
 		RET
 
-CLEAR_DIALOG_BOX:
+CLEAR_DIALOG_BOX_v2:
 		LD C,0
 		LD DE, FIRST_LINE_DLG_BOX
 		LD (CHR_ACR), DE
@@ -199,6 +212,12 @@ CLEAR_DIALOG_BOX:
 		DEC a
 		JR NZ,1b
 		RET
+	
+CLEAR_DIALOG_BOX:
+		LD HL, DiagBoxToFrontkBufROM
+		CALL VDPCMD
+		RET
+
 
 ; -----------------------------------------------------------------------------------
 ; https://www.msx.org/forum/development/msx-development/assembly-combined-basic
@@ -335,3 +354,21 @@ LIN212:				; Set 212 lines
 	EI
 	OUT	($99),A
 	RET
+;
+; This lil' routine waits until the VDP is done copying.
+;
+VDP_Ready:
+    ld a,2
+    di
+    out (#99),a     ; select s#2
+    ld a,15+128
+    out (#99),a
+    in a,(#99)
+    rra
+    ld a,0          ; back to s#0, enable ints
+    out (#99),a
+    ld a,15+128
+    ei
+    out (#99),a     ; loop if vdp not ready (CE)
+    jp c,VDP_Ready
+    ret

@@ -20,14 +20,13 @@ _bank2	equ	7000h
 ;Constantes
     include "include\BTH_const.asm"
     include "include\BTH_strings.asm"
-
 ; Funciones auxiliares
 	include "include\BTH_func.asm"
     include "include\BTH_animate.asm"
 	include "include\VDP.asm"
     include "include\VDP_Data.asm"
 ; SFX
-    include	"include\PT3_player.s"    
+    include	"include\PT3_player.s"  
 START
 	; CODE
     ld hl,FORCLR ; Variable del Sistema
@@ -100,8 +99,8 @@ INIT_CHARS_VARS:
     LD (SHOWING_GUS_DIALOG), A
     LD (SHOWING_JOHN_DIALOG), A
     LD (SHOWING_MIKE_DIALOG), A
-    LD (SHOWING_SKULL_STG1_DIALOG), A
-
+    LD (SHOWING_SKULL_STG1_DIALOG), A    
+    LD (stg1_puzzle_solved), A
    ; LD A,$FF
     LD (OLD_KEY_PRESSED), A
     LD A,$01
@@ -138,12 +137,25 @@ STAGE1:
     LD HL, TILES1    
     call load_tiles_vdp
 
+    LD A, (stg1_puzzle_solved)
+    CP 3
+    JR NZ, .backfromstg2
+        ; Open the gate!
+    LD IY, tileDat
+    LD (IY + VDP_SX), 64      ; SXL - Tile 2
+    LD (IY+VDP_SY), 0      ; SYL
+    LD (IY + VDP_DX), 112     ; DXL    
+    LD (IY + VDP_DY), 0      ; DYL    
+    LD HL, tileDat
+    CALL VDPCMD
+
+.backfromstg2
     CALL ENASCR    
 
    	di	
 	ld		hl,SONG-99		; hl vale la direccion donde se encuentra la cancion - 99
     PUSH IX
-    ;call	PT3_INIT			; Inicia el reproductor de PT3
+    call	PT3_INIT			; Inicia el reproductor de PT3
 	POP IX
     ei
 
@@ -158,16 +170,52 @@ MAIN_LOOP:
     call DUMP_SPR_ATTS    
 
 .check_tombs:
+
+    LD A, (stg1_puzzle_solved)
+    CP 3
+    JP Z, .animate_ghost
+
     LD A, (ix +1)   ; Cargamos la X para mirar si hay colisión con la tumba
     CP MIKE_TOMB_STG1_X
-    JR NZ, .check_john_tomb
+    JR NZ, .check_john_tomb    
+    
+    LD A, (stg1_puzzle_solved)
+    CP 2
+    JP NZ, .puzzle_wrong_order
+    INC A
+    LD (stg1_puzzle_solved), A
+    ; Open the gate!
+    LD IY, tileDat
+    LD (IY + VDP_SX), 64      ; SXL - Tile 2
+    LD (IY+VDP_SY), 0      ; SYL
+    LD (IY + VDP_DX), 112     ; DXL    
+    LD (IY + VDP_DY), 0      ; DYL    
+    LD HL, tileDat
+    CALL VDPCMD
+
+    LD IY, stg1_puzzle_solved_strings
+    CALL print_strings_dialog_box
+    JP .animate_ghost
+
+.puzzle_wrong_order
     LD A, (SHOWING_MIKE_DIALOG)
     CP 1
-    JP Z, .animate_ghost
+    JP Z, .animate_ghost    
     LD IY, mike_tomb_strings
     CALL print_strings_dialog_box
     LD A,1
     LD (SHOWING_MIKE_DIALOG), A
+    XOR A
+    LD (stg1_puzzle_solved), A
+            ; Close the gate!
+    LD IY, tileDat
+    LD (IY + VDP_SX), 0      ; SXL - Tile 2
+    LD (IY+VDP_SY), 0      ; SYL
+    LD (IY + VDP_DX), 112     ; DXL    
+    LD (IY + VDP_DY), 0      ; DYL    
+    LD HL, tileDat
+    CALL VDPCMD
+
     JP .animate_ghost
 
 .check_john_tomb:
@@ -180,6 +228,11 @@ MAIN_LOOP:
     CALL print_strings_dialog_box
     LD A,1
     LD (SHOWING_JOHN_DIALOG), A
+    LD A, (stg1_puzzle_solved)
+    CP 1
+    JP NZ, .animate_ghost
+    INC A
+    LD (stg1_puzzle_solved), A
     JP .animate_ghost
 
 .check_gus_tomb:
@@ -195,7 +248,8 @@ MAIN_LOOP:
     CALL print_strings_dialog_box
     LD A,1
     LD (SHOWING_GUS_DIALOG), A
-    ; Open the gate!
+    LD (stg1_puzzle_solved), A
+    ; Open the gate (half)!
     LD IY, tileDat
     LD (IY + VDP_SX), 32      ; SXL - Tile 1
     LD (IY+VDP_SY), 0      ; SYL
@@ -609,9 +663,11 @@ MAIN_LOOP2:
 SONG:
 	;incbin "musica_sin_cabacera.pt3"
     incbin "sfx\test.pt3"
+    ;incbin "sfx\G-6sin_cabecera.pt3"
 include "include\BTH_data.asm"
 TILES1:
  INCBIN "gfx\tiles1.sc5",#7
+
  PAGE 1
 ; CODE O NO
 
@@ -658,3 +714,4 @@ CEMENTER2
 ;
 	include "include\BTH_RAM.asm"
 	ENDMAP
+  

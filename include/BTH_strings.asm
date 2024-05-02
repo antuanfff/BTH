@@ -22,3 +22,9 @@ string01Sk: db 'MURRAY:',0
 string02Sk: db 'LA SANGRE TE DARA EL ORDEN',0
 string03Sk: db 0
 
+stg1_puzzle_solved_strings: dw string01P, string02P, string03P
+; Caben 23 caracteres en cada línea
+string01P: db 'PETER:',0
+string02P: db 'LA PUERTA SE HA ABIERTO!',0
+string03P: db 0
+

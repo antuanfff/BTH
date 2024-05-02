@@ -981,24 +981,12 @@ T_PACK:		; First 12 values of tone tables (packed)
 		db $0EF8-$0E10
 
 
-
-
-
-
-
-
-
-
-
-
-
 	;Variables del replayer... las coloco desde aqui.
 	;mirar que hace la directiva MAP del SJASM
-	map		#f200
-
+	map		#F000
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;PT3 REPLAYER
 PT3_SETUP:		#0	;set bit0 to 1, if you want to play without looping
-					;bit7 is set each time, when loop point is passed
+                    ;bit7 is set each time, when loop point is passed
 PT3_MODADDR:	#2
 PT3_CrPsPtr:		#2
 PT3_SAMPTRS:		#2
@@ -1050,3 +1038,4 @@ T_OLD_0:		#0
 T_NEW_0:		#24
 T_NEW_2:		#166
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;PT3 REPLAYER END
+    ENDMAP
