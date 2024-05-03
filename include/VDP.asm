@@ -36,7 +36,7 @@ TILE_WIDTH			equ	32
 TILE_HEIGHT			equ	16
 TILES_PAGE			equ	1		; Page where tiles are stored
 TILES_START_ADDR 	equ $8000  ; Tiles in ROM will be loaded at $8000, so we can load them to VRAM
-BACK_BUFFER			equ 1		; we will draw to page 1
+BACK_BUFFER			equ 2		; we will draw to page 1
 FRONT_BUFFER		equ 0		; then copy to page 0
 
 ; Dialog Box

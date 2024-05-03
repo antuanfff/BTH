@@ -54,7 +54,16 @@ START
 	LD (CHAR_SPEED_X_GHOST), A
     LD HL, PaletteData
     CALL SetPalette
+    ; init sfx
+    di	
+	ld		hl,SONG-99		; hl vale la direccion donde se encuentra la cancion - 99
+    PUSH IX
+    call	PT3_INIT			; Inicia el reproductor de PT3
+	POP IX
+    ei
+    ; Start STG1
     CALL STAGE1
+
     ;call MAIN_LOOP
     ;CALL CHGET
 	ret
@@ -162,14 +171,6 @@ STAGE1:
 
 .nobackfromstg2
     CALL ENASCR    
-
-   	di	
-	ld		hl,SONG-99		; hl vale la direccion donde se encuentra la cancion - 99
-    PUSH IX
-    call	PT3_INIT			; Inicia el reproductor de PT3
-	POP IX
-    ei
-
 
 MAIN_LOOP:
     ;halt ; sincroniza el teclado y pantalla con el procesador (que va muy rápido)    
@@ -428,8 +429,8 @@ MAIN_LOOP:
 	
 	di       
     PUSH IX
-	;call	PT3_ROUT			;envia datos a al PSG 	   
-	;call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
+	call	PT3_ROUT			;envia datos a al PSG 	   
+	call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
 	POP IX
     ei
 
@@ -682,19 +683,19 @@ MAIN_LOOP2:
     ret z
 
     halt
-	;di       
-    ;PUSH IX
-	;call	PT3_ROUT			;envia datos a al PSG 	   
-	;call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
-	;POP IX
-    ;ei
+	di       
+    PUSH IX
+	call	PT3_ROUT			;envia datos a al PSG 	   
+	call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
+	POP IX
+    ei
 
     jp MAIN_LOOP2
 
 
 SONG:
-	;incbin "musica_sin_cabacera.pt3"
-    incbin "sfx\test.pt3"
+	incbin "sfx\Nostalgy_sincabecera.pt3"
+    ;incbin "sfx\G-6sin_cabecera.pt3"
     ;incbin "sfx\G-6sin_cabecera.pt3"
 include "include\BTH_data.asm"
 TILES1:
