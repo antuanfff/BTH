@@ -1,21 +1,22 @@
-Sjasm Z80 Assembler v0.42c - www.xl2s.tk             [2024.05.06 - 19:14:53]
+Sjasm Z80 Assembler v0.42c - www.xl2s.tk             [2024.05.06 - 20:03:56]
 
 bth.asm
-Errors: 0
+Errors: 1
 
        1   00:0000                      	output "BTH.rom" 
-       2   00:7BAC                      
-       3   00:7BAC                      ;ROM ASCII16
-       4   00:7BAC                      		defpage	0,0x4000, 0x4000
-       5   00:7BAC                      		defpage	1,0x8000, 0x4000        
-       6   00:7BAC                      		defpage	2..14 ;Here it is determined rom size        
-       7   00:7BAC                              defpage	15,0xC000, 0x4000
-       8   00:7BAC                      
-       9   00:7BAC  (00:4000)           PageSize:	    equ	0x4000	        ; 16kB
-      10   00:7BAC  (00:6000)           _bank1	equ	6000h
-      11   00:7BAC  (00:7000)           _bank2	equ	7000h
-      12   00:7BAC  32 00 70 32 FF 77   		DB 32h,0,70h,32h,0FFh,77h		; Para evitar seleccionar el tipo de ROM ASCII16 en OpenMSX
-      13   00:7BB2  (00)                		page 0			
+       2   00:4000                      
+       3   00:4000                      ;ROM ASCII16
+       4   00:4000                      		defpage	0,0x4000, 0x4000
+       5   00:4000                      		defpage	1,0x8000, 0x4000        
+       6   00:4000                      		defpage	2..14 ;Here it is determined rom size        
+       7   00:4000                              defpage	15,0xC000, 0x4000
+       8   00:4000                      
+       9   00:4000  (00:4000)           PageSize:	    equ	0x4000	        ; 16kB
+      10   00:4000  (00:6000)           _bank1	equ	6000h
+      11   00:4000  (00:7000)           _bank2	equ	7000h
+      12   00:4000  32 00 70 32 FF 77   		DB 32h,0,70h,32h,0FFh,77h		; Para evitar seleccionar el tipo de ROM ASCII16 en OpenMSX
+bth.asm(13) : Part 'mike_tomb_strings' does not fit in page 0
+      13   00:4006  (00)                		page 0			
       14   00:4000                              org 4000h		
       15   00:4000                              dw  4241h,START,0,0,0,0,0,0
       15   00:4000  41 42 41 4D 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -3927,9 +3928,9 @@ Errors: 0
      519.  00:73AF  01 02                   db 0x01, 0x02 ; Color index 14
      520.  00:73B1  00 00                   db 0x00, 0x00 ; Color index 15
      701   00:73B3                      TILES1:
-     702   00:73B3  (07F9)               INCBIN "gfx\tiles1.sc5",#7
-     703   00:7BAC                      
-     704   00:7BAC  (01)                 PAGE 1
+     702   00:73B3  (6A00)               INCBIN "gfx\tiles1.sc5",#7
+     703   00:DDB3                      
+     704   00:DDB3  (01)                 PAGE 1
      705   01:8000                      ; CODE O NO
      706   01:8000                      
      707   01:8000  (02)                 PAGE 2
@@ -4509,12 +4510,11 @@ Errors: 0
 -------------------------------------------------
 
  Page: 00
-  Org: 00004000  Size: 00004000  Used: 00003BB2
+  Org: 00004000  Size: 00004000  Used: 00000006
 
    Address   Length Align   Label
-   00004000   15276         mike_tomb_strings
-   00007BAC       6         
-   00007BB2    1102       <empty>
+   00004000       6         
+   00004006   16378       <empty>
 
  Page: 01
   Org: 00008000  Size: 00004000  Used: 00000000
