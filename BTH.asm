@@ -147,16 +147,7 @@ STAGE1:
     ;We load the tiles on page 1 of VDP
     LD HL, TILES1    
     call load_tiles_vdp
-
-                ; Cambio la gate pq no está en el sc5 de fondo
-    LD IY, tileDat
-    LD (IY + VDP_SX), 0      ; SXL - Tile 2
-    LD (IY+VDP_SY), 0      ; SYL
-    LD (IY + VDP_DX), 112     ; DXL    
-    LD (IY + VDP_DY), 0      ; DYL    
-    LD HL, tileDat
-    CALL VDPCMD
-
+  
     LD A, (stg1_puzzle_solved)
     CP 3
     JR NZ, .nobackfromstg2
