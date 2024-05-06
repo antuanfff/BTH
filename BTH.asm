@@ -20,13 +20,13 @@ _bank2	equ	7000h
 ;Constantes
     include "include\BTH_const.asm"
     include "include\BTH_strings.asm"
-
 ; Funciones auxiliares
 	include "include\BTH_func.asm"
     include "include\BTH_animate.asm"
 	include "include\VDP.asm"
+    include "include\VDP_Data.asm"
 ; SFX
-    include	"include\PT3_player.s"    
+    include	"include\PT3_player.s"  
 START
 	; CODE
     ld hl,FORCLR ; Variable del Sistema
@@ -48,11 +48,22 @@ START
     call Set212Lines
         
     call INIT_CHARS_VARS
+    call initVDPBuffers
+
     LD A, -MOV_SPEED_GHOST
 	LD (CHAR_SPEED_X_GHOST), A
     LD HL, PaletteData
     CALL SetPalette
+    ; init sfx
+    di	
+	ld		hl,SONG-99		; hl vale la direccion donde se encuentra la cancion - 99
+    PUSH IX
+    call	PT3_INIT			; Inicia el reproductor de PT3
+	POP IX
+    ei
+    ; Start STG1
     CALL STAGE1
+
     ;call MAIN_LOOP
     ;CALL CHGET
 	ret
@@ -97,8 +108,8 @@ INIT_CHARS_VARS:
     LD (SHOWING_GUS_DIALOG), A
     LD (SHOWING_JOHN_DIALOG), A
     LD (SHOWING_MIKE_DIALOG), A
-    LD (SHOWING_SKULL_STG1_DIALOG), A
-
+    LD (SHOWING_SKULL_STG1_DIALOG), A    
+    LD (stg1_puzzle_solved), A
    ; LD A,$FF
     LD (OLD_KEY_PRESSED), A
     LD A,$01
@@ -135,15 +146,31 @@ STAGE1:
     LD HL, TILES1    
     call load_tiles_vdp
 
+    LD A, (stg1_puzzle_solved)
+    CP 3
+    JR NZ, .nobackfromstg2
+        ; Open the gate!
+    LD IY, tileDat
+    LD (IY + VDP_SX), 64      ; SXL - Tile 2
+    LD (IY+VDP_SY), 0      ; SYL
+    LD (IY + VDP_DX), 112     ; DXL    
+    LD (IY + VDP_DY), 0      ; DYL    
+    LD HL, tileDat
+    CALL VDPCMD
+
+    ; Modify MAP
+    LD HL,stg1_gate
+    LD DE, MAP_RAM+14
+    LD BC, 4
+    LDIR
+
+    LD HL,stg1_gate
+    LD DE, MAP_RAM+46
+    LD BC, 4
+    LDIR
+
+.nobackfromstg2
     CALL ENASCR    
-
-   	di	
-	ld		hl,SONG-99		; hl vale la direccion donde se encuentra la cancion - 99
-    PUSH IX
-    ;call	PT3_INIT			; Inicia el reproductor de PT3
-	POP IX
-    ei
-
 
 MAIN_LOOP:
     ;halt ; sincroniza el teclado y pantalla con el procesador (que va muy rápido)    
@@ -155,38 +182,67 @@ MAIN_LOOP:
     call DUMP_SPR_ATTS    
 
 .check_tombs:
+
+    LD A, (stg1_puzzle_solved)
+    CP 3
+    JP Z, .animate_ghost
+
     LD A, (ix +1)   ; Cargamos la X para mirar si hay colisión con la tumba
     CP MIKE_TOMB_STG1_X
-    JR NZ, .check_john_tomb
+    JP NZ, .check_john_tomb    
+    
+    LD A, (stg1_puzzle_solved)
+    CP 2
+    JP NZ, .puzzle_wrong_order
+    INC A
+    LD (stg1_puzzle_solved), A
+    ; Open the gate!
+    LD IY, tileDat
+    LD (IY + VDP_SX), 64      ; SXL - Tile 2
+    LD (IY+VDP_SY), 0      ; SYL
+    LD (IY + VDP_DX), 112     ; DXL    
+    LD (IY + VDP_DY), 0      ; DYL    
+    LD HL, tileDat
+    CALL VDPCMD
+
+    LD IY, stg1_puzzle_solved_strings
+    CALL print_strings_dialog_box
+
+    ; Modify MAP
+    LD HL,stg1_gate
+    LD DE, MAP_RAM+14
+    LD BC, 4
+    LDIR
+
+    LD HL,stg1_gate
+    LD DE, MAP_RAM+46
+    LD BC, 4
+    LDIR
+    JP .animate_ghost
+
+.puzzle_wrong_order
     LD A, (SHOWING_MIKE_DIALOG)
     CP 1
-    JP Z, .animate_ghost
+    JP Z, .animate_ghost    
     LD IY, mike_tomb_strings
     CALL print_strings_dialog_box
     LD A,1
     LD (SHOWING_MIKE_DIALOG), A
-    LD IY, COPY01
-    LD (IY), 0      ; SXL
-    LD (IY+1), 0      ; SXH - 0-1
-    LD (IY+2), 0      ; SYL
-    LD (IY+3), 1      ; SYH - Page 1
-
-    LD (IY+4), 112     ; DXL
-    LD (IY+5), 0      ; DXH
-    LD (IY+6), 0      ; DYL
-    LD (IY+7), 0      ; DYH - Page 0
-
-    LD (IY+8), 32      ; NXL
-    LD (IY+9), 0       ; NXH
-    LD (IY+10), 16      ; NYL
-    LD (IY+11), 0      ; NYH
-
-    LD (IY+12), 0      ; ARG
-    LD (IY+13), 0      ; CLR
-    LD (IY+14), $D0      ; CMD
-    
-    LD HL, COPY01
+    XOR A
+    LD (stg1_puzzle_solved), A
+            ; Close the gate!
+    LD IY, tileDat
+    LD (IY + VDP_SX), 0      ; SXL - Tile 2
+    LD (IY+VDP_SY), 0      ; SYL
+    LD (IY + VDP_DX), 112     ; DXL    
+    LD (IY + VDP_DY), 0      ; DYL    
+    LD HL, tileDat
     CALL VDPCMD
+
+    LD HL,stg1_gate_blocked
+    LD DE, MAP_RAM+45
+    LD BC, 6
+    LDIR
 
     JP .animate_ghost
 
@@ -200,21 +256,40 @@ MAIN_LOOP:
     CALL print_strings_dialog_box
     LD A,1
     LD (SHOWING_JOHN_DIALOG), A
+    LD A, (stg1_puzzle_solved)
+    CP 1
+    JP NZ, .animate_ghost
+    INC A
+    LD (stg1_puzzle_solved), A
     JP .animate_ghost
 
 .check_gus_tomb:
     CP GUS_TOMB_STG1_X
-    jr nz, .check_skull_hint
+    JP nz, .check_skull_hint
     LD A, (SHOWING_GUS_DIALOG)
     CP 1
     JP Z, .animate_ghost
     LD A, (ix)
     CP GUS_TOMB_STG1_Y
-    jr c, .animate_ghost
+    jp c, .animate_ghost
     LD IY, gus_tomb_strings
     CALL print_strings_dialog_box
     LD A,1
     LD (SHOWING_GUS_DIALOG), A
+    LD (stg1_puzzle_solved), A
+    ; Open the gate (half)!
+    LD IY, tileDat
+    LD (IY + VDP_SX), 32      ; SXL - Tile 1
+    LD (IY+VDP_SY), 0      ; SYL
+    LD (IY + VDP_DX), 112     ; DXL    
+    LD (IY + VDP_DY), 0      ; DYL    
+    LD HL, tileDat
+    CALL VDPCMD
+
+    LD HL,stg1_gate
+    LD DE, MAP_RAM+47
+    LD BC, 2
+    LDIR
     JR .animate_ghost
 
 .check_skull_hint:
@@ -354,8 +429,8 @@ MAIN_LOOP:
 	
 	di       
     PUSH IX
-	;call	PT3_ROUT			;envia datos a al PSG 	   
-	;call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
+	call	PT3_ROUT			;envia datos a al PSG 	   
+	call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
 	POP IX
     ei
 
@@ -608,22 +683,24 @@ MAIN_LOOP2:
     ret z
 
     halt
-	;di       
-    ;PUSH IX
-	;call	PT3_ROUT			;envia datos a al PSG 	   
-	;call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
-	;POP IX
-    ;ei
+	di       
+    PUSH IX
+	call	PT3_ROUT			;envia datos a al PSG 	   
+	call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
+	POP IX
+    ei
 
     jp MAIN_LOOP2
 
 
 SONG:
-	;incbin "musica_sin_cabacera.pt3"
-    incbin "sfx\test.pt3"
+	incbin "sfx\Nostalgy_sincabecera.pt3"
+    ;incbin "sfx\G-6sin_cabecera.pt3"
+    ;incbin "sfx\G-6sin_cabecera.pt3"
 include "include\BTH_data.asm"
 TILES1:
  INCBIN "gfx\tiles1.sc5",#7
+
  PAGE 1
 ; CODE O NO
 
@@ -670,3 +747,4 @@ CEMENTER2
 ;
 	include "include\BTH_RAM.asm"
 	ENDMAP
+  

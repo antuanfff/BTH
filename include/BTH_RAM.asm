@@ -1,6 +1,8 @@
-; VDP COMMAND PARAMETER
-;          SXL SXH SYL SYH DXL DXH DYL DYH NXL NXH NYL NYH CLR ARG CMD
-COPY01 DB  $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+; VDP variables
+tileDat: ds 15
+
+; puzzle 1st stage
+stg1_puzzle_solved DS 1
 
 SHOWING_SKULL_STG1_DIALOG  DS 1
 SHOWING_MIKE_DIALOG  DS 1
@@ -50,3 +52,5 @@ BITMAP:
     DS 2
 MAP_RAM:
     DS 736
+
+

@@ -1,4 +1,68 @@
+; Offset commands registers
+VDP_SX		 EQU 0
+VDP_SY		 EQU 2
+VDP_DX		 EQU 4
+VDP_DY		 EQU 6
+VDP_NX		 EQU 8
+VDP_NY		 EQU 10
+VDP_COLOR	 EQU 12
+VDP_ARGUMENT EQU 13
+VDP_COMMAND	 EQU 14
+
+; Offset for sprite commands from memory
+
+; VDP Commands
+CMD_YMMM	equ	$e0
+CMD_HMMM	equ	$d0
+CMD_HMMV	equ	$c0
+CMD_LMMM	equ	$98
+CMD_LMMC	equ $b0
+CMD_LMMV    equ $80
+
+; Logical operations
+VDP_IMP		equ	%0000
+VDP_AND		equ	%0001
+VDP_OR		equ	%0010
+VDP_XOR		equ	%0011
+VDP_NOT		equ	%0100
+VDP_TIMP	equ	%1000
+VDP_TAND	equ	%1001
+VDP_TOR		equ	%1010
+VDP_TXOR	equ	%1011
+VDP_TNOT	equ	%1100
+
+; Tile
+TILE_WIDTH			equ	32
+TILE_HEIGHT			equ	16
+TILES_PAGE			equ	1		; Page where tiles are stored
+TILES_START_ADDR 	equ $8000  ; Tiles in ROM will be loaded at $8000, so we can load them to VRAM
+BACK_BUFFER			equ 2		; we will draw to page 1
+FRONT_BUFFER		equ 0		; then copy to page 0
+
+; Dialog Box
+DIAGBOX_HEIGHT	equ 20
+DIAGBOX_WIDTH	equ 255
+
+;---------------------------------------------------------------------------
+; Init the RAM buffer used to draw a tile
+;---------------------------------------------------------------------------
+initVDPBuffers:
+		ld	hl,tileDatROM
+		ld	de,tileDat
+		ld	bc,15
+		ldir	
+
+		ret
+
 print_strings_dialog_box:
+	
+	LD HL, DiagBoxToBackBufROM
+	call VDPCMD
+	call VDP_Ready
+	
+	LD HL, DiagBoxClearROM
+	call VDPCMD
+	call VDP_Ready
 
 	LD H, (IY+1)
 	LD L, (IY)
@@ -99,7 +163,7 @@ print_char
 		jr	nz,1b		
 		ret 
 
-CLEAR_DIALOG_BOX:		
+CLEAR_DIALOG_BOX_v1:		
 		LD C,0
 		LD DE, 5C28H
 		LD (CHR_ACR), DE
@@ -123,6 +187,37 @@ CLEAR_DIALOG_BOX:
 		DEC a
 		JR NZ,1b
 		RET
+
+CLEAR_DIALOG_BOX_v2:
+		LD C,0
+		LD DE, FIRST_LINE_DLG_BOX
+		LD (CHR_ACR), DE
+		call _vdpsetvramwr
+		LD A, 24		; Borraremos 24 líneas de la pantalla
+1:		LD HL, BLANK_DATA
+		LD BC,0x8098	; Escribimos 128 bytes, la linea entera
+		OTIR
+
+		PUSH AF
+		LD IY, (CHR_ACR)
+		LD BC, 128
+		ADD IY, BC
+		LD D, IYH
+		LD E, IYL
+		LD C,0
+		LD (CHR_ACR), DE
+		call	_vdpsetvramwr		
+		POP AF		
+
+		DEC a
+		JR NZ,1b
+		RET
+	
+CLEAR_DIALOG_BOX:
+		LD HL, DiagBoxToFrontkBufROM
+		CALL VDPCMD
+		RET
+
 
 ; -----------------------------------------------------------------------------------
 ; https://www.msx.org/forum/development/msx-development/assembly-combined-basic
@@ -259,3 +354,21 @@ LIN212:				; Set 212 lines
 	EI
 	OUT	($99),A
 	RET
+;
+; This lil' routine waits until the VDP is done copying.
+;
+VDP_Ready:
+    ld a,2
+    di
+    out (#99),a     ; select s#2
+    ld a,15+128
+    out (#99),a
+    in a,(#99)
+    rra
+    ld a,0          ; back to s#0, enable ints
+    out (#99),a
+    ld a,15+128
+    ei
+    out (#99),a     ; loop if vdp not ready (CE)
+    jp c,VDP_Ready
+    ret
