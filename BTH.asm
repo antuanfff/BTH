@@ -148,12 +148,21 @@ STAGE1:
     LD HL, TILES1    
     call load_tiles_vdp
 
+                ; Cambio la gate pq no está en el sc5 de fondo
+    LD IY, tileDat
+    LD (IY + VDP_SX), 0      ; SXL - Tile 2
+    LD (IY+VDP_SY), 0      ; SYL
+    LD (IY + VDP_DX), 112     ; DXL    
+    LD (IY + VDP_DY), 0      ; DYL    
+    LD HL, tileDat
+    CALL VDPCMD
+
     LD A, (stg1_puzzle_solved)
     CP 3
     JR NZ, .nobackfromstg2
         ; Open the gate!
     LD IY, tileDat
-    LD (IY + VDP_SX), 64      ; SXL - Tile 2
+    LD (IY + VDP_SX), 96      ; SXL - Tile 2
     LD (IY+VDP_SY), 0      ; SYL
     LD (IY + VDP_DX), 112     ; DXL    
     LD (IY + VDP_DY), 0      ; DYL    
@@ -170,6 +179,7 @@ STAGE1:
     LD DE, MAP_RAM+46
     LD BC, 4
     LDIR
+    
 
 .nobackfromstg2
     CALL ENASCR    
@@ -200,7 +210,7 @@ MAIN_LOOP:
     LD (stg1_puzzle_solved), A
     ; Open the gate!
     LD IY, tileDat
-    LD (IY + VDP_SX), 64      ; SXL - Tile 2
+    LD (IY + VDP_SX), 96      ; SXL - Tile 2
     LD (IY+VDP_SY), 0      ; SYL
     LD (IY + VDP_DX), 112     ; DXL    
     LD (IY + VDP_DY), 0      ; DYL    
@@ -233,13 +243,13 @@ MAIN_LOOP:
     XOR A
     LD (stg1_puzzle_solved), A
             ; Close the gate!
-    LD IY, tileDat
-    LD (IY + VDP_SX), 0      ; SXL - Tile 2
-    LD (IY+VDP_SY), 0      ; SYL
-    LD (IY + VDP_DX), 112     ; DXL    
-    LD (IY + VDP_DY), 0      ; DYL    
-    LD HL, tileDat
-    CALL VDPCMD
+    ;LD IY, tileDat
+    ;LD (IY + VDP_SX), 0      ; SXL - Tile 2
+    ;LD (IY+VDP_SY), 0      ; SYL
+    ;LD (IY + VDP_DX), 112     ; DXL    
+    ;LD (IY + VDP_DY), 0      ; DYL    
+    ;LD HL, tileDat
+    ;CALL VDPCMD
 
     LD HL,stg1_gate_blocked
     LD DE, MAP_RAM+45
@@ -263,6 +273,14 @@ MAIN_LOOP:
     JP NZ, .animate_ghost
     INC A
     LD (stg1_puzzle_solved), A
+    ; Half open gate
+    LD IY, tileDat
+    LD (IY + VDP_SX), 64      ; SXL - Tile 2
+    LD (IY+VDP_SY), 0      ; SYL
+    LD (IY + VDP_DX), 112     ; DXL    
+    LD (IY + VDP_DY), 0      ; DYL    
+    LD HL, tileDat
+    CALL VDPCMD
     JP .animate_ghost
 
 .check_gus_tomb:
