@@ -1,3 +1,4 @@
+CLRSPR                  equ #0069
 CHGET                   equ #009F    ; Se queda esperando que se pulse una tecla
 CHPUT                   equ #00A2    ; escribe el caracter ascii almacenado en a                         
 CHGMOD                  equ #005F   ; Cambia el modo de screen pero previamente necesita que se le asigne el modo en el registro a

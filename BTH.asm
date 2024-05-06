@@ -50,7 +50,7 @@ START
     call Set212Lines
         
     call INIT_CHARS_VARS
-    call initVDPBuffers
+    call initVDPBuffers    
 
     LD A, -MOV_SPEED_GHOST
 	LD (CHAR_SPEED_X_GHOST), A
@@ -63,6 +63,7 @@ START
     call	PT3_INIT			; Inicia el reproductor de PT3
 	POP IX
     ei
+    
     ; Start STG1
     CALL STAGE1
 
@@ -172,7 +173,12 @@ STAGE1:
     LDIR
     
 
+
 .nobackfromstg2
+        ; Copy the energy bar to back buffer
+    LD HL, DiagBoxToBackBufROM
+	call VDPCMD
+;	call VDP_Ready
     CALL ENASCR    
 
 MAIN_LOOP:

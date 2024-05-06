@@ -54,15 +54,7 @@ initVDPBuffers:
 
 		ret
 
-print_strings_dialog_box:
-	
-	LD HL, DiagBoxToBackBufROM
-	call VDPCMD
-	call VDP_Ready
-	
-	LD HL, DiagBoxClearROM
-	call VDPCMD
-	call VDP_Ready
+print_strings_dialog_box:		
 
 	LD H, (IY+1)
 	LD L, (IY)
