@@ -26,7 +26,9 @@ _bank2	equ	7000h
 	include "include\VDP.asm"
     include "include\VDP_Data.asm"
 ; SFX
-    include	"include\PT3_player.s"  
+    include	"include\PT3_player.s"
+; GFX
+    include "include\metatiles.asm"
 START
 	; CODE
     ld hl,FORCLR ; Variable del Sistema
