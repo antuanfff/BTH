@@ -50,7 +50,7 @@ START
     call Set212Lines
         
     call INIT_CHARS_VARS
-    call initVDPBuffers
+    call initVDPBuffers    
 
     LD A, -MOV_SPEED_GHOST
 	LD (CHAR_SPEED_X_GHOST), A
@@ -63,6 +63,7 @@ START
     call	PT3_INIT			; Inicia el reproductor de PT3
 	POP IX
     ei
+    
     ; Start STG1
     CALL STAGE1
 
@@ -147,16 +148,7 @@ STAGE1:
     ;We load the tiles on page 1 of VDP
     LD HL, TILES1    
     call load_tiles_vdp
-
-                ; Cambio la gate pq no está en el sc5 de fondo
-    LD IY, tileDat
-    LD (IY + VDP_SX), 0      ; SXL - Tile 2
-    LD (IY+VDP_SY), 0      ; SYL
-    LD (IY + VDP_DX), 112     ; DXL    
-    LD (IY + VDP_DY), 0      ; DYL    
-    LD HL, tileDat
-    CALL VDPCMD
-
+  
     LD A, (stg1_puzzle_solved)
     CP 3
     JR NZ, .nobackfromstg2
@@ -181,12 +173,16 @@ STAGE1:
     LDIR
     
 
+
 .nobackfromstg2
+        ; Copy the energy bar to back buffer
+    LD HL, DiagBoxToBackBufROM
+	call VDPCMD
+;	call VDP_Ready
     CALL ENASCR    
 
 MAIN_LOOP:
     ;halt ; sincroniza el teclado y pantalla con el procesador (que va muy rápido)    
-
     
     LD A, (ix)  ; Cargamos la Y
     CP $00
@@ -552,6 +548,13 @@ SHOOT_MAIN_CHAR:
 
 STAGE2:
     CALL DISSCR
+    halt
+	di       
+    PUSH IX
+	call	PT3_ROUT			;envia datos a al PSG 	   
+	call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
+	POP IX
+    ei
     LD HL, CEMENTER2
     LD (BITMAP), HL
     LD B, :CEMENTER2
@@ -587,12 +590,18 @@ STAGE2:
     LD (CHAR_DIR_GHOST_STG2), A
     LD A, MOV_SPEED_GHOST
 	LD (CHAR_SPEED_X_GHOST_STG2), A
-
+    
     CALL ENASCR
     
 MAIN_LOOP2:
     ;halt    
-   
+       halt
+	di       
+    PUSH IX
+	call	PT3_ROUT			;envia datos a al PSG 	   
+	call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
+	POP IX
+    ei
     LD A, (ix)    
     CP 162      ; Miramos si la Y es 160 para pasar a stg1
     JP NZ, .no_screen_change
@@ -702,13 +711,7 @@ MAIN_LOOP2:
     BIT KB_DEL, C			; La tecla presionada es DEL    
     ret z
 
-    halt
-	di       
-    PUSH IX
-	call	PT3_ROUT			;envia datos a al PSG 	   
-	call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
-	POP IX
-    ei
+
 
     jp MAIN_LOOP2
 

@@ -248,9 +248,10 @@ SET_SCREEN5_MODE:
 	inc hl ; FORCLR+2
 	ld [hl],15 ; Color del borde 1=negro
 
-    ld  a,5     ; La rutina CHGMOD nos obliga a poner en el registro A el modo de pantalla que queremos
-    call CHGMOD ; Mira arriba, pone la explicación
-;
+    ld  a,5     
+    call CHGMOD 
+	call CLRSPR
+
     ld a,(RG15AV) ; esta dirección de memoria almacena el valor del registro de lectura del VDP, mira arriba
     ;En or 0+0=0, 0+1=1, 1+1=1
     ;En and 0+0=0, 0+1=0, 1+1=1
@@ -385,3 +386,14 @@ SetPalette:
 	otir
 	ei
 	ret
+
+
+DUMMY_SPR_ATTS:
+
+;-----------------------------Definición de los atributos en #1E00 y volcado a la VRAM------------------------------------
+
+    ld hl, dummy_SPR_ATT__TBL ; la rutina LDIRVM necesita haber cargado previamente la dirección de inicio de la RAM, para saber porqué he puesto 0000 fíjate este dibujo https://sites.google.com/site/multivac7/files-images/TMS9918_VRAMmap_G2_300dpi.png ,así es como está formado el VDP en screen 2
+    ld de, #7600	; la rutina necesita haber cargado previamente con de la dirección de inicio de la VRAM          
+    ld bc,128		; 4 x #Sprites mostrados
+    call  LDIRVM 	; Mira arriba, pone la explicación
+	RET
