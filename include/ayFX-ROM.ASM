@@ -12,7 +12,7 @@
 
 		; --- DEFINE AYFXRELATIVE AS 0 FOR FIXED VOLUME VERSION ---
 		; --- DEFINE AYFXRELATIVE AS 1 FOR RELATIVE VOLUME VERSION ---
-		AYFXRELATIVE=0
+AYFXRELATIVE: 	equ 0
 
 ayFX_SETUP:	; ---          ayFX replayer setup          ---
 		; --- INPUT: HL -> pointer to the ayFX bank ---
@@ -37,19 +37,19 @@ ayFX_INIT:	; ---     INIT A NEW ayFX STREAM     ---
 		ld	hl,[ayFX_BANK]			; Current ayFX BANK
 		ld	a,[hl]				; Number of samples in the bank
 		or	a				; If zero (means 256 samples)...
-		jr	z,@@CHECK_PRI			; ...goto @@CHECK_PRI
+		jr	z,.CHECK_PRI			; ...goto @@CHECK_PRI
 		; The bank has less than 256 samples
 		ld	a,b				; a:=b (new ayFX stream index)
 		cp	[hl]				; If new index is not in the bank...
 		ld	a,2				; a:=2 (error 2: Sample not in the bank)
-		jr	nc,@@INIT_END			; ...we can't init it
-@@CHECK_PRI:	; --- Check if the new priority is lower than the current one ---
+		jr	nc,.INIT_END			; ...we can't init it
+.CHECK_PRI:	; --- Check if the new priority is lower than the current one ---
 		; ---   Remember: 0 = highest priority, 15 = lowest priority  ---
 		ld	a,b				; a:=b (new ayFX stream index)
 		ld	a,[ayFX_PRIORITY]		; a:=Current ayFX stream priority
 		cp	c				; If new ayFX stream priority is lower than current one...
 		ld	a,1				; a:=1 (error 1: A sample with higher priority is being played)
-		jr	c,@@INIT_END			; ...we don't start the new ayFX stream
+		jr	c,.INIT_END			; ...we don't start the new ayFX stream
 		; --- Set new priority ---
 		ld	a,c				; a:=New priority
 		and	$0F				; We mask the priority
@@ -85,16 +85,16 @@ ayFX_INIT:	; ---     INIT A NEW ayFX STREAM     ---
 		add	hl,de				; hl:=hl+de (hl points to the new ayFX stream)
 		ld	[ayFX_POINTER],hl		; Pointer saved in RAM
 		xor	a				; a:=0 (no errors)
-@@INIT_END:	pop	hl				; Retrieve hl from stack
+.INIT_END:	pop	hl				; Retrieve hl from stack
 		pop	de				; Retrieve de from stack
 		pop	bc				; Retrieve bc from stack
 		ret					; Return
 
 		IF ( AYFXRELATIVE == 1 )
-	@@INIT_NOSOUND:	; --- Init a sample with relative volume zero -> no sound output ---
+	.INIT_NOSOUND:	; --- Init a sample with relative volume zero -> no sound output ---
 			ld	a,255				; Lowest ayFX priority
 			ld	[ayFX_PRIORITY],a		; Priority saved (not playing ayFX stream)
-			jr	@@INIT_END			; Jumps to @@INIT_END
+			jr	.INIT_END			; Jumps to @@INIT_END
 		ENDIF
 
 ayFX_PLAY:	; --- PLAY A FRAME OF AN ayFX STREAM ---
@@ -104,34 +104,34 @@ ayFX_PLAY:	; --- PLAY A FRAME OF AN ayFX STREAM ---
 		; --- Calculate next ayFX channel (if needed) ---
 		ld	a,[ayFX_MODE]			; ayFX mode
 		and	1				; If bit0=0 (fixed channel)...
-		jr	z,@@TAKECB			; ...skip channel changing
+		jr	z,.TAKECB			; ...skip channel changing
 		ld	hl,ayFX_CHANNEL			; Old ayFX playing channel
 		dec	[hl]				; New ayFX playing channel
-		jr	nz,@@TAKECB			; If not zero jump to @@TAKECB
+		jr	nz,.TAKECB			; If not zero jump to @@TAKECB
 		ld	[hl],3				; If zero -> set channel 3
-@@TAKECB:	; --- Extract control byte from stream ---
+.TAKECB:	; --- Extract control byte from stream ---
 		ld	hl,[ayFX_POINTER]		; Pointer to the current ayFX stream
 		ld	c,[hl]				; c:=Control byte
 		inc	hl				; Increment pointer
 		; --- Check if there's new tone on stream ---
 		bit	5,c				; If bit 5 c is off...
-		jr	z,@@CHECK_NN			; ...jump to @@CHECK_NN (no new tone)
+		jr	z,.CHECK_NN			; ...jump to @@CHECK_NN (no new tone)
 		; --- Extract new tone from stream ---
 		ld	e,[hl]				; e:=lower byte of new tone
 		inc	hl				; Increment pointer
 		ld	d,[hl]				; d:=higher byte of new tone
 		inc	hl				; Increment pointer
 		ld	[ayFX_TONE],de			; ayFX tone updated
-@@CHECK_NN:	; --- Check if there's new noise on stream ---
+.CHECK_NN:	; --- Check if there's new noise on stream ---
 		bit	6,c				; if bit 6 c is off...
-		jr	z,@@SETPOINTER			; ...jump to @@SETPOINTER (no new noise)
+		jr	z,.SETPOINTER			; ...jump to @@SETPOINTER (no new noise)
 		; --- Extract new noise from stream ---
 		ld	a,[hl]				; a:=New noise
 		inc	hl				; Increment pointer
 		cp	$20				; If it's an illegal value of noise (used to mark end of stream)...
 		jr	z,ayFX_END			; ...jump to ayFX_END
 		ld	[ayFX_NOISE],a			; ayFX noise updated
-@@SETPOINTER:	; --- Update ayFX pointer ---
+.SETPOINTER:	; --- Update ayFX pointer ---
 		ld	[ayFX_POINTER],hl		; Update ayFX stream pointer
 		; --- Extract volume ---
 		ld	a,c				; a:=Control byte
@@ -154,10 +154,10 @@ ayFX_PLAY:	; --- PLAY A FRAME OF AN ayFX STREAM ---
 		; -------------------------------------
 		; --- Set noise channel ---
 		bit	7,c				; If noise is off...
-		jr	nz,@@SETMASKS			; ...jump to @@SETMASKS
+		jr	nz,.SETMASKS			; ...jump to @@SETMASKS
 		ld	a,[ayFX_NOISE]			; ayFX noise value
 		ld	[AYREGS+6],a			; copied in to AYREGS (noise channel)
-@@SETMASKS:	; --- Set mixer masks ---
+.SETMASKS:	; --- Set mixer masks ---
 		ld	a,c				; a:=Control byte
 		and	$90				; Only bits 7 and 4 (noise and tone mask for psg reg 7)
 		cp	$90				; If no noise and no tone...
@@ -169,37 +169,37 @@ ayFX_PLAY:	; --- PLAY A FRAME OF AN ayFX STREAM ---
 		; --- Dump to correct channel ---
 		ld	hl,ayFX_CHANNEL			; Next ayFX playing channel
 		ld	b,[hl]				; Channel counter
-@@CHK1:		; --- Check if playing channel was 1 ---
-		djnz	@@CHK2				; Decrement and jump if channel was not 1
-@@PLAY_C:	; --- Play ayFX stream on channel C ---
-		call	@@SETMIXER			; Set PSG mixer value (returning a=ayFX volume and hl=ayFX tone)
+.CHK1:		; --- Check if playing channel was 1 ---
+		djnz	.CHK2				; Decrement and jump if channel was not 1
+.LAY_C:	; --- Play ayFX stream on channel C ---
+		call	.SETMIXER			; Set PSG mixer value (returning a=ayFX volume and hl=ayFX tone)
 		ld	[AYREGS+10],a			; Volume copied in to AYREGS (channel C volume)
 		bit	2,c				; If tone is off...
 		ret	nz				; ...return
 		ld	[AYREGS+4],hl			; copied in to AYREGS (channel C tone)
 		ret					; Return
-@@CHK2:		; --- Check if playing channel was 2 ---
+.CHK2:		; --- Check if playing channel was 2 ---
 		rrc	d				; Rotate right AND mask
 		rrca					; Rotate right OR mask
-		djnz	@@CHK3				; Decrement and jump if channel was not 2
-@@PLAY_B:	; --- Play ayFX stream on channel B ---
-		call	@@SETMIXER			; Set PSG mixer value (returning a=ayFX volume and hl=ayFX tone)
+		djnz	.CHK3				; Decrement and jump if channel was not 2
+.PLAY_B:	; --- Play ayFX stream on channel B ---
+		call	.SETMIXER			; Set PSG mixer value (returning a=ayFX volume and hl=ayFX tone)
 		ld	[AYREGS+9],a			; Volume copied in to AYREGS (channel B volume)
 		bit	1,c				; If tone is off...
 		ret	nz				; ...return
 		ld	[AYREGS+2],hl			; copied in to AYREGS (channel B tone)
 		ret					; Return
-@@CHK3:		; --- Check if playing channel was 3 ---
+.CHK3:		; --- Check if playing channel was 3 ---
 		rrc	d				; Rotate right AND mask
 		rrca					; Rotate right OR mask
-@@PLAY_A:	; --- Play ayFX stream on channel A ---
-		call	@@SETMIXER			; Set PSG mixer value (returning a=ayFX volume and hl=ayFX tone)
+.PLAY_A:	; --- Play ayFX stream on channel A ---
+		call	.SETMIXER			; Set PSG mixer value (returning a=ayFX volume and hl=ayFX tone)
 		ld	[AYREGS+8],a			; Volume copied in to AYREGS (channel A volume)
 		bit	0,c				; If tone is off...
 		ret	nz				; ...return
 		ld	[AYREGS+0],hl			; copied in to AYREGS (channel A tone)
 		ret					; Return
-@@SETMIXER:	; --- Set PSG mixer value ---
+.SETMIXER:	; --- Set PSG mixer value ---
 		ld	c,a				; c:=OR mask
 		ld	a,[AYREGS+7]			; a:=PSG mixer value
 		and	d				; AND mask

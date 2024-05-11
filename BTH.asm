@@ -28,7 +28,7 @@ _bank2	equ	7000h
 ; SFX
     include	"include\PT3_player.s"
 ; AFX
-    include "include\ayFX-RAM.ASM"
+    include "include\ayFX-ROM.ASM"
 ; GFX
     include "include\metatiles.asm"
 START
@@ -63,7 +63,9 @@ START
 	ld		hl,SONG-99		; hl vale la direccion donde se encuentra la cancion - 99
     PUSH IX
     call	PT3_INIT			; Inicia el reproductor de PT3
-	POP IX
+	ld hl, AFX
+    call ayFX_SETUP
+    POP IX
     ei
     
     ; Start STG1
@@ -228,6 +230,11 @@ MAIN_LOOP:
     LD DE, MAP_RAM+46
     LD BC, 4
     LDIR
+    ; afx
+    LD A,1
+    LD C, 0
+    CALL ayFX_INIT
+
     JP .animate_ghost
 
 .puzzle_wrong_order
@@ -279,6 +286,11 @@ MAIN_LOOP:
     LD (IY + VDP_DY), 0      ; DYL    
     LD HL, tileDat
     CALL VDPCMD
+    ; afx
+    LD A,1
+    LD C, 0
+    CALL ayFX_INIT
+
     JP .animate_ghost
 
 .check_gus_tomb:
@@ -308,6 +320,12 @@ MAIN_LOOP:
     LD DE, MAP_RAM+47
     LD BC, 2
     LDIR
+
+    ; afx
+    LD A,0
+    LD C, 0
+    CALL ayFX_INIT
+
     JR .animate_ghost
 
 .check_skull_hint:
@@ -449,7 +467,8 @@ MAIN_LOOP:
     PUSH IX
 	call	PT3_ROUT			;envia datos a al PSG 	   
 	call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
-	POP IX
+	call ayFX_PLAY
+    POP IX
     ei
 
     ld a, 8
@@ -718,10 +737,10 @@ MAIN_LOOP2:
     jp MAIN_LOOP2
 
 AFX:
-    incbin "sfx\reja_open.afx"
+    incbin "sfx\noname.afb"
 SONG:
 	incbin "sfx\Nostalgy_sincabecera.pt3"
-    ;incbin "sfx\G-6sin_cabecera.pt3"
+    ;incbin "sfx\test.pt3"
     ;incbin "sfx\G-6sin_cabecera.pt3"
 include "include\BTH_data.asm"
 TILES1:

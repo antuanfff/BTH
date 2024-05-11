@@ -51,7 +51,7 @@ CHNPRM_TnSlDl	equ 22	;RESB 1
 CHNPRM_TSlStp	equ 23	;RESW 1
 CHNPRM_TnDelt	equ 25	;RESW 1
 CHNPRM_NtSkCn	equ 27	;RESB 1
-CHNPRM_Volume	equ 28	;RESB 1
+CHNPRM_Volume	equ 23	;RESB 1
 CHNPRM_Size	equ 29	;RESB 1
 ;endstruc
 
