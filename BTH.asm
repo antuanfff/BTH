@@ -27,6 +27,8 @@ _bank2	equ	7000h
     include "include\VDP_Data.asm"
 ; SFX
     include	"include\PT3_player.s"
+; AFX
+    include "include\ayFX-RAM.ASM"
 ; GFX
     include "include\metatiles.asm"
 START
@@ -715,7 +717,8 @@ MAIN_LOOP2:
 
     jp MAIN_LOOP2
 
-
+AFX:
+    incbin "sfx\reja_open.afx"
 SONG:
 	incbin "sfx\Nostalgy_sincabecera.pt3"
     ;incbin "sfx\G-6sin_cabecera.pt3"
@@ -769,5 +772,6 @@ CEMENTER2
 ;ETC
 ;
 	include "include\BTH_RAM.asm"
+    include "include\ayFX-RAM.ASM"
 	ENDMAP
   
