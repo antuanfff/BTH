@@ -1,0 +1,18 @@
+Sjasm Z80 Assembler v0.42c - www.xl2s.tk             [2024.05.09 - 20:05:14]
+
+.\main64.asm
+Errors: 1
+
+Error opening file: .\main64.asm
+
+    LABELS
+-------------------------------------------------
+
+
+ Output: .\main64.out
+-------------------------------------------------
+
+ Page: 00
+  Org: 00000000  Size: *  Used: 00000000
+
+    No output
