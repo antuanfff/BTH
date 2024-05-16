@@ -1,3 +1,8 @@
+; Notes Black Sabbath
+STG2_TILE1_X    equ 113
+STG2_TILE1_Y    equ 110
+
+
 ; VDP Const
 ;IRST_LINE_DLG_BOX   equ 5C28H
 ;SEC_LINE_DLG_BOX   equ 6028H
