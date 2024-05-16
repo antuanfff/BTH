@@ -231,7 +231,7 @@ MAIN_LOOP:
     LD BC, 4
     LDIR
     ; afx
-    LD A,1
+    LD A,2
     LD C, 0
     CALL ayFX_INIT
 
@@ -287,7 +287,7 @@ MAIN_LOOP:
     LD HL, tileDat
     CALL VDPCMD
     ; afx
-    LD A,1
+    LD A,0
     LD C, 0
     CALL ayFX_INIT
 
@@ -307,7 +307,7 @@ MAIN_LOOP:
     LD A,1
     LD (SHOWING_GUS_DIALOG), A
     LD (stg1_puzzle_solved), A
-    ; Open the gate (half)!
+    ; Remove the lockpad
     LD IY, tileDat
     LD (IY + VDP_SX), 32      ; SXL - Tile 1
     LD (IY+VDP_SY), 0      ; SYL
@@ -322,7 +322,7 @@ MAIN_LOOP:
     LDIR
 
     ; afx
-    LD A,0
+    LD A,1
     LD C, 0
     CALL ayFX_INIT
 
@@ -737,7 +737,7 @@ MAIN_LOOP2:
     jp MAIN_LOOP2
 
 AFX:
-    incbin "sfx\noname.afb"
+    incbin "sfx\cementer_sounds.afb"
 SONG:
 	incbin "sfx\Nostalgy_sincabecera.pt3"
     ;incbin "sfx\test.pt3"
