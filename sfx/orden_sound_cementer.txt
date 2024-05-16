@@ -1,0 +1,6 @@
+1-abrir reja
+2-candado_out
+3-puzzle_solved
+4-nota1 blacksabbath-G4
+5-nota2 blacksabbath-G5
+6-nota3 blacksabbath-C#5
