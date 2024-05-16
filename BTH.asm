@@ -497,75 +497,6 @@ no_arrows:
     
     jp MAIN_LOOP
 
-SHOOT_MAIN_CHAR:    
-    LD A, (CHAR_MAIN_SHOOT)
-    CP $01                  ; Si ya está disparando esperamos a que termine
-    RET Z;,MAIN_LOOP
-    CP $02                  ; Si ya está disparando esperamos a que termine
-    RET Z;,MAIN_LOOP
-    CP $03                  ; Si ya está disparando esperamos a que termine
-    RET Z;,MAIN_LOOP
-    CP $04                  ; Si ya está disparando esperamos a que termine
-    RET Z;,MAIN_LOOP
-
-    ld (ix+SPR_SHOOT_P1+2), SPR_SHOOT_P1_PTRN     ; Sprite Disparo
-
-    LD A, (ix)          
-    ld (ix+SPR_SHOOT_P1), A       ; Asignamos la Y del personaje    
-
-    LD A, (CHAR_DIR_MAIN)
-    CP $03
-    JP Z,.SHOOT_RIGHT
-    CP $00
-    JP Z,.SHOOT_UP
-    CP $01
-    JP Z,.SHOOT_DOWN
-    ; SHOOT LEFT
-    LD A,$01                ; SHOOT LEFT
-    LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando izquierda
-    LD A, (ix+1)			;cargamos la X - Si no es derecha, debe ser izquierda
-	LD HL, -12
-	ADD L
-    
-    JP .CONTINUE
-
-.SHOOT_RIGHT:    
-    LD A,$02
-    LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando derecha
-    
-    LD A, (ix+1)			;cargamos la X
-	LD HL, 12
-	ADD L
-    JP .CONTINUE
-
-.SHOOT_UP:
-    LD A,$03
-    LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando arriba
-    
-    ; Sumamos el desplazamiento a la Y
-    LD A, (ix+SPR_SHOOT_P1)
-    SUB 16
-    LD (ix+SPR_SHOOT_P1), A    
-    ;LD (ix+17), D
-    LD A, (ix+1)			;cargamos la X    
-    JP .CONTINUE
-
-.SHOOT_DOWN
-	LD A,$04
-    LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando abajo
-    
-    ; Sumamos el desplazamiento a la Y
-    LD A, (ix+SPR_SHOOT_P1)
-    ADD 16
-    LD (ix+SPR_SHOOT_P1), A    
-    ;LD (ix+17), D
-    LD A, (ix+1)			;cargamos la X    
-
-.CONTINUE:
-    ;ld (ix+16), B       ; Asignamos la Y del personaje
-    ld (ix+SPR_SHOOT_P1+1), A       ; Asignamos la X del personaje + el desplazamiento        
-    ;jp MAIN_LOOP
-    ret
 
 STAGE2:
     CALL DISSCR
@@ -604,13 +535,14 @@ MAIN_LOOP2:
     PUSH IX
 	call	PT3_ROUT			;envia datos a al PSG 	   
 	call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
-	POP IX
+	call ayFX_PLAY
+    POP IX
     ei
     LD A, (ix)    
     CP 162      ; Miramos si la Y es 160 para pasar a stg1
     JP NZ, .no_screen_change
-    ; Ponemos el SP1 al principio de la pantalla 1
-    LD (ix), 1          ; SP1 - Y = 1
+    ; Ponemos el P1 al principio de la pantalla 1
+    LD (ix), 1          ; P1.Y = 1
     LD (ix+4), 1
     LD (ix+8), 1
 
@@ -623,10 +555,19 @@ MAIN_LOOP2:
     CALL STAGE1
 
 .no_screen_change:
-
-    call DUMP_SPR_ATTS    
+    ; check X,Y to play Black Sabbath
+    ; Ya tenemos en A la Y
+    CP STG2_TILE1_Y
+    JP NZ, .continue
+    LD A, (ix+1)
+    CP STG2_TILE1_X
+    JP NZ, .continue
+    LD A, 3
+    LD C, 0
+    CALL ayFX_INIT    
     
 .continue:
+    call DUMP_SPR_ATTS      
     CALL MOVE_SHOOT    
 
     ld a, 8
