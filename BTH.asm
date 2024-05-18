@@ -155,7 +155,7 @@ STAGE1:
     
     ; set energy
     LD HL, ANDY_MAX_ENERGY
-    LD A, (HL)  ; no offset for level 
+    LD A, (HL)  ; no offset for level 1
     CALL DRAW_ANDY_ENERGY
 
     LD A, (stg1_puzzle_solved)
