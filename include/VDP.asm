@@ -373,6 +373,7 @@ VDP_Ready:
 
 ;INPUT: A - ANDY'S MAX ENERGY
 DRAW_ANDY_ENERGY:	
+
 	LD IY, energyDat
     LD (IY + VDP_SX), 128      ; SXL - Tile 2
     ;LD (IY+VDP_SY), 0      ; SYL	
