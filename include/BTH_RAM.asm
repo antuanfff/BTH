@@ -1,5 +1,6 @@
 ; VDP variables
 tileDat: ds 15
+energyDat: ds 15
 
 ; puzzle 1st stage
 stg1_puzzle_solved DS 1

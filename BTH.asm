@@ -67,8 +67,8 @@ START
     call ayFX_SETUP
     POP IX
     ei
-    
-    ; Start STG1
+        
+    ; Start STG1    
     CALL STAGE1
 
     ;call MAIN_LOOP
@@ -152,7 +152,12 @@ STAGE1:
     ;We load the tiles on page 1 of VDP
     LD HL, TILES1    
     call load_tiles_vdp
-  
+    
+    ; set energy
+    LD HL, ANDY_MAX_ENERGY
+    LD A, (HL)  ; no offset for level 
+    CALL DRAW_ANDY_ENERGY
+
     LD A, (stg1_puzzle_solved)
     CP 3
     JR NZ, .nobackfromstg2
@@ -176,8 +181,6 @@ STAGE1:
     LD BC, 4
     LDIR
     
-
-
 .nobackfromstg2
         ; Copy the energy bar to back buffer
     LD HL, DiagBoxToBackBufROM
@@ -516,9 +519,9 @@ STAGE2:
     LD (MAPA), HL
     
     ; Ponemos el P1 por encima del marco
-    LD (ix), 161      ; mask 0
-    LD (ix+4), 161    ; mask 1
-    LD (ix+8), 161    ; mask 2
+    LD (ix), 175      ; mask 0
+    LD (ix+4), 175    ; mask 1
+    LD (ix+8), 175    ; mask 2
     
     LD (ix+SPR_GHOST_STG1),217  ; ocultamos el fantasma
     LD (ix+SPR_GHOST_STG1+4),217  ; ocultamos el fantasma
@@ -539,7 +542,7 @@ MAIN_LOOP2:
     POP IX
     ei
     LD A, (ix)    
-    CP 162      ; Miramos si la Y es 160 para pasar a stg1
+    CP 176      ; Miramos si la Y es 160 para pasar a stg1
     JP NZ, .no_screen_change
     ; Ponemos el P1 al principio de la pantalla 1
     LD (ix), 1          ; P1.Y = 1
@@ -620,6 +623,7 @@ FONT:
  INCBIN "gfx\FONT.SC5",#7
  PAGE 7
 CEMENTER1
+ ;#Para el fondo borrar de BDA0 en adelante para quitar la parte de la energia
  INCBIN "gfx\CEMENTER1.SC5",#7,#4000			; Cada página tiene 16K = 4000h
  PAGE 8
  INCBIN "gfx\CEMENTER1.SC5",#4007			; Cada página tiene 16K = 4000h 
@@ -637,6 +641,7 @@ GRAPHIC
 
  PAGE 13
 CEMENTER2
+;#Para el fondo borrar de BDA0 en adelante para quitar la parte de la energia
  INCBIN "gfx\CEMENTER2.SC5",#7,#4000			; Cada página tiene 16K = 4000h
  PAGE 14
  INCBIN "gfx\CEMENTER2.SC5",#4007			; Cada página tiene 16K = 4000h 

@@ -32,6 +32,7 @@ VDP_TXOR	equ	%1011
 VDP_TNOT	equ	%1100
 
 ; Tile
+ENERGY_WIDTH		equ	16		; Blood drops
 TILE_WIDTH			equ	32
 TILE_HEIGHT			equ	16
 TILES_PAGE			equ	1		; Page where tiles are stored
@@ -49,6 +50,11 @@ DIAGBOX_WIDTH	equ 255
 initVDPBuffers:
 		ld	hl,tileDatROM
 		ld	de,tileDat
+		ld	bc,15
+		ldir	
+
+		ld	hl,energyDatROM
+		ld	de,energyDat
 		ld	bc,15
 		ldir	
 
@@ -364,3 +370,14 @@ VDP_Ready:
     out (#99),a     ; loop if vdp not ready (CE)
     jp c,VDP_Ready
     ret
+
+;INPUT: A - ANDY'S MAX ENERGY
+DRAW_ANDY_ENERGY:	
+	LD IY, energyDat
+    LD (IY + VDP_SX), 128      ; SXL - Tile 2
+    ;LD (IY+VDP_SY), 0      ; SYL	
+    ;LD (IY + VDP_DX), 0     ; DXL    
+    LD (IY + VDP_DY), 194      ; DYL    
+    LD HL, energyDat
+    CALL VDPCMD
+	ret
