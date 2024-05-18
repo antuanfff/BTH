@@ -373,12 +373,32 @@ VDP_Ready:
 
 ;INPUT: A - ANDY'S MAX ENERGY
 DRAW_ANDY_ENERGY:	
-
+	XOR C
 	LD IY, energyDat
-    LD (IY + VDP_SX), 128      ; SXL - Tile 2
+    ;LD (IY + VDP_SX), 128      ; SXL - Tile 2
     ;LD (IY+VDP_SY), 0      ; SYL	
-    ;LD (IY + VDP_DX), 0     ; DXL    
+    ;LD (IY + VDP_DX), A     ; DXL    
     LD (IY + VDP_DY), 194      ; DYL    
+
+.check_next_drop
+	CP 4
+	JP Z, .draw_half_drop	
+	LD (IY + VDP_SX), 128      ; SXL - Tile 2
+	LD (IY + VDP_DX), C     ; DXL    
+	PUSH AF
+	LD A, C
+	ADD A, 16
+	LD C, A 	
+	LD HL, energyDat
+    CALL VDPCMD
+	POP AF
+	SUB 8
+	JP NZ, .check_next_drop
+	RET
+
+.draw_half_drop
+	LD (IY + VDP_DX), C     ; DXL    
+	LD (IY + VDP_SX), 144      ; SXL - Tile 2
     LD HL, energyDat
     CALL VDPCMD
 	ret

@@ -8,7 +8,7 @@ STG2_TILE1_Y    equ 110
 ;SEC_LINE_DLG_BOX   equ 6028H
 ;THIRD_LINE_DLG_BOX   equ 6428H
 
-; Energy lv1, lv2, lv3, lv4, lv5, lv6
+; Energy             lv1, lv2, lv3, lv4, lv5, lv6
 ANDY_MAX_ENERGY:  db  24, 32, 40, 48, 56, 64
 
 FIRST_LINE_DLG_BOX   equ 6100H
