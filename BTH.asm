@@ -31,6 +31,8 @@ _bank2	equ	7000h
     include "include\ayFX-ROM.ASM"
 ; GFX
     include "include\metatiles.asm"
+; entities
+    include "include\entities.asm"
 START
 	; CODE
     ld hl,FORCLR ; Variable del Sistema
@@ -100,6 +102,7 @@ INIT_CHARS_VARS:
     ld (ix+SPR_GHOST_STG1+6), SPR_GHOST_STG1_PTRN_L1+4
     
     XOR A
+    LD (current_level), A
     LD (JIFFY_TEMP),A
     LD (CHAR_SPEED_X),A
     LD (CHAR_SPEED_Y),A
@@ -155,7 +158,9 @@ STAGE1:
     
     ; set energy
     LD HL, ANDY_MAX_ENERGY
+    ;ADD HL, current_level
     LD A, (HL)  ; no offset for level 1
+    LD (ENTITY_PLAYER_POINTER+3), A
     CALL DRAW_ANDY_ENERGY
 
     LD A, (stg1_puzzle_solved)

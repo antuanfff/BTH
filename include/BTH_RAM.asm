@@ -1,3 +1,12 @@
+;entities data
+ENTITY_DATA: ds 15 ;  5 bytes, 3 entities
+
+ENTITY_SIZE: EQU 5
+ENTITY_PLAYER_POINTER:  EQU ENTITY_DATA
+ENTITY_ENEMY1_POINTER:  EQU ENTITY_DATA+5
+ENTITY_ENEMY2_POINTER:  EQU ENTITY_DATA+5
+
+current_level: 	ds 1
 ; VDP variables
 tileDat: ds 15
 energyDat: ds 15

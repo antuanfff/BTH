@@ -58,6 +58,11 @@ initVDPBuffers:
 		ld	bc,15
 		ldir	
 
+		ld 	hl, ENTITY_DATA
+		ld de, init_player
+		ld bc,5
+		ldir
+
 		ret
 
 print_strings_dialog_box:		
@@ -373,7 +378,9 @@ VDP_Ready:
 
 ;INPUT: A - ANDY'S MAX ENERGY
 DRAW_ANDY_ENERGY:	
-	LD D, 0
+	LD A, (ENTITY_PLAYER_POINTER+3)		; cargamos la energia de Andy
+	;LD A, 8  ; TESTS
+	LD DE, 0	
 	LD IY, energyDat
     ;LD (IY + VDP_SX), 128      ; SXL - Tile 4
     ;LD (IY+VDP_SY), 0      ; SYL	
@@ -391,14 +398,43 @@ DRAW_ANDY_ENERGY:
 	LD D, A 	
 	LD HL, energyDat
     CALL VDPCMD
+	INC E
 	POP AF
 	SUB 8
 	JP NZ, .check_next_drop
-	RET
+	;ret
+	JR .draw_empty_drops
 
 .draw_half_drop		
 	LD (IY + VDP_SX), 144      ; SXL - Tile 5
 	LD (IY + VDP_DX), D     ; DXL    
+	LD A, D
+	ADD A, 16
+	LD D, A 	
     LD HL, energyDat
     CALL VDPCMD
-	ret
+	INC E
+	;ret
+
+.draw_empty_drops
+		LD HL, ANDY_MAX_ENERGY
+		LD BC, (current_level)
+		ADD HL, BC
+		LD A, (HL)
+[3]     srl a       ;a/8
+		sub e
+		ret Z		; si es cero volvemos, full energy
+.loop
+		LD (IY + VDP_SX), 160      ; SXL - Tile 6
+		LD (IY + VDP_DX), D     ; DXL    
+    	LD HL, energyDat
+		PUSH AF
+		LD A, D
+		ADD A, 16
+		LD D, A 			
+    	CALL VDPCMD
+		pop AF
+		dec a
+		jp nz, .loop
+		ret
+		;ld a, (ENTITY_PLAYER_POINTER+3)	; Andy's energy
