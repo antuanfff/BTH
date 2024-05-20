@@ -4,31 +4,31 @@
 ;   Calculates whether a collision occurs between the player
 ;   and an enemy
 ;
-; IN: ix - pointer to enemy data record
+; IN: iy - pointer to enemy data record
 ; OUT: Carry set if collision
-; CHANGES: AF
+; CHANGES: A, B, C, E
 ;
 EnemyCollisionCheck:
-        ld      a,(PlayerX)                     ; read player x-coordinate          [14]
+        ld      a,(ix+1)                     ; read player x-coordinate          [14]
         add     PLAYER_COLLISION_OFFSET_X       ; add offset for smaller rectangle  [8]
         ld      b,a                             ;                                   [5]
         ld      c,PLAYER_WIDTH                  ; set the width of the player       [8]
         
-        ld      a,(ix+ENEMY_X)                  ; read enemy x-coordinate           [21]
-        add     (ix+ENEMY_COLLISION_OFFSET_X)   ; add offset for smaller rectangle  [21]
-        ld      e,(ix+ENEMY_COLLISION_WIDTH)    ; set the width of the enemy        [21]
+        ld      a,(iy+ENEMY_X)                  ; read enemy x-coordinate           [21]
+        add     (iy+ENEMY_COLLISION_OFFSET_X)   ; add offset for smaller rectangle  [21]
+        ld      e,(iy+ENEMY_COLLISION_WIDTH)    ; set the width of the enemy        [21]
 
         call    .check                          ;                                   [18]
         ret     nc                              ;                                   [12/6]
 
-        ld      a,(PlayerY)                     ; read player y-coordinate          [14]
+        ld      a,(ix)                     ; read player y-coordinate          [14]
         add     PLAYER_COLLISION_OFFSET_Y       ; add offset for smaller rectangle  [8]
         ld      b,a                             ;                                   [5]
         ld      c,PLAYER_HEIGHT                 ; set the height of the player      [8]
         
-        ld      a,(ix+ENEMY_Y)                  ; read enemy y-coordinate           [21]
-        add     (ix+ENEMY_COLLISION_OFFSET_Y)   ; add offset for smaller rectangle  [21]
-        ld      e,(ix+ENEMY_COLLISION_HEIGHT)    ; set the height of the enemy      [21]
+        ld      a,(iy+ENEMY_Y)                  ; read enemy y-coordinate           [21]
+        add     (iy+ENEMY_COLLISION_OFFSET_Y)   ; add offset for smaller rectangle  [21]
+        ld      e,(iy+ENEMY_COLLISION_HEIGHT)    ; set the height of the enemy      [21]
 
 .check:
         sub     b               ; calculate x2-x1              [5]

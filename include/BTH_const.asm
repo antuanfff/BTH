@@ -1,19 +1,19 @@
 ; Sprite Collision
 
-PLAYER_COLLISION_OFFSET_X      equ 12
-PLAYER_COLLISION_OFFSET_Y      equ 12
-PLAYER_COLLISION_WIDTH         equ 12
-PLAYER_WIDTH                   equ 16
+PLAYER_COLLISION_OFFSET_X      equ 15
+PLAYER_COLLISION_OFFSET_Y      equ 16
+PLAYER_WIDTH                   equ 14
 PLAYER_HEIGHT                  equ 16
-PlayerX                        equ 1
-PlayerY                        equ 1
 
-ENEMY_COLLISION_OFFSET_X       equ 12
-ENEMY_COLLISION_OFFSET_Y       equ 12
-ENEMY_COLLISION_WIDTH          equ 12
-ENEMY_COLLISION_HEIGHT         equ 12
-ENEMY_X                        equ 1
-ENEMY_Y                        equ 1
+; Offset Entity struct
+ENEMY_X                         equ 1
+ENEMY_Y                         equ 2
+ENERGY                          equ 3
+ENEMY_COLLISION_OFFSET_X        equ 4
+ENEMY_COLLISION_OFFSET_Y        equ 5
+ENEMY_COLLISION_WIDTH           equ 6
+ENEMY_COLLISION_HEIGHT          equ 7
+SPRITENUMBER_SPAT               equ 8
 
 ; Notes Black Sabbath
 STG2_TILE1_X    equ 113

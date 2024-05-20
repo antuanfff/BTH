@@ -45,7 +45,7 @@ DIAGBOX_HEIGHT	equ 20
 DIAGBOX_WIDTH	equ 255
 
 ;---------------------------------------------------------------------------
-; Init the RAM buffer used to draw a tile
+; Init the RAM buffers used to draw a tile, energy and entities
 ;---------------------------------------------------------------------------
 initVDPBuffers:
 		ld	hl,tileDatROM
@@ -58,9 +58,15 @@ initVDPBuffers:
 		ld	bc,15
 		ldir	
 
-		ld 	hl, ENTITY_DATA
+		ld 	hl, ENTITY_PLAYER_POINTER
 		ld de, init_player
-		ld bc,5
+		ld bc,ENTITY_SIZE
+		ldir
+
+		ld 	hl, ENTITY_ENEMY1_POINTER
+		;add hl, 9			; ENTITY_SIZE
+		ld de, enemy1_stg1
+		ld bc,ENTITY_SIZE
 		ldir
 
 		ret
