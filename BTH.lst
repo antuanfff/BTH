@@ -1,4 +1,4 @@
-Sjasm Z80 Assembler v0.42c - www.xl2s.tk             [2024.05.20 - 12:39:07]
+Sjasm Z80 Assembler v0.42c - www.xl2s.tk             [2024.05.20 - 12:55:02]
 
 .\BTH.asm
 Errors: 0
@@ -54,72 +54,71 @@ Errors: 0
       12.  00:4010  (00:000C)           ENEMY_COLLISION_OFFSET_Y       equ 12
       13.  00:4010  (00:000C)           ENEMY_COLLISION_WIDTH          equ 12
       14.  00:4010  (00:000C)           ENEMY_COLLISION_HEIGHT         equ 12
-      15.  00:4010  (00:0010)           ENEMY_WIDTH                    equ 16
-      16.  00:4010  (00:0001)           ENEMY_X                        equ 1
-      17.  00:4010  (00:0001)           ENEMY_Y                        equ 1
-      18.  00:4010                      
-      19.  00:4010                      ; Notes Black Sabbath
-      20.  00:4010  (00:0071)           STG2_TILE1_X    equ 113
-      21.  00:4010  (00:006E)           STG2_TILE1_Y    equ 110
+      15.  00:4010  (00:0001)           ENEMY_X                        equ 1
+      16.  00:4010  (00:0001)           ENEMY_Y                        equ 1
+      17.  00:4010                      
+      18.  00:4010                      ; Notes Black Sabbath
+      19.  00:4010  (00:0071)           STG2_TILE1_X    equ 113
+      20.  00:4010  (00:006E)           STG2_TILE1_Y    equ 110
+      21.  00:4010                      
       22.  00:4010                      
-      23.  00:4010                      
-      24.  00:4010                      ; VDP Const
-      25.  00:4010                      ;IRST_LINE_DLG_BOX   equ 5C28H
-      26.  00:4010                      ;SEC_LINE_DLG_BOX   equ 6028H
-      27.  00:4010                      ;THIRD_LINE_DLG_BOX   equ 6428H
-      28.  00:4010                      
-      29.  00:4010                      ; Energy             lv1, lv2, lv3, lv4, lv5, lv6
-      30.  00:4010  18 20 28 30 38 40   ANDY_MAX_ENERGY:  db  24, 32, 40, 48, 56, 64
-      31.  00:4016                      
-      32.  00:4016  (00:6100)           FIRST_LINE_DLG_BOX   equ 6100H
-      33.  00:4016  (00:6500)           SEC_LINE_DLG_BOX   equ 6500H
-      34.  00:4016  (00:6900)           THIRD_LINE_DLG_BOX   equ 6900H
-      35.  00:4016                      
-      36.  00:4016  (00:0001)           ROMMODE                 equ 1 ; 0 Dos Mode 1 Rom Mode
-      37.  00:4016  (00:0007)           KB_RIGHT 				equ 7
-      38.  00:4016  (00:0006)           KB_DOWN 				equ 6
-      39.  00:4016  (00:0005)           KB_UP 					equ	5        
-      40.  00:4016  (00:0004)           KB_LEFT 				equ	4
-      41.  00:4016  (00:0003)           KB_DEL 					equ	3
-      42.  00:4016  (00:0000)           KB_SPACE				equ	0
-      43.  00:4016                      
-      44.  00:4016  (00:0001)           MOV_SPEED				equ 1
-      45.  00:4016  (00:0001)           MOV_SPEED_GHOST			equ 1
-      46.  00:4016  (00:0003)           MOV_SPEED_SHOOT         equ 3
-      47.  00:4016  (00:0030)           MAX_DISTANCE_SHOOT      equ 48
-      48.  00:4016  (00:0005)           MAX_CHAR_STEPS          equ 5       ; #steps pattern change MAIN CHAR
-      49.  00:4016  (00:0006)           MAX_CHAR_STEPS_STG2          equ 6
-      50.  00:4016  (00:FFE8)           REG9SAV                 equ #FFE8
-      51.  00:4016  (00:0098)           PORT_0                  equ 0x98
-      52.  00:4016  (00:0099)           PORT_1                  equ 0x99
-      53.  00:4016  (00:009A)           PORT_2                  equ 0x9a
-      54.  00:4016  (00:009B)           PORT_3                  equ 0x9b
-      55.  00:4016                      
-      56.  00:4016  (00:F3E0)           RG15AV equ #F3E0 ; alamcena el valor del registro 1 de escritura del VDP, hay unas rutinas de la bios que guardan estas direcciones valores globals del sistema
-      57.  00:4016  (00:F3E9)           FORCLR equ $F3E9 ; Foreground colour
-      58.  00:4016                      
-      59.  00:4016  (00:00C8)           MIKE_TOMB_STG1_X            equ 200
-      60.  00:4016  (00:0029)           JOHN_TOMB_STG1_X            equ 41
-      61.  00:4016  (00:0049)           GUS_TOMB_STG1_X             equ 73
-      62.  00:4016  (00:0078)           GUS_TOMB_STG1_Y             equ 120
-      63.  00:4016  (00:0069)           SKULL_TOMB_STG1_X             equ 105
-      64.  00:4016  (00:005A)           SKULL_TOMB_STG1_Y1             equ 90
-      65.  00:4016  (00:0064)           SKULL_TOMB_STG1_Y2             equ 100
-      66.  00:4016                      
-      67.  00:4016  (00:000C)           SPR_SHOOT_P1                equ 12  ; Offset de IX (SPRATT)
-      68.  00:4016  (00:0018)           SPR_SHOOT_P1_PTRN           equ 18h
-      69.  00:4016  (00:0010)           SPR_GHOST_STG1              equ 16  ; Offset de IX (SPRATT)
-      70.  00:4016  (00:001C)           SPR_GHOST_STG1_PTRN_L1      equ 1Ch  ; Offset del Sprite Pattern Table
-      71.  00:4016  (00:0024)           SPR_GHOST_STG1_PTRN_L2      equ 24h  ; Offset del Sprite Pattern Table
-      72.  00:4016  (00:002C)           SPR_GHOST_STG1_PTRN_R1      equ 2Ch  ; Offset del Sprite Pattern Table
-      73.  00:4016  (00:0034)           SPR_GHOST_STG1_PTRN_R2      equ 34h  ; Offset del Sprite Pattern Table
-      74.  00:4016                      
-      75.  00:4016  (00:0018)           SPR_GHOST_STG2              equ 24  ; Offset de IX (SPRATT)
-      76.  00:4016  (00:003C)           SPR_GHOST_STG2_PTRN_L1      equ 3Ch  ; Offset del Sprite Pattern Table
-      77.  00:4016  (00:0044)           SPR_GHOST_STG2_PTRN_L2      equ 44h  ; Offset del Sprite Pattern Table
-      78.  00:4016  (00:004C)           SPR_GHOST_STG2_PTRN_R1      equ 4Ch  ; Offset del Sprite Pattern Table
-      79.  00:4016  (00:0054)           SPR_GHOST_STG2_PTRN_R2      equ 54h  ; Offset del Sprite Pattern Table
-      80.  00:4016                      
+      23.  00:4010                      ; VDP Const
+      24.  00:4010                      ;IRST_LINE_DLG_BOX   equ 5C28H
+      25.  00:4010                      ;SEC_LINE_DLG_BOX   equ 6028H
+      26.  00:4010                      ;THIRD_LINE_DLG_BOX   equ 6428H
+      27.  00:4010                      
+      28.  00:4010                      ; Energy             lv1, lv2, lv3, lv4, lv5, lv6
+      29.  00:4010  18 20 28 30 38 40   ANDY_MAX_ENERGY:  db  24, 32, 40, 48, 56, 64
+      30.  00:4016                      
+      31.  00:4016  (00:6100)           FIRST_LINE_DLG_BOX   equ 6100H
+      32.  00:4016  (00:6500)           SEC_LINE_DLG_BOX   equ 6500H
+      33.  00:4016  (00:6900)           THIRD_LINE_DLG_BOX   equ 6900H
+      34.  00:4016                      
+      35.  00:4016  (00:0001)           ROMMODE                 equ 1 ; 0 Dos Mode 1 Rom Mode
+      36.  00:4016  (00:0007)           KB_RIGHT 				equ 7
+      37.  00:4016  (00:0006)           KB_DOWN 				equ 6
+      38.  00:4016  (00:0005)           KB_UP 					equ	5        
+      39.  00:4016  (00:0004)           KB_LEFT 				equ	4
+      40.  00:4016  (00:0003)           KB_DEL 					equ	3
+      41.  00:4016  (00:0000)           KB_SPACE				equ	0
+      42.  00:4016                      
+      43.  00:4016  (00:0001)           MOV_SPEED				equ 1
+      44.  00:4016  (00:0001)           MOV_SPEED_GHOST			equ 1
+      45.  00:4016  (00:0003)           MOV_SPEED_SHOOT         equ 3
+      46.  00:4016  (00:0030)           MAX_DISTANCE_SHOOT      equ 48
+      47.  00:4016  (00:0005)           MAX_CHAR_STEPS          equ 5       ; #steps pattern change MAIN CHAR
+      48.  00:4016  (00:0006)           MAX_CHAR_STEPS_STG2          equ 6
+      49.  00:4016  (00:FFE8)           REG9SAV                 equ #FFE8
+      50.  00:4016  (00:0098)           PORT_0                  equ 0x98
+      51.  00:4016  (00:0099)           PORT_1                  equ 0x99
+      52.  00:4016  (00:009A)           PORT_2                  equ 0x9a
+      53.  00:4016  (00:009B)           PORT_3                  equ 0x9b
+      54.  00:4016                      
+      55.  00:4016  (00:F3E0)           RG15AV equ #F3E0 ; alamcena el valor del registro 1 de escritura del VDP, hay unas rutinas de la bios que guardan estas direcciones valores globals del sistema
+      56.  00:4016  (00:F3E9)           FORCLR equ $F3E9 ; Foreground colour
+      57.  00:4016                      
+      58.  00:4016  (00:00C8)           MIKE_TOMB_STG1_X            equ 200
+      59.  00:4016  (00:0029)           JOHN_TOMB_STG1_X            equ 41
+      60.  00:4016  (00:0049)           GUS_TOMB_STG1_X             equ 73
+      61.  00:4016  (00:0078)           GUS_TOMB_STG1_Y             equ 120
+      62.  00:4016  (00:0069)           SKULL_TOMB_STG1_X             equ 105
+      63.  00:4016  (00:005A)           SKULL_TOMB_STG1_Y1             equ 90
+      64.  00:4016  (00:0064)           SKULL_TOMB_STG1_Y2             equ 100
+      65.  00:4016                      
+      66.  00:4016  (00:000C)           SPR_SHOOT_P1                equ 12  ; Offset de IX (SPRATT)
+      67.  00:4016  (00:0018)           SPR_SHOOT_P1_PTRN           equ 18h
+      68.  00:4016  (00:0010)           SPR_GHOST_STG1              equ 16  ; Offset de IX (SPRATT)
+      69.  00:4016  (00:001C)           SPR_GHOST_STG1_PTRN_L1      equ 1Ch  ; Offset del Sprite Pattern Table
+      70.  00:4016  (00:0024)           SPR_GHOST_STG1_PTRN_L2      equ 24h  ; Offset del Sprite Pattern Table
+      71.  00:4016  (00:002C)           SPR_GHOST_STG1_PTRN_R1      equ 2Ch  ; Offset del Sprite Pattern Table
+      72.  00:4016  (00:0034)           SPR_GHOST_STG1_PTRN_R2      equ 34h  ; Offset del Sprite Pattern Table
+      73.  00:4016                      
+      74.  00:4016  (00:0018)           SPR_GHOST_STG2              equ 24  ; Offset de IX (SPRATT)
+      75.  00:4016  (00:003C)           SPR_GHOST_STG2_PTRN_L1      equ 3Ch  ; Offset del Sprite Pattern Table
+      76.  00:4016  (00:0044)           SPR_GHOST_STG2_PTRN_L2      equ 44h  ; Offset del Sprite Pattern Table
+      77.  00:4016  (00:004C)           SPR_GHOST_STG2_PTRN_R1      equ 4Ch  ; Offset del Sprite Pattern Table
+      78.  00:4016  (00:0054)           SPR_GHOST_STG2_PTRN_R2      equ 54h  ; Offset del Sprite Pattern Table
+      79.  00:4016                      
       22   00:4016                          include "include\BTH_strings.asm"
        1.  00:4016  1C 40 25 40 41 40   mike_tomb_strings: dw string01M, string02M, string03M
        2.  00:401C                      ; Caben 23 caracteres en cada línea
@@ -212,15 +211,15 @@ Errors: 0
       42.  00:411A                      
       43.  00:411A                      ; Dadas las coordenadas X,Y en pixels de dos sprites, devuelve 1 si hay colision
       44.  00:411A                      ;Entrada:
-      45.  00:411A                      ;   b - Y SPR1
+      45.  00:411A                      ;   B - Y SPR1
       46.  00:411A                      ;   C - X SPR1
       47.  00:411A                      
-      48.  00:411A                      ;   d - Y SPR2
-      49.  00:411A                      ;   e - X SPR2
+      48.  00:411A                      ;   D - Y SPR2
+      49.  00:411A                      ;   E - X SPR2
       50.  00:411A                      ;Salida:
-      51.  00:411A                      ;   a - bloque
+      51.  00:411A                      ;   A - colision
       52.  00:411A                      ;Modifica:
-      53.  00:411A                      ;   a, hl, de
+      53.  00:411A                      ;   A
       54.  00:411A                      check_spr_collision:        
       55.  00:411A  78                          LD A,B          ; a = Y SPR1
       56.  00:411B  BA                          CP D
@@ -4508,7 +4507,6 @@ Errors: 0
 00:0000000C   ENEMY_COLLISION_OFFSET_Y
 00:0000000C   ENEMY_COLLISION_WIDTH
 00:0000000C   ENEMY_COLLISION_HEIGHT
-00:00000010 X ENEMY_WIDTH
 00:00000001   ENEMY_X
 00:00000001   ENEMY_Y
 00:00000071   STG2_TILE1_X

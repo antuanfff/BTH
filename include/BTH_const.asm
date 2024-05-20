@@ -12,7 +12,6 @@ ENEMY_COLLISION_OFFSET_X       equ 12
 ENEMY_COLLISION_OFFSET_Y       equ 12
 ENEMY_COLLISION_WIDTH          equ 12
 ENEMY_COLLISION_HEIGHT         equ 12
-ENEMY_WIDTH                    equ 16
 ENEMY_X                        equ 1
 ENEMY_Y                        equ 1
 
