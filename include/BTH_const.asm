@@ -1,3 +1,21 @@
+; Sprite Collision
+
+PLAYER_COLLISION_OFFSET_X      equ 12
+PLAYER_COLLISION_OFFSET_Y      equ 12
+PLAYER_COLLISION_WIDTH         equ 12
+PLAYER_WIDTH                   equ 16
+PLAYER_HEIGHT                  equ 16
+PlayerX                        equ 1
+PlayerY                        equ 1
+
+ENEMY_COLLISION_OFFSET_X       equ 12
+ENEMY_COLLISION_OFFSET_Y       equ 12
+ENEMY_COLLISION_WIDTH          equ 12
+ENEMY_COLLISION_HEIGHT         equ 12
+ENEMY_WIDTH                    equ 16
+ENEMY_X                        equ 1
+ENEMY_Y                        equ 1
+
 ; Notes Black Sabbath
 STG2_TILE1_X    equ 113
 STG2_TILE1_Y    equ 110

@@ -1,3 +1,45 @@
+;
+; EnemyCollisionCheck
+;
+;   Calculates whether a collision occurs between the player
+;   and an enemy
+;
+; IN: ix - pointer to enemy data record
+; OUT: Carry set if collision
+; CHANGES: AF
+;
+EnemyCollisionCheck:
+        ld      a,(PlayerX)                     ; read player x-coordinate          [14]
+        add     PLAYER_COLLISION_OFFSET_X       ; add offset for smaller rectangle  [8]
+        ld      b,a                             ;                                   [5]
+        ld      c,PLAYER_WIDTH                  ; set the width of the player       [8]
+        
+        ld      a,(ix+ENEMY_X)                  ; read enemy x-coordinate           [21]
+        add     (ix+ENEMY_COLLISION_OFFSET_X)   ; add offset for smaller rectangle  [21]
+        ld      e,(ix+ENEMY_COLLISION_WIDTH)    ; set the width of the enemy        [21]
+
+        call    .check                          ;                                   [18]
+        ret     nc                              ;                                   [12/6]
+
+        ld      a,(PlayerY)                     ; read player y-coordinate          [14]
+        add     PLAYER_COLLISION_OFFSET_Y       ; add offset for smaller rectangle  [8]
+        ld      b,a                             ;                                   [5]
+        ld      c,PLAYER_HEIGHT                 ; set the height of the player      [8]
+        
+        ld      a,(ix+ENEMY_Y)                  ; read enemy y-coordinate           [21]
+        add     (ix+ENEMY_COLLISION_OFFSET_Y)   ; add offset for smaller rectangle  [21]
+        ld      e,(ix+ENEMY_COLLISION_HEIGHT)    ; set the height of the enemy      [21]
+
+.check:
+        sub     b               ; calculate x2-x1              [5]
+        jr      nc,.other       ; don't jump if x2<x1          [13/8]
+        neg                     ; use negative value           [10]
+        sub     e               ; compare with size 1          [5]
+        ret                     ; return result                [11]
+.other:
+        sub     c               ; compare with size 1          [5]
+        ret                     ; return result                [11]
+
 ; Dadas las coordenadas X,Y en pixels de dos sprites, devuelve 1 si hay colision
 ;Entrada:
 ;   b - Y SPR1
