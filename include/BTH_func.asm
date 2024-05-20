@@ -42,15 +42,15 @@ EnemyCollisionCheck:
 
 ; Dadas las coordenadas X,Y en pixels de dos sprites, devuelve 1 si hay colision
 ;Entrada:
-;   b - Y SPR1
+;   B - Y SPR1
 ;   C - X SPR1
 
-;   d - Y SPR2
-;   e - X SPR2
+;   D - Y SPR2
+;   E - X SPR2
 ;Salida:
-;   a - bloque
+;   A - colision
 ;Modifica:
-;   a, hl, de
+;   A
 check_spr_collision:        
         LD A,B          ; a = Y SPR1
         CP D
