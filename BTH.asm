@@ -30,7 +30,7 @@ _bank2	equ	7000h
 ; AFX
     include "include\ayFX-ROM.ASM"
 ; GFX
-    include "include\metatiles.asm"
+    ;include "include\metatiles.asm"
 ; entities
     include "include\entities.asm"
 START
@@ -447,6 +447,20 @@ MAIN_LOOP:
     LD (ix+SPR_GHOST_STG1+6),SPR_GHOST_STG1_PTRN_R2+4
 
 .continue:    
+    LD A, (ix+SPR_GHOST_STG1+1)     ; Cargamos la X
+    LD (ENTITY_ENEMY1_POINTER+1), A
+    LD A, (ix+SPR_GHOST_STG1)           ; Cargamos la Y
+    LD (ENTITY_ENEMY1_POINTER+2), A
+    
+    LD IY, ENTITY_ENEMY1_POINTER
+    ;CALL EnemyCollisionCheck
+    ;JR NC, .move_shoot
+    ; Collision
+    ;LD A, 16
+    ;LD (ENTITY_PLAYER_POINTER+3), A
+    ;call DRAW_ANDY_ENERGY
+
+.move_shoot:
     CALL MOVE_SHOOT
 .CHECK_GHOST:
     ; Comprobamos si hay colision con el fantasma
