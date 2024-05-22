@@ -19,6 +19,11 @@ SPRITENUMBER_SPAT               equ 8
 STG2_TILE1_X    equ 113
 STG2_TILE1_Y    equ 110
 
+STG2_TILE2_X    equ 128
+
+STG2_TILE3_X    equ 128
+STG2_TILE3_Y    equ 142
+
 
 ; VDP Const
 ;IRST_LINE_DLG_BOX   equ 5C28H

@@ -385,7 +385,7 @@ VDP_Ready:
 ;INPUT: A - ANDY'S MAX ENERGY
 DRAW_ANDY_ENERGY:	
 	LD A, (ENTITY_PLAYER_POINTER+3)		; cargamos la energia de Andy
-	;LD A, 8  ; TESTS
+	;LD A, 24  ; TESTS
 	LD DE, 0	
 	LD IY, energyDat
     ;LD (IY + VDP_SX), 128      ; SXL - Tile 4

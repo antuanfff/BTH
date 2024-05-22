@@ -548,11 +548,19 @@ STAGE2:
     CALL DUMP_SPR_ALL
     CALL DUMP_SPR_P1        
     
+    ;LD HL, ANDY_MAX_ENERGY
+    ;LD A, (HL)  
+    ;INC A           ; level 1
+    ;LD (ENTITY_PLAYER_POINTER+3), A
+
+    
+    ;CALL DRAW_ANDY_ENERGY
+    
     CALL ENASCR
     
 MAIN_LOOP2:
     ;halt    
-       halt
+    halt
 	di       
     PUSH IX
 	call	PT3_ROUT			;envia datos a al PSG 	   
@@ -577,17 +585,63 @@ MAIN_LOOP2:
     CALL STAGE1
 
 .no_screen_change:
+    
     ; check X,Y to play Black Sabbath
     ; Ya tenemos en A la Y
     CP STG2_TILE1_Y
-    JP NZ, .continue
+    JP NZ, .check_tile3
     LD A, (ix+1)
     CP STG2_TILE1_X
-    JP NZ, .continue
+    JP NZ, .check_next_tile
     LD A, 3
     LD C, 0
     CALL ayFX_INIT    
-    
+
+    LD IY, tileDat
+    LD (IY + VDP_SX), 192      ; SXL - Tile 2
+    LD (IY+VDP_SY), 0      ; SYL
+    LD (IY+VDP_NX), 16      ; NX    
+    LD (IY + VDP_DX), 112     ; DXL    
+    LD (IY + VDP_DY), 112      ; DYL    
+    LD HL, tileDat
+    CALL VDPCMD
+    jr .continue
+
+.check_next_tile:
+    CP STG2_TILE2_X
+    JP NZ, .check_tile3
+    LD A, 4
+    LD C, 0
+    CALL ayFX_INIT    
+
+    LD IY, tileDat
+    LD (IY + VDP_SX), 192      ; SXL - Tile 2
+    LD (IY+VDP_SY), 0      ; SYL
+    LD (IY+VDP_NX), 16      ; NX    
+    LD (IY + VDP_DX), 128     ; DXL    
+    LD (IY + VDP_DY), 112      ; DYL    
+    LD HL, tileDat
+    CALL VDPCMD
+
+.check_tile3:
+    CP STG2_TILE3_Y
+    JP NZ, .continue
+    LD A, (ix+1)
+    CP STG2_TILE3_X
+    JP NZ, .continue
+    LD A, 5
+    LD C, 0
+    CALL ayFX_INIT    
+
+    LD IY, tileDat
+    LD (IY + VDP_SX), 192      ; SXL - Tile 2
+    LD (IY+VDP_SY), 0      ; SYL
+    LD (IY+VDP_NX), 16      ; NX    
+    LD (IY + VDP_DX), 128     ; DXL    
+    LD (IY + VDP_DY), 144      ; DYL    
+    LD HL, tileDat
+    CALL VDPCMD
+
 .continue:
     call DUMP_SPR_ATTS      
     CALL MOVE_SHOOT    
@@ -621,8 +675,8 @@ MAIN_LOOP2:
 AFX:
     incbin "sfx\cementer_sounds.afb"
 SONG:
-	incbin "sfx\Nostalgy_sincabecera.pt3"
-    ;incbin "sfx\test.pt3"
+	;incbin "sfx\Nostalgy_sincabecera.pt3"
+    incbin "sfx\test.pt3"
     ;incbin "sfx\G-6sin_cabecera.pt3"
 include "include\BTH_data.asm"
 TILES1:
