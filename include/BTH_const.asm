@@ -1,3 +1,5 @@
+ENTITY_SIZE: EQU 9
+
 ; Sprite Collision
 
 PLAYER_COLLISION_OFFSET_X      equ 15

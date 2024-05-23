@@ -192,7 +192,7 @@ STAGE1:
 	call VDPCMD
 ;	call VDP_Ready
     CALL ENASCR    
-
+    
 MAIN_LOOP:
     ;halt ; sincroniza el teclado y pantalla con el procesador (que va muy rápido)    
     
@@ -553,8 +553,9 @@ STAGE2:
     ;INC A           ; level 1
     ;LD (ENTITY_PLAYER_POINTER+3), A
 
-    
-    ;CALL DRAW_ANDY_ENERGY
+    XOR a
+    LD (current_level), A
+    CALL DRAW_ANDY_ENERGY
     
     CALL ENASCR
     

@@ -1,15 +1,11 @@
 ;entities data
 ENTITY_DATA: ds 27 ;  9 bytes, 3 entities
+current_level: 	ds 2
 
-ENTITY_SIZE: EQU 9
-ENTITY_PLAYER_POINTER:  EQU ENTITY_DATA
-ENTITY_ENEMY1_POINTER:  EQU ENTITY_DATA+9
-ENTITY_ENEMY2_POINTER:  EQU ENTITY_DATA+18
-
-current_level: 	ds 1
 ; VDP variables
 tileDat: ds 15
 energyDat: ds 15
+
 
 ; puzzle 1st stage
 stg1_puzzle_solved DS 1
@@ -63,4 +59,6 @@ BITMAP:
 MAP_RAM:
     DS 736
 
-
+ENTITY_PLAYER_POINTER:  EQU ENTITY_DATA
+ENTITY_ENEMY1_POINTER:  EQU ENTITY_DATA+9
+ENTITY_ENEMY2_POINTER:  EQU ENTITY_DATA+18
