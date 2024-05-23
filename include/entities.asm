@@ -9,6 +9,6 @@
 ; 7 - ENEMY_COLLISION_HEIGHT
 ; 8 - spritenumber in spat
 
-init_player: db 1,$7F,$69,24,12,12,15,15,0
-enemy1_stg1: db 1,$AF,$0F,4,16,16,16,16,4
+init_playerDAT: db 1,$7F,$69,24,12,12,15,15,0
+enemy1_stg1DAT: db 1,$AF,$0F,4,16,16,16,16,4
 

@@ -58,14 +58,14 @@ initVDPBuffers:
 		ld	bc,15
 		ldir	
 
-		ld 	hl, ENTITY_PLAYER_POINTER
-		ld de, init_player
+		ld 	hl, init_playerDAT
+		ld de, ENTITY_PLAYER_POINTER
 		ld bc,ENTITY_SIZE
 		ldir
 
-		ld 	hl, ENTITY_ENEMY1_POINTER
+		ld 	hl, enemy1_stg1DAT
 		;add hl, 9			; ENTITY_SIZE
-		ld de, enemy1_stg1
+		ld de, ENTITY_ENEMY1_POINTER
 		ld bc,ENTITY_SIZE
 		ldir
 

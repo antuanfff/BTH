@@ -453,12 +453,12 @@ MAIN_LOOP:
     LD (ENTITY_ENEMY1_POINTER+2), A
     
     LD IY, ENTITY_ENEMY1_POINTER
-    ;CALL EnemyCollisionCheck
-    ;JR NC, .move_shoot
+    CALL EnemyCollisionCheck
+    JR NC, .move_shoot
     ; Collision
-    ;LD A, 16
-    ;LD (ENTITY_PLAYER_POINTER+3), A
-    ;call DRAW_ANDY_ENERGY
+    LD A, 16
+    LD (ENTITY_PLAYER_POINTER+3), A
+    call DRAW_ANDY_ENERGY
 
 .move_shoot:
     CALL MOVE_SHOOT
@@ -553,8 +553,8 @@ STAGE2:
     ;INC A           ; level 1
     ;LD (ENTITY_PLAYER_POINTER+3), A
 
-    XOR a
-    LD (current_level), A
+    ;XOR a
+    ;LD (current_level), A
     CALL DRAW_ANDY_ENERGY
     
     CALL ENASCR
