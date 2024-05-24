@@ -10,12 +10,13 @@ PLAYER_HEIGHT                  equ 16
 ; Offset Entity struct
 ENEMY_X                         equ 1
 ENEMY_Y                         equ 2
-ENERGY                          equ 3
+ENTITY_ENERGY                   equ 3
 ENEMY_COLLISION_OFFSET_X        equ 4
 ENEMY_COLLISION_OFFSET_Y        equ 5
 ENEMY_COLLISION_WIDTH           equ 6
 ENEMY_COLLISION_HEIGHT          equ 7
 SPRITENUMBER_SPAT               equ 8
+damage                          equ 9
 
 ; Notes Black Sabbath
 STG2_TILE1_X    equ 113

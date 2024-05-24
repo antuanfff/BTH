@@ -28,3 +28,8 @@ string01P: db 'ANDY:                   ',0
 string02P: db 'LA PUERTA SE HA ABIERTO!',0
 string03P: db 0
 
+game_over_strings: dw string01GO, string02GO, string03GO
+; Caben 23 caracteres en cada línea
+string01GO: db 'AAAAHHHHHHHHHH!!!',0
+string02GO: db 'GAME OVER!',0
+string03GO: db '',0

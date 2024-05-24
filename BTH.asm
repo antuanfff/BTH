@@ -160,6 +160,7 @@ STAGE1:
     LD HL, ANDY_MAX_ENERGY
     ;ADD HL, current_level
     LD A, (HL)  ; no offset for level 1
+    ;LD A, 0
     LD (ENTITY_PLAYER_POINTER+3), A
     CALL DRAW_ANDY_ENERGY
 
@@ -456,9 +457,14 @@ MAIN_LOOP:
     CALL EnemyCollisionCheck
     JR NC, .move_shoot
     ; Collision
-    LD A, 16
-    LD (ENTITY_PLAYER_POINTER+3), A
+    LD A, (ENTITY_PLAYER_POINTER+ENTITY_ENERGY)
+    SUB 4    
+    LD (ENTITY_PLAYER_POINTER+ENTITY_ENERGY), A
     call DRAW_ANDY_ENERGY
+    call BOUNCE_ANDY
+    LD A, (ENTITY_PLAYER_POINTER+ENTITY_ENERGY)
+    CP 0
+    JP Z, game_over
 
 .move_shoot:
     CALL MOVE_SHOOT
@@ -672,6 +678,14 @@ MAIN_LOOP2:
 
 
     jp MAIN_LOOP2
+
+game_over:
+    LD IY, game_over_strings
+    call print_strings_dialog_box
+    call CHGET
+    call CHGET
+    call CHGET
+    JP START
 
 AFX:
     incbin "sfx\cementer_sounds.afb"

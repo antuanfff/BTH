@@ -435,3 +435,12 @@ SHOOT_MAIN_CHAR:
     ld (ix+SPR_SHOOT_P1+1), A       ; Asignamos la X del personaje + el desplazamiento        
     ;jp MAIN_LOOP
     ret
+
+BOUNCE_ANDY:
+    LD A, (ix)
+    ADD 16
+    LD (ix), A
+    LD (ix+4), A
+    LD (ix+8), A
+
+    ret
