@@ -1,7 +1,40 @@
+ENTITY_SIZE: EQU 9
+
+; Sprite Collision
+
+PLAYER_COLLISION_OFFSET_X      equ 15
+PLAYER_COLLISION_OFFSET_Y      equ 16
+PLAYER_WIDTH                   equ 14
+PLAYER_HEIGHT                  equ 16
+
+; Offset Entity struct
+ENEMY_X                         equ 1
+ENEMY_Y                         equ 2
+ENTITY_ENERGY                   equ 3
+ENEMY_COLLISION_OFFSET_X        equ 4
+ENEMY_COLLISION_OFFSET_Y        equ 5
+ENEMY_COLLISION_WIDTH           equ 6
+ENEMY_COLLISION_HEIGHT          equ 7
+SPRITENUMBER_SPAT               equ 8
+damage                          equ 9
+
+; Notes Black Sabbath
+STG2_TILE1_X    equ 113
+STG2_TILE1_Y    equ 110
+
+STG2_TILE2_X    equ 128
+
+STG2_TILE3_X    equ 128
+STG2_TILE3_Y    equ 142
+
+
 ; VDP Const
 ;IRST_LINE_DLG_BOX   equ 5C28H
 ;SEC_LINE_DLG_BOX   equ 6028H
 ;THIRD_LINE_DLG_BOX   equ 6428H
+
+; Energy             lv1, lv2, lv3, lv4, lv5, lv6
+ANDY_MAX_ENERGY:  db  24, 32, 40, 48, 56, 64
 
 FIRST_LINE_DLG_BOX   equ 6100H
 SEC_LINE_DLG_BOX   equ 6500H

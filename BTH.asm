@@ -30,7 +30,9 @@ _bank2	equ	7000h
 ; AFX
     include "include\ayFX-ROM.ASM"
 ; GFX
-    include "include\metatiles.asm"
+    ;include "include\metatiles.asm"
+; entities
+    include "include\entities.asm"
 START
 	; CODE
     ld hl,FORCLR ; Variable del Sistema
@@ -67,8 +69,8 @@ START
     call ayFX_SETUP
     POP IX
     ei
-    
-    ; Start STG1
+        
+    ; Start STG1    
     CALL STAGE1
 
     ;call MAIN_LOOP
@@ -100,6 +102,7 @@ INIT_CHARS_VARS:
     ld (ix+SPR_GHOST_STG1+6), SPR_GHOST_STG1_PTRN_L1+4
     
     XOR A
+    LD (current_level), A
     LD (JIFFY_TEMP),A
     LD (CHAR_SPEED_X),A
     LD (CHAR_SPEED_Y),A
@@ -152,7 +155,15 @@ STAGE1:
     ;We load the tiles on page 1 of VDP
     LD HL, TILES1    
     call load_tiles_vdp
-  
+    
+    ; set energy
+    LD HL, ANDY_MAX_ENERGY
+    ;ADD HL, current_level
+    LD A, (HL)  ; no offset for level 1
+    ;LD A, 0
+    LD (ENTITY_PLAYER_POINTER+3), A
+    CALL DRAW_ANDY_ENERGY
+
     LD A, (stg1_puzzle_solved)
     CP 3
     JR NZ, .nobackfromstg2
@@ -176,15 +187,13 @@ STAGE1:
     LD BC, 4
     LDIR
     
-
-
 .nobackfromstg2
         ; Copy the energy bar to back buffer
     LD HL, DiagBoxToBackBufROM
 	call VDPCMD
 ;	call VDP_Ready
     CALL ENASCR    
-
+    
 MAIN_LOOP:
     ;halt ; sincroniza el teclado y pantalla con el procesador (que va muy rápido)    
     
@@ -439,6 +448,25 @@ MAIN_LOOP:
     LD (ix+SPR_GHOST_STG1+6),SPR_GHOST_STG1_PTRN_R2+4
 
 .continue:    
+    LD A, (ix+SPR_GHOST_STG1+1)     ; Cargamos la X
+    LD (ENTITY_ENEMY1_POINTER+1), A
+    LD A, (ix+SPR_GHOST_STG1)           ; Cargamos la Y
+    LD (ENTITY_ENEMY1_POINTER+2), A
+    
+    LD IY, ENTITY_ENEMY1_POINTER
+    CALL EnemyCollisionCheck
+    JR NC, .move_shoot
+    ; Collision
+    LD A, (ENTITY_PLAYER_POINTER+ENTITY_ENERGY)
+    SUB 4    
+    LD (ENTITY_PLAYER_POINTER+ENTITY_ENERGY), A
+    call DRAW_ANDY_ENERGY
+    call BOUNCE_ANDY
+    LD A, (ENTITY_PLAYER_POINTER+ENTITY_ENERGY)
+    CP 0
+    JP Z, game_over
+
+.move_shoot:
     CALL MOVE_SHOOT
 .CHECK_GHOST:
     ; Comprobamos si hay colision con el fantasma
@@ -497,75 +525,6 @@ no_arrows:
     
     jp MAIN_LOOP
 
-SHOOT_MAIN_CHAR:    
-    LD A, (CHAR_MAIN_SHOOT)
-    CP $01                  ; Si ya está disparando esperamos a que termine
-    RET Z;,MAIN_LOOP
-    CP $02                  ; Si ya está disparando esperamos a que termine
-    RET Z;,MAIN_LOOP
-    CP $03                  ; Si ya está disparando esperamos a que termine
-    RET Z;,MAIN_LOOP
-    CP $04                  ; Si ya está disparando esperamos a que termine
-    RET Z;,MAIN_LOOP
-
-    ld (ix+SPR_SHOOT_P1+2), SPR_SHOOT_P1_PTRN     ; Sprite Disparo
-
-    LD A, (ix)          
-    ld (ix+SPR_SHOOT_P1), A       ; Asignamos la Y del personaje    
-
-    LD A, (CHAR_DIR_MAIN)
-    CP $03
-    JP Z,.SHOOT_RIGHT
-    CP $00
-    JP Z,.SHOOT_UP
-    CP $01
-    JP Z,.SHOOT_DOWN
-    ; SHOOT LEFT
-    LD A,$01                ; SHOOT LEFT
-    LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando izquierda
-    LD A, (ix+1)			;cargamos la X - Si no es derecha, debe ser izquierda
-	LD HL, -12
-	ADD L
-    
-    JP .CONTINUE
-
-.SHOOT_RIGHT:    
-    LD A,$02
-    LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando derecha
-    
-    LD A, (ix+1)			;cargamos la X
-	LD HL, 12
-	ADD L
-    JP .CONTINUE
-
-.SHOOT_UP:
-    LD A,$03
-    LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando arriba
-    
-    ; Sumamos el desplazamiento a la Y
-    LD A, (ix+SPR_SHOOT_P1)
-    SUB 16
-    LD (ix+SPR_SHOOT_P1), A    
-    ;LD (ix+17), D
-    LD A, (ix+1)			;cargamos la X    
-    JP .CONTINUE
-
-.SHOOT_DOWN
-	LD A,$04
-    LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando abajo
-    
-    ; Sumamos el desplazamiento a la Y
-    LD A, (ix+SPR_SHOOT_P1)
-    ADD 16
-    LD (ix+SPR_SHOOT_P1), A    
-    ;LD (ix+17), D
-    LD A, (ix+1)			;cargamos la X    
-
-.CONTINUE:
-    ;ld (ix+16), B       ; Asignamos la Y del personaje
-    ld (ix+SPR_SHOOT_P1+1), A       ; Asignamos la X del personaje + el desplazamiento        
-    ;jp MAIN_LOOP
-    ret
 
 STAGE2:
     CALL DISSCR
@@ -585,49 +544,42 @@ STAGE2:
     LD (MAPA), HL
     
     ; Ponemos el P1 por encima del marco
-    LD (ix), 161      ; mask 0
-    LD (ix+4), 161    ; mask 1
-    LD (ix+8), 161    ; mask 2
+    LD (ix), 175      ; mask 0
+    LD (ix+4), 175    ; mask 1
+    LD (ix+8), 175    ; mask 2
     
     LD (ix+SPR_GHOST_STG1),217  ; ocultamos el fantasma
     LD (ix+SPR_GHOST_STG1+4),217  ; ocultamos el fantasma
     
     CALL DUMP_SPR_ALL
-    CALL DUMP_SPR_P1
+    CALL DUMP_SPR_P1        
     
-    ; Esqueleto
-    LD (ix+SPR_GHOST_STG2), 10h
-    LD (ix+SPR_GHOST_STG2+1), 10h
-    LD (ix+SPR_GHOST_STG2+2), SPR_GHOST_STG2_PTRN_L1
+    ;LD HL, ANDY_MAX_ENERGY
+    ;LD A, (HL)  
+    ;INC A           ; level 1
+    ;LD (ENTITY_PLAYER_POINTER+3), A
 
-    LD (ix+SPR_GHOST_STG2+4), 10h
-    LD (ix+SPR_GHOST_STG2+5), 10h
-    LD (ix+SPR_GHOST_STG2+6), SPR_GHOST_STG2_PTRN_L1+4
-
-    XOR A
-    LD (CHAR_GHOST_DEAD_STG2), A
-    LD (CHAR_MIN_STEP_STG2), A
-    LD A, $FF
-    LD (CHAR_DIR_GHOST_STG2), A
-    LD A, MOV_SPEED_GHOST
-	LD (CHAR_SPEED_X_GHOST_STG2), A
+    ;XOR a
+    ;LD (current_level), A
+    CALL DRAW_ANDY_ENERGY
     
     CALL ENASCR
     
 MAIN_LOOP2:
     ;halt    
-       halt
+    halt
 	di       
     PUSH IX
 	call	PT3_ROUT			;envia datos a al PSG 	   
 	call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
-	POP IX
+	call ayFX_PLAY
+    POP IX
     ei
     LD A, (ix)    
-    CP 162      ; Miramos si la Y es 160 para pasar a stg1
+    CP 176      ; Miramos si la Y es 160 para pasar a stg1
     JP NZ, .no_screen_change
-    ; Ponemos el SP1 al principio de la pantalla 1
-    LD (ix), 1          ; SP1 - Y = 1
+    ; Ponemos el P1 al principio de la pantalla 1
+    LD (ix), 1          ; P1.Y = 1
     LD (ix+4), 1
     LD (ix+8), 1
 
@@ -636,78 +588,69 @@ MAIN_LOOP2:
     JP Z, .GHOST_DEAD
     ld (ix+SPR_GHOST_STG1), $0F      ; Sprite 1 - Ghost
     ld (ix+SPR_GHOST_STG1+4), $0F      ; Sprite 1 - Ghost
-.GHOST_DEAD:
-    LD (ix+SPR_GHOST_STG2),217  ; ocultamos el esqueleto
-    LD (ix+SPR_GHOST_STG2+4),217  ; ocultamos el esqueleto
+.GHOST_DEAD:    
     CALL STAGE1
 
 .no_screen_change:
-
-    call DUMP_SPR_ATTS    
-    ; Movemos el esqueleto
-    LD A,(CHAR_GHOST_DEAD_STG2)
-    CP $01
-    JP Z,.continue
-    LD A, (ix+SPR_GHOST_STG2+1)          ;cargamos la X del Esqueleto
-	LD HL, (CHAR_SPEED_X_GHOST_STG2)
-	ADD L					; Actualizamos la posicion en base a la velocidad
     
-	LD (ix+SPR_GHOST_STG2+1), A	
-    LD (ix+SPR_GHOST_STG2+5), A
-    CP $16
-    JP Z,.CHANGE_DIR_RIGHT
-    CP $B9
-    JP Z,.CHANGE_DIR_LEFT
+    ; check X,Y to play Black Sabbath
+    ; Ya tenemos en A la Y
+    CP STG2_TILE1_Y
+    JP NZ, .check_tile3
+    LD A, (ix+1)
+    CP STG2_TILE1_X
+    JP NZ, .check_next_tile
+    LD A, 3
+    LD C, 0
+    CALL ayFX_INIT    
 
-    LD A, (CHAR_MIN_STEP_STG2)		
-    CP MAX_CHAR_STEPS_STG2
-    JP Z,.check_pattern
-    ADD 1
-    LD (CHAR_MIN_STEP_STG2), A
-    JP .continue
+    LD IY, tileDat
+    LD (IY + VDP_SX), 192      ; SXL - Tile 2
+    LD (IY+VDP_SY), 0      ; SYL
+    LD (IY+VDP_NX), 16      ; NX    
+    LD (IY + VDP_DX), 112     ; DXL    
+    LD (IY + VDP_DY), 112      ; DYL    
+    LD HL, tileDat
+    CALL VDPCMD
+    jr .continue
 
-.CHANGE_DIR_RIGHT:
-    LD A, MOV_SPEED_GHOST
-	LD (CHAR_SPEED_X_GHOST_STG2), A
-    LD A,$FF
-    LD (CHAR_DIR_GHOST_STG2),A
-    JP .check_pattern
+.check_next_tile:
+    CP STG2_TILE2_X
+    JP NZ, .check_tile3
+    LD A, 4
+    LD C, 0
+    CALL ayFX_INIT    
 
-.CHANGE_DIR_LEFT:
-    LD A, -MOV_SPEED_GHOST
-	LD (CHAR_SPEED_X_GHOST_STG2), A
-    XOR A   ; Pone A a 0
-    LD (CHAR_DIR_GHOST_STG2),A
+    LD IY, tileDat
+    LD (IY + VDP_SX), 192      ; SXL - Tile 2
+    LD (IY+VDP_SY), 0      ; SYL
+    LD (IY+VDP_NX), 16      ; NX    
+    LD (IY + VDP_DX), 128     ; DXL    
+    LD (IY + VDP_DY), 112      ; DYL    
+    LD HL, tileDat
+    CALL VDPCMD
 
-.check_pattern:
-    XOR A
-    LD (CHAR_MIN_STEP_STG2), A
-    LD A,(CHAR_DIR_GHOST_STG2)
-    CP $FF
-    JP Z,.check_pattern_RIGHT
-    LD A, (ix+SPR_GHOST_STG2+2)       ; Cargamos el patrón y lo cambiamos
-    CP SPR_GHOST_STG2_PTRN_L1
-    jp z,.change_pattern_L
-    LD (ix+SPR_GHOST_STG2+2),SPR_GHOST_STG2_PTRN_L1
-    LD (ix+SPR_GHOST_STG2+6),SPR_GHOST_STG2_PTRN_L1+4
-    jp .continue
-.change_pattern_L:
-    LD (ix+SPR_GHOST_STG2+2),SPR_GHOST_STG2_PTRN_L2
-    LD (ix+SPR_GHOST_STG2+6),SPR_GHOST_STG2_PTRN_L2+4
-    jp .continue
+.check_tile3:
+    CP STG2_TILE3_Y
+    JP NZ, .continue
+    LD A, (ix+1)
+    CP STG2_TILE3_X
+    JP NZ, .continue
+    LD A, 5
+    LD C, 0
+    CALL ayFX_INIT    
 
-.check_pattern_RIGHT
-    LD A, (ix+SPR_GHOST_STG2+2)       ; Cargamos el patrón y lo cambiamos
-    CP SPR_GHOST_STG2_PTRN_R1
-    jp z,.change_pattern_R
-    LD (ix+SPR_GHOST_STG2+2),SPR_GHOST_STG2_PTRN_R1
-    LD (ix+SPR_GHOST_STG2+6),SPR_GHOST_STG2_PTRN_R1+4
-    jp .continue
-.change_pattern_R:
-    LD (ix+SPR_GHOST_STG2+2),SPR_GHOST_STG2_PTRN_R2
-    LD (ix+SPR_GHOST_STG2+6),SPR_GHOST_STG2_PTRN_R2+4
+    LD IY, tileDat
+    LD (IY + VDP_SX), 192      ; SXL - Tile 2
+    LD (IY+VDP_SY), 0      ; SYL
+    LD (IY+VDP_NX), 16      ; NX    
+    LD (IY + VDP_DX), 128     ; DXL    
+    LD (IY + VDP_DY), 144      ; DYL    
+    LD HL, tileDat
+    CALL VDPCMD
 
 .continue:
+    call DUMP_SPR_ATTS      
     CALL MOVE_SHOOT    
 
     ld a, 8
@@ -736,11 +679,19 @@ MAIN_LOOP2:
 
     jp MAIN_LOOP2
 
+game_over:
+    LD IY, game_over_strings
+    call print_strings_dialog_box
+    call CHGET
+    call CHGET
+    call CHGET
+    JP START
+
 AFX:
     incbin "sfx\cementer_sounds.afb"
 SONG:
-	incbin "sfx\Nostalgy_sincabecera.pt3"
-    ;incbin "sfx\test.pt3"
+	;incbin "sfx\Nostalgy_sincabecera.pt3"
+    incbin "sfx\test.pt3"
     ;incbin "sfx\G-6sin_cabecera.pt3"
 include "include\BTH_data.asm"
 TILES1:
@@ -760,6 +711,7 @@ FONT:
  INCBIN "gfx\FONT.SC5",#7
  PAGE 7
 CEMENTER1
+ ;#Para el fondo borrar de BDA0 en adelante para quitar la parte de la energia
  INCBIN "gfx\CEMENTER1.SC5",#7,#4000			; Cada página tiene 16K = 4000h
  PAGE 8
  INCBIN "gfx\CEMENTER1.SC5",#4007			; Cada página tiene 16K = 4000h 
@@ -777,6 +729,7 @@ GRAPHIC
 
  PAGE 13
 CEMENTER2
+;#Para el fondo borrar de BDA0 en adelante para quitar la parte de la energia
  INCBIN "gfx\CEMENTER2.SC5",#7,#4000			; Cada página tiene 16K = 4000h
  PAGE 14
  INCBIN "gfx\CEMENTER2.SC5",#4007			; Cada página tiene 16K = 4000h 

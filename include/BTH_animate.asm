@@ -366,3 +366,81 @@ MOVE_SHOOT:
     LD (CHAR_DISTANCE_SHOOT),A
     RET
 
+SHOOT_MAIN_CHAR:    
+    LD A, (CHAR_MAIN_SHOOT)
+    CP $01                  ; Si ya está disparando esperamos a que termine
+    RET Z;,MAIN_LOOP
+    CP $02                  ; Si ya está disparando esperamos a que termine
+    RET Z;,MAIN_LOOP
+    CP $03                  ; Si ya está disparando esperamos a que termine
+    RET Z;,MAIN_LOOP
+    CP $04                  ; Si ya está disparando esperamos a que termine
+    RET Z;,MAIN_LOOP
+
+    ld (ix+SPR_SHOOT_P1+2), SPR_SHOOT_P1_PTRN     ; Sprite Disparo
+
+    LD A, (ix)          
+    ld (ix+SPR_SHOOT_P1), A       ; Asignamos la Y del personaje    
+
+    LD A, (CHAR_DIR_MAIN)
+    CP $03
+    JP Z,.SHOOT_RIGHT
+    CP $00
+    JP Z,.SHOOT_UP
+    CP $01
+    JP Z,.SHOOT_DOWN
+    ; SHOOT LEFT
+    LD A,$01                ; SHOOT LEFT
+    LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando izquierda
+    LD A, (ix+1)			;cargamos la X - Si no es derecha, debe ser izquierda
+	LD HL, -12
+	ADD L
+    
+    JP .CONTINUE
+
+.SHOOT_RIGHT:    
+    LD A,$02
+    LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando derecha
+    
+    LD A, (ix+1)			;cargamos la X
+	LD HL, 12
+	ADD L
+    JP .CONTINUE
+
+.SHOOT_UP:
+    LD A,$03
+    LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando arriba
+    
+    ; Sumamos el desplazamiento a la Y
+    LD A, (ix+SPR_SHOOT_P1)
+    SUB 16
+    LD (ix+SPR_SHOOT_P1), A    
+    ;LD (ix+17), D
+    LD A, (ix+1)			;cargamos la X    
+    JP .CONTINUE
+
+.SHOOT_DOWN
+	LD A,$04
+    LD (CHAR_MAIN_SHOOT),A   ; Activo el estado disparando abajo
+    
+    ; Sumamos el desplazamiento a la Y
+    LD A, (ix+SPR_SHOOT_P1)
+    ADD 16
+    LD (ix+SPR_SHOOT_P1), A    
+    ;LD (ix+17), D
+    LD A, (ix+1)			;cargamos la X    
+
+.CONTINUE:
+    ;ld (ix+16), B       ; Asignamos la Y del personaje
+    ld (ix+SPR_SHOOT_P1+1), A       ; Asignamos la X del personaje + el desplazamiento        
+    ;jp MAIN_LOOP
+    ret
+
+BOUNCE_ANDY:
+    LD A, (ix)
+    ADD 16
+    LD (ix), A
+    LD (ix+4), A
+    LD (ix+8), A
+
+    ret

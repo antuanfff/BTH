@@ -8,3 +8,6 @@ metatiles_data:
     db 128, 0, 16, 16, 0  ; blood drop full
     db 144, 0, 16, 16, 0  ; blood drop half
     db 160, 0, 16, 16, 0  ; blood drop empty
+
+    db 176, 0, 16, 16, 0  ; Tile
+    db 192, 0, 16, 16, 0  ; Pressed tile

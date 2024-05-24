@@ -32,6 +32,7 @@ VDP_TXOR	equ	%1011
 VDP_TNOT	equ	%1100
 
 ; Tile
+ENERGY_WIDTH		equ	16		; Blood drops
 TILE_WIDTH			equ	32
 TILE_HEIGHT			equ	16
 TILES_PAGE			equ	1		; Page where tiles are stored
@@ -44,13 +45,29 @@ DIAGBOX_HEIGHT	equ 20
 DIAGBOX_WIDTH	equ 255
 
 ;---------------------------------------------------------------------------
-; Init the RAM buffer used to draw a tile
+; Init the RAM buffers used to draw a tile, energy and entities
 ;---------------------------------------------------------------------------
 initVDPBuffers:
 		ld	hl,tileDatROM
 		ld	de,tileDat
 		ld	bc,15
 		ldir	
+
+		ld	hl,energyDatROM
+		ld	de,energyDat
+		ld	bc,15
+		ldir	
+
+		ld 	hl, init_playerDAT
+		ld de, ENTITY_PLAYER_POINTER
+		ld bc,ENTITY_SIZE
+		ldir
+
+		ld 	hl, enemy1_stg1DAT
+		;add hl, 9			; ENTITY_SIZE
+		ld de, ENTITY_ENEMY1_POINTER
+		ld bc,ENTITY_SIZE
+		ldir
 
 		ret
 
@@ -364,3 +381,71 @@ VDP_Ready:
     out (#99),a     ; loop if vdp not ready (CE)
     jp c,VDP_Ready
     ret
+
+;INPUT: A - ANDY'S MAX ENERGY
+DRAW_ANDY_ENERGY:		
+	LD DE, 0
+	LD IY, energyDat
+    ;LD (IY + VDP_SX), 128      ; SXL - Tile 4
+    ;LD (IY+VDP_SY), 0      ; SYL	
+    ;LD (IY + VDP_DX), A     ; DXL    
+    LD (IY + VDP_DY), 194      ; DYL    
+	LD A, (ENTITY_PLAYER_POINTER+ENTITY_ENERGY)		; cargamos la energia de Andy
+	CP 0
+	JR Z, .draw_empty_drops
+	;LD A, 24  ; TESTS	
+
+.check_next_drop
+	CP 4
+	JP Z, .draw_half_drop	
+	LD (IY + VDP_SX), 128      ; SXL - Tile 4
+	LD (IY + VDP_DX), D     ; DXL    
+	PUSH AF
+	LD A, D
+	ADD A, 16
+	LD D, A 	
+	LD HL, energyDat
+    CALL VDPCMD
+	INC E
+	POP AF
+	SUB 8
+	JP NZ, .check_next_drop
+	;ret
+	JR .draw_empty_drops
+
+.draw_half_drop		
+	LD (IY + VDP_SX), 144      ; SXL - Tile 5
+	LD (IY + VDP_DX), D     ; DXL    
+	LD A, D
+	ADD A, 16
+	LD D, A 	
+    LD HL, energyDat
+    CALL VDPCMD
+	INC E
+	;ret
+
+.draw_empty_drops
+		LD HL, ANDY_MAX_ENERGY
+		LD BC, (current_level)
+		LD B,0
+		ADD HL, BC
+		;INC HL
+		LD A, (HL)
+		;LD A, 24
+[3]     srl a       ;a/8
+		sub e
+		ret Z		; si es cero volvemos, full energy
+.loop
+		LD (IY + VDP_SX), 160      ; SXL - Tile 6
+		LD (IY + VDP_DX), D     ; DXL    
+    	LD HL, energyDat
+		PUSH AF
+		LD A, D
+		ADD A, 16
+		LD D, A 			
+    	CALL VDPCMD
+		pop AF
+		dec a
+		jp nz, .loop
+		ret
+		;ld a, (ENTITY_PLAYER_POINTER+3)	; Andy's energy
