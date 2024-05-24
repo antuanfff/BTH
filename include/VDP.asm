@@ -52,6 +52,11 @@ initVDPBuffers:
 		ld	de,tileDat
 		ld	bc,15
 		ldir	
+		
+		ld	hl,tileDatTransROM
+		ld	de,tileDatTrans
+		ld	bc,15
+		ldir	
 
 		ld	hl,energyDatROM
 		ld	de,energyDat

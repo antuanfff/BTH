@@ -8,6 +8,7 @@ current_level: 	ds 1
 
 ; VDP variables
 tileDat: ds 15
+tileDatTrans: ds 15
 energyDat: ds 15
 
 

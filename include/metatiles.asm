@@ -11,3 +11,7 @@ metatiles_data:
 
     db 176, 0, 16, 16, 0  ; Tile
     db 192, 0, 16, 16, 0  ; Pressed tile
+
+    db 208, 0, 16, 16, 0  ; Gress
+    db 224, 0, 16, 16, 0  ; Skull
+    db 240, 0, 16, 16, 0  ; Tree
