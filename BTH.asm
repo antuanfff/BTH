@@ -45,13 +45,14 @@ START
 	;CALL CHGMOD    	
     CALL SETPAGES32K
 	;CALL opening_screen
-	LD A,1
-	LD (_bank2),A
+	
 	;CALL CHGET
 	; Empieza el juego    
 	call ClearVram_MSX2		
 	call SET_SCREEN5_MODE    
     call Set212Lines
+    ld	a, BTH_DATA			; page 
+	ld	(_bank2),a
         
     call INIT_CHARS_VARS
     call initVDPBuffers    
@@ -702,13 +703,13 @@ SONG:
 	;incbin "sfx\Nostalgy_sincabecera.pt3"
     incbin "sfx\test.pt3"
     ;incbin "sfx\G-6sin_cabecera.pt3"
-include "include\BTH_data.asm"
+
 TILES1:
  INCBIN "gfx\tiles1.sc5",#7
 
  PAGE 1
 ; CODE O NO
-
+    include "include\BTH_data.asm"
  PAGE 2
 
  PAGE 3

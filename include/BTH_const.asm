@@ -1,3 +1,7 @@
+; page for SPRITE DATA
+
+BTH_DATA    equ 1
+
 ENTITY_SIZE: EQU 9
 
 ; Sprite Collision
