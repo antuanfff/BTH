@@ -194,6 +194,15 @@ STAGE1:
 ;	call VDP_Ready
     CALL ENASCR    
     
+    LD IY, tileDatTrans
+    LD (IY + VDP_SX), 224      ; SXL - Tile 2
+    LD (IY+VDP_SY), 0      ; SYL
+    LD (IY + VDP_DX), 0     ; DXL    
+    LD (IY + VDP_DY), 0      ; DYL    
+    LD HL, tileDatTrans
+    CALL VDPCMD
+    
+
 MAIN_LOOP:
     ;halt ; sincroniza el teclado y pantalla con el procesador (que va muy rápido)    
     
