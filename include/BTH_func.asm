@@ -312,8 +312,8 @@ SET_SCREEN5_MODE:
     ret
 
 DUMP_SPR_ALL:
-	ld	a, BTH_DATA			; page 
-	ld	(_bank2),a
+	;ld	a, BTH_DATA			; page 
+	;ld	(_bank2),a
 ;-----------------------------Definición del sprite en #7800  y volcado a la VRAM-------------------------------------------
 
     ld hl, SPRITE_PATTERN ; la rutina LDIRVM necesita haber cargado previamente la dirección de inicio de la RAM, para saber porqué he puesto 03800 fíjate este dibujo https://sites.google.com/site/multivac7/files-images/TMS9918_VRAMmap_G2_300dpi.png ,así es como está formado el VDP en screen 2
@@ -346,9 +346,7 @@ load_tiles_vdp
 
 DUMP_SPR_ATTS:
 
-;-----------------------------Definición de los atributos en #1E00 y volcado a la VRAM------------------------------------
-	ld	a, BTH_DATA			; page 
-	ld	(_bank2),a
+;-----------------------------Definición de los atributos en #1E00 y volcado a la VRAM------------------------------------	
 
     ld hl, SPRITE_ATTRS ; la rutina LDIRVM necesita haber cargado previamente la dirección de inicio de la RAM, para saber porqué he puesto 0000 fíjate este dibujo https://sites.google.com/site/multivac7/files-images/TMS9918_VRAMmap_G2_300dpi.png ,así es como está formado el VDP en screen 2
     ld de, #7600	; la rutina necesita haber cargado previamente con de la dirección de inicio de la VRAM          
@@ -368,9 +366,7 @@ DUMP_SPR_ATTS:
     ret
 
 DUMP_SPR_P1:    
-;-----------------------------Definición del sprite en #7800  y volcado a la VRAM-------------------------------------------
-	ld	a, BTH_DATA			; page 
-	ld	(_bank2),a
+;-----------------------------Definición del sprite en #7800  y volcado a la VRAM-------------------------------------------	
     ld hl, (SPRITE_PTR_REPLACE) ; la rutina LDIRVM necesita haber cargado previamente la dirección de inicio de la RAM, para saber porqué he puesto 03800 fíjate este dibujo https://sites.google.com/site/multivac7/files-images/TMS9918_VRAMmap_G2_300dpi.png ,así es como está formado el VDP en screen 2
     ld de, #7800; la rutina necesita haber cargado previamente con de la dirección de inicio de la VRAM          
     PUSH BC

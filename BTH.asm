@@ -142,6 +142,8 @@ STAGE1:
     LD B, :CEMENTER1
     call load_screen
     
+    ld	a, BTH_DATA			; page 
+	ld	(_bank2),a
     call DUMP_SPR_ALL
     CALL DUMP_SPR_P1
     
@@ -195,6 +197,7 @@ STAGE1:
 ;	call VDP_Ready
     CALL ENASCR    
     
+    ; Testing transparency
     LD IY, tileDatTrans
     LD (IY + VDP_SX), 224      ; SXL - Tile 2
     LD (IY+VDP_SY), 0      ; SYL
@@ -202,7 +205,7 @@ STAGE1:
     LD (IY + VDP_DY), 0      ; DYL    
     LD HL, tileDatTrans
     CALL VDPCMD
-    
+  
 
 MAIN_LOOP:
     ;halt ; sincroniza el teclado y pantalla con el procesador (que va muy rápido)    
@@ -710,6 +713,9 @@ TILES1:
  PAGE 1
 ; CODE O NO
     include "include\BTH_data.asm"
+FONT:
+ INCBIN "gfx\FONT.SC5",#7
+
  PAGE 2
 
  PAGE 3
@@ -717,8 +723,6 @@ TILES1:
  PAGE 4
  PAGE 5
  PAGE 6
-FONT:
- INCBIN "gfx\FONT.SC5",#7
  PAGE 7
 CEMENTER1
  ;#Para el fondo borrar de BDA0 en adelante para quitar la parte de la energia
