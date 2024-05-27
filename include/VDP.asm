@@ -454,3 +454,33 @@ DRAW_ANDY_ENERGY:
 		jp nz, .loop
 		ret
 		;ld a, (ENTITY_PLAYER_POINTER+3)	; Andy's energy
+
+; Draw a background tile
+; Input:
+; A - Number of tile
+; D - X
+; E - Y
+draw_tile:
+	LD HL, metatiles_data
+	ADD A,A
+	ADD A,A ; A*4 (size of metatiles data)
+	LD B, 0
+	LD C, A
+	ADD HL, BC
+	LD IY, tileDat
+	LD A, (HL)
+	LD (IY + VDP_SX), A
+	INC HL
+	LD A, (HL)
+	LD (IY + VDP_SY), A
+	INC HL
+	LD A, (HL)
+	LD (IY + VDP_NX), A
+	INC HL
+	LD A, (HL)
+	LD (IY + VDP_NY), A
+	LD (IY + VDP_DX), D
+	LD (IY + VDP_DY), E
+	LD HL, tileDat
+	CALL VDPCMD
+	ret

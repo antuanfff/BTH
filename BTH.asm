@@ -30,7 +30,7 @@ _bank2	equ	7000h
 ; AFX
     include "include\ayFX-ROM.ASM"
 ; GFX
-    ;include "include\metatiles.asm"
+    include "include\metatiles.asm"
 ; entities
     include "include\entities.asm"
 START
@@ -206,6 +206,10 @@ STAGE1:
     LD HL, tileDatTrans
     CALL VDPCMD
   
+    LD A, 10
+    LD D, 0
+    LD E, 16
+    CALL draw_tile
 
 MAIN_LOOP:
     ;halt ; sincroniza el teclado y pantalla con el procesador (que va muy rápido)    
@@ -555,7 +559,10 @@ STAGE2:
     call load_screen
     LD HL, mapa2
     LD (MAPA), HL
-    
+
+    ld	a, BTH_DATA			; page 
+	ld	(_bank2),a
+ 
     ; Ponemos el P1 por encima del marco
     LD (ix), 175      ; mask 0
     LD (ix+4), 175    ; mask 1
@@ -700,13 +707,6 @@ game_over:
     call CHGET
     JP START
 
-AFX:
-    incbin "sfx\cementer_sounds.afb"
-SONG:
-	;incbin "sfx\Nostalgy_sincabecera.pt3"
-    incbin "sfx\test.pt3"
-    ;incbin "sfx\G-6sin_cabecera.pt3"
-
 TILES1:
  INCBIN "gfx\tiles1.sc5",#7
 
@@ -715,6 +715,12 @@ TILES1:
     include "include\BTH_data.asm"
 FONT:
  INCBIN "gfx\FONT.SC5",#7
+AFX:
+    incbin "sfx\cementer_sounds.afb"
+SONG:
+	;incbin "sfx\Nostalgy_sincabecera.pt3"
+    incbin "sfx\test.pt3"
+    ;incbin "sfx\G-6sin_cabecera.pt3"
 
  PAGE 2
 
