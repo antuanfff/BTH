@@ -339,8 +339,15 @@ DUMP_SPR_ALL:
 load_tiles_vdp
     
 	;ld hl, TILES1
-    ld de, 0x8000; la rutina necesita haber cargado previamente con de la dirección de inicio de la VRAM          
+    ld de, 0x8000; la rutina necesita haber cargado previamente la dirección de inicio de la VRAM          
     ld bc,128*16; 16 lineas
+    call  LDIRVM ; Mira arriba, pone la explicación
+	ret 
+
+load_font_vdp    
+	ld hl, FONT
+    ld de, 0x6A00; la rutina necesita haber cargado previamente la dirección de inicio de la VRAM          
+    ld bc,128*16; 32 lineas
     call  LDIRVM ; Mira arriba, pone la explicación
 	ret 
 

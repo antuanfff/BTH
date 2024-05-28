@@ -40,6 +40,11 @@ TILES_START_ADDR 	equ $8000  ; Tiles in ROM will be loaded at $8000, so we can l
 BACK_BUFFER			equ 2		; we will draw to page 1
 FRONT_BUFFER		equ 0		; then copy to page 0
 
+; Font
+FONT_HEIGHT			equ 8
+FONT_WIDTH			equ 8
+FONT_Y_OFFSET		equ 212
+
 ; Dialog Box
 DIAGBOX_HEIGHT	equ 20
 DIAGBOX_WIDTH	equ 255
@@ -48,10 +53,15 @@ DIAGBOX_WIDTH	equ 255
 ; Init the RAM buffers used to draw a tile, energy and entities
 ;---------------------------------------------------------------------------
 initVDPBuffers:
+		ld	hl,charDatROM
+		ld	de,charDat
+		ld	bc,15
+		ldir
+
 		ld	hl,tileDatROM
 		ld	de,tileDat
 		ld	bc,15
-		ldir	
+		ldir
 		
 		ld	hl,tileDatTransROM
 		ld	de,tileDatTrans
@@ -154,7 +164,7 @@ print_char
     	call	_vdpsetvramwr		
 		ld	a, b			; 1st page bitmap
 		;ld	d,a
-		ld	(_bank2),a
+		;ld	(_bank2),a
 		ld	hl,(BITMAP)		; Bitmap address
 		ld	a, 8			; #lineas del caracter
 1:      ld	bc,0x498		; escribimos 4 bytes en el puerto 98h	

@@ -159,6 +159,9 @@ STAGE1:
     LD HL, TILES1    
     call load_tiles_vdp
     
+    ;We load the font on page 1 of VDP
+    call load_font_vdp
+    
     ; set energy
     LD HL, ANDY_MAX_ENERGY
     ;ADD HL, current_level
