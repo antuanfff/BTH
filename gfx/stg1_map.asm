@@ -1,5 +1,5 @@
 stg1_map:
-; Compressed: #Tile, X, Y, #
+; Compressed: #Tile, X, Y, #reps
 	db 9, 0, 0, 7
 	db 0, 112, 0, 1
 	db 9, 128, 0, 7
