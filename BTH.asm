@@ -209,7 +209,7 @@ STAGE1:
     LD A, 10
     LD D, 0
     LD E, 16
-    CALL draw_tile
+    CALL draw_tile_trans
 
 MAIN_LOOP:
     ;halt ; sincroniza el teclado y pantalla con el procesador (que va muy rápido)    
@@ -713,6 +713,7 @@ TILES1:
  PAGE 1
 ; CODE O NO
     include "include\BTH_data.asm"
+    include "gfx\stg1_map.asm"
 FONT:
  INCBIN "gfx\FONT.SC5",#7
 AFX:

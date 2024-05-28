@@ -455,19 +455,31 @@ DRAW_ANDY_ENERGY:
 		ret
 		;ld a, (ENTITY_PLAYER_POINTER+3)	; Andy's energy
 
-; Draw a background tile
+; Draw a background tile - Background
 ; Input:
 ; A - Number of tile
 ; D - X
 ; E - Y
 draw_tile:
+	LD IY, tileDat
+	JP draw_tile_common
+
+; Draw a background tile - Transparent
+; Input:
+; A - Number of tile
+; D - X
+; E - Y
+draw_tile_trans:
+	LD IY, tileDatTrans
+	
+draw_tile_common:
 	LD HL, metatiles_data
 	ADD A,A
 	ADD A,A ; A*4 (size of metatiles data)
 	LD B, 0
 	LD C, A
 	ADD HL, BC
-	LD IY, tileDat
+	;LD IY, tileDat
 	LD A, (HL)
 	LD (IY + VDP_SX), A
 	INC HL
@@ -481,6 +493,7 @@ draw_tile:
 	LD (IY + VDP_NY), A
 	LD (IY + VDP_DX), D
 	LD (IY + VDP_DY), E
-	LD HL, tileDat
+	PUSH IY
+	POP HL
 	CALL VDPCMD
 	ret
