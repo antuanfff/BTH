@@ -209,7 +209,7 @@ STAGE1:
     LD HL, tileDatTrans
     CALL VDPCMD
   
-    LD A, 10
+    LD A, 13
     LD D, 0
     LD E, 16
     CALL draw_tile_trans

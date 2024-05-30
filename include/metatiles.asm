@@ -15,3 +15,8 @@ metatiles_data:
     db 208, 0, 16, 16  ; 9 - Gress
     db 224, 0, 16, 16  ; 10 - Skull
     db 240, 0, 16, 16  ; 11 - Tree
+
+    db 0, 16, 16, 16  ; 12 - Tomb Antich
+    db 16, 16, 16, 16  ; 13 - Tomb RIP
+    db 32, 16, 16, 16  ; 14 - Tomb Christ
+
