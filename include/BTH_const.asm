@@ -44,6 +44,9 @@ FIRST_LINE_DLG_BOX   equ 6100H
 SEC_LINE_DLG_BOX   equ 6500H
 THIRD_LINE_DLG_BOX   equ 6900H
 
+FIRST_LINE_DLG_BOX_v2   equ 194
+SEC_LINE_DLG_BOX_v2   equ 202
+
 ROMMODE                 equ 1 ; 0 Dos Mode 1 Rom Mode
 KB_RIGHT 				equ 7
 KB_DOWN 				equ 6

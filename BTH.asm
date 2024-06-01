@@ -141,6 +141,7 @@ STAGE1:
     LD (BITMAP), HL
     LD B, :CEMENTER1
     call load_screen
+    call load_screen_v2
     
     ld	a, BTH_DATA			; page 
 	ld	(_bank2),a
@@ -247,7 +248,7 @@ MAIN_LOOP:
     CALL VDPCMD
 
     LD IY, stg1_puzzle_solved_strings
-    CALL print_strings_dialog_box
+    CALL print_strings_dialog_box_v2
 
     ; Modify MAP
     LD HL,stg1_gate
@@ -271,7 +272,7 @@ MAIN_LOOP:
     CP 1
     JP Z, .animate_ghost    
     LD IY, mike_tomb_strings
-    CALL print_strings_dialog_box
+    CALL print_strings_dialog_box_v2
     LD A,1
     LD (SHOWING_MIKE_DIALOG), A
     XOR A
@@ -299,7 +300,7 @@ MAIN_LOOP:
     CP 1
     JP Z, .animate_ghost
     LD IY, john_tomb_strings
-    CALL print_strings_dialog_box
+    CALL print_strings_dialog_box_v2
     LD A,1
     LD (SHOWING_JOHN_DIALOG), A
     LD A, (stg1_puzzle_solved)
@@ -332,7 +333,7 @@ MAIN_LOOP:
     CP GUS_TOMB_STG1_Y
     jp c, .animate_ghost
     LD IY, gus_tomb_strings
-    CALL print_strings_dialog_box
+    CALL print_strings_dialog_box_v2
     LD A,1
     LD (SHOWING_GUS_DIALOG), A
     LD (stg1_puzzle_solved), A
@@ -371,7 +372,7 @@ MAIN_LOOP:
     CP 1
     JR Z, .animate_ghost
     LD IY, stg1_skull_strings
-    CALL print_strings_dialog_box
+    CALL print_strings_dialog_box_v2
     LD A,1
     LD (SHOWING_SKULL_STG1_DIALOG), A
     JR .animate_ghost
@@ -704,7 +705,7 @@ MAIN_LOOP2:
 
 game_over:
     LD IY, game_over_strings
-    call print_strings_dialog_box
+    call print_strings_dialog_box_v2
     call CHGET
     call CHGET
     call CHGET

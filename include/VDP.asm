@@ -43,7 +43,8 @@ FRONT_BUFFER		equ 0		; then copy to page 0
 ; Font
 FONT_HEIGHT			equ 8
 FONT_WIDTH			equ 8
-FONT_Y_OFFSET		equ 212
+FONT_Y_OFFSET_1L	equ 212
+FONT_Y_OFFSET_2L	equ 220
 
 ; Dialog Box
 DIAGBOX_HEIGHT	equ 20
@@ -506,4 +507,70 @@ draw_tile_common:
 	PUSH IY
 	POP HL
 	CALL VDPCMD
+	ret
+
+print_strings_dialog_box_v2:
+
+	LD H, (IY+1)
+	LD L, (IY)
+	LD A, FIRST_LINE_DLG_BOX_v2	; Aquí irá el offset de la memoria del VDP en base a X, Y
+	PUSH IY
+    call print_string_v2
+    POP IY
+
+	LD H, (IY+3)
+	LD L, (IY+2)
+    LD A, SEC_LINE_DLG_BOX_v2	; Aquí irá el offset de la memoria del VDP en base a X, Y    
+	PUSH IY
+    call print_string_v2
+	POP IY
+
+	RET
+
+print_string_v2:	
+	
+	LD IY, charDat
+	LD (IY+VDP_DY), A
+	LD D, 0		; acumulador de la DX
+.loop_str:
+	
+	LD A, (HL)
+	AND A		; if A = 0 -> RET
+	RET Z	
+	CP 64		 ; Si #ASCII > 63 -> 2ª línea
+	JP C, .first_line_font
+	LD (IY+VDP_SY), FONT_Y_OFFSET_2L		; Cargamos la SY	
+	JR .continue
+
+.first_line_font:
+    LD (IY+VDP_SY), FONT_Y_OFFSET_1L		; Cargamos la SY	
+    
+.continue:
+	SUB 32
+	RLC A
+	RLC A	
+	RLC A		; numero 0: ASCII #48 - 32 = 16 * 8 = SX número 0, Y = 0	
+	
+	LD (IY+VDP_SX), A		; Cargamos la SX
+	LD (IY+VDP_DX), D		; Cargamos la DX
+	
+	PUSH HL
+	LD HL, charDat
+	CALL VDPCMD	
+	
+	LD A, D
+	ADD FONT_WIDTH	; Le sumo 8 para que empiece a escribir el next char 8 pixels a la derecha 
+	LD D, A	
+
+	POP HL
+	INC HL
+	JR .loop_str
+    
+    RET
+
+; Loads the screen image using the tile map
+
+load_screen_v2:
+	LD HL, stg1_map_back
+	
 	ret
