@@ -140,7 +140,15 @@ STAGE1:
     LD HL, CEMENTER1
     LD (BITMAP), HL
     LD B, :CEMENTER1
-    call load_screen
+    ;call load_screen
+    
+    ;We load the tiles on page 1 of VDP
+    LD HL, TILES1    
+    call load_tiles_vdp
+    
+    ;We load the font on page 1 of VDP
+    call load_font_vdp
+    ; Draw screen using map and metatile
     call load_screen_v2
     
     ld	a, BTH_DATA			; page 
@@ -154,14 +162,7 @@ STAGE1:
     LDIR
     
     LD HL, MAP_RAM
-    LD (MAPA), HL
-    
-    ;We load the tiles on page 1 of VDP
-    LD HL, TILES1    
-    call load_tiles_vdp
-    
-    ;We load the font on page 1 of VDP
-    call load_font_vdp
+    LD (MAPA), HL    
     
     ; set energy
     LD HL, ANDY_MAX_ENERGY

@@ -40,6 +40,18 @@ TILES_START_ADDR 	equ $8000  ; Tiles in ROM will be loaded at $8000, so we can l
 BACK_BUFFER			equ 2		; we will draw to page 1
 FRONT_BUFFER		equ 0		; then copy to page 0
 
+; Tile Map
+TILENUM_OFFSET	equ 0
+DX_OFFSET	equ 1
+DY_OFFSET	equ 2
+REPS_OFFSET	equ 3
+
+; Metatiles
+SX_METATILE		equ 0
+SY_METATILE		equ 1
+NX_METATILE		equ 2
+NY_METATILE		equ 3
+
 ; Font
 FONT_HEIGHT			equ 8
 FONT_WIDTH			equ 8
@@ -571,6 +583,38 @@ print_string_v2:
 ; Loads the screen image using the tile map
 
 load_screen_v2:
-	LD HL, stg1_map_back
+	LD IY, stg1_map_back
 	
+	LD A, (IY+TILENUM_OFFSET)
+	LD HL, metatiles_data
+	ADD A,A
+	ADD A,A ; A*4 (size of metatiles data)
+	ADD A, NX_METATILE
+	LD B, 0
+	LD C, A
+	ADD HL, BC
+	
+	LD C, (HL)	; Guardamos el ancho de la tile
+	
+	LD D, (IY+DX_OFFSET)
+	LD B, (IY+REPS_OFFSET)
+	
+.loop1	
+	LD A, (IY+TILENUM_OFFSET)	
+	LD E, (IY+DY_OFFSET)	
+	
+	PUSH BC
+	PUSH IY
+	call draw_tile
+	POP IY
+	POP BC
+	LD A, D
+	ADD C
+	LD D, a		; We add the tile width
+
+	LD A, B
+	DEC A
+	LD B, A
+	JR NZ, .loop1	 
+
 	ret
