@@ -45,12 +45,14 @@ TILENUM_OFFSET	equ 0
 DX_OFFSET	equ 1
 DY_OFFSET	equ 2
 REPS_OFFSET	equ 3
+TILEMAP_SIZE	equ 4
 
 ; Metatiles
-SX_METATILE		equ 0
-SY_METATILE		equ 1
-NX_METATILE		equ 2
-NY_METATILE		equ 3
+METATILE_SX		equ 0
+METATILE_SY		equ 1
+METATILE_NX		equ 2
+METATILE_NY		equ 3
+METATILE_SIZE	equ 4
 
 ; Font
 FONT_HEIGHT			equ 8
@@ -584,12 +586,13 @@ print_string_v2:
 
 load_screen_v2:
 	LD IY, stg1_map_back
-	
+
+.map_element	
 	LD A, (IY+TILENUM_OFFSET)
 	LD HL, metatiles_data
 	ADD A,A
 	ADD A,A ; A*4 (size of metatiles data)
-	ADD A, NX_METATILE
+	ADD A, METATILE_NX
 	LD B, 0
 	LD C, A
 	ADD HL, BC
@@ -616,5 +619,17 @@ load_screen_v2:
 	DEC A
 	LD B, A
 	JR NZ, .loop1	 
+
+	LD A, D
+	CP 255
+	JR NZ, .next_element
+	XOR a
+	LD D, A
+
+.next_element
+[4]	INC IY		; TILEMAP_SIZE
+	LD A, (IY)
+	CP 255
+	JR NZ, .map_element
 
 	ret

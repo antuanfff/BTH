@@ -141,18 +141,20 @@ STAGE1:
     LD (BITMAP), HL
     LD B, :CEMENTER1
     ;call load_screen
-    
+
+    ld	a, BTH_DATA			; page 
+	ld	(_bank2),a
+
     ;We load the tiles on page 1 of VDP
     LD HL, TILES1    
     call load_tiles_vdp
     
     ;We load the font on page 1 of VDP
     call load_font_vdp
+
     ; Draw screen using map and metatile
-    call load_screen_v2
+    call load_screen_v2    
     
-    ld	a, BTH_DATA			; page 
-	ld	(_bank2),a
     call DUMP_SPR_ALL
     CALL DUMP_SPR_P1
     
@@ -338,14 +340,11 @@ MAIN_LOOP:
     LD A,1
     LD (SHOWING_GUS_DIALOG), A
     LD (stg1_puzzle_solved), A
-    ; Remove the lockpad
-    LD IY, tileDat
-    LD (IY + VDP_SX), 32      ; SXL - Tile 1
-    LD (IY+VDP_SY), 0      ; SYL
-    LD (IY + VDP_DX), 112     ; DXL    
-    LD (IY + VDP_DY), 0      ; DYL    
-    LD HL, tileDat
-    CALL VDPCMD
+    ; Remove the lockpad    
+    LD A, 1
+    LD D, 112
+    LD E, 0
+    call draw_tile
 
     LD HL,stg1_gate
     LD DE, MAP_RAM+47
