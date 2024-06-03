@@ -535,9 +535,9 @@ print_strings_dialog_box_v2:
 	LD H, (IY+3)
 	LD L, (IY+2)
     LD A, SEC_LINE_DLG_BOX_v2	; Aquí irá el offset de la memoria del VDP en base a X, Y    
-	PUSH IY
+	;PUSH IY
     call print_string_v2
-	POP IY
+	;POP IY
 
 	RET
 

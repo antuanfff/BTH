@@ -1,5 +1,5 @@
 stg1_map_back:
-; Compressed: #Tile, X, Y, #reps
+; Background Tiles - #Tile, X, Y, #reps
 	db 9, 0, 0, 7	
 	db 0, 112, 0, 1	
 	db 9, 144, 0, 7	
