@@ -1,3 +1,6 @@
+; Function Pointer
+draw_pointer ds 2
+
 ;entities data
 ENTITY_DATA: ds 27 ;  10 bytes, 3 entities
 ENTITY_PLAYER_POINTER:  EQU ENTITY_DATA

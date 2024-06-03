@@ -584,7 +584,7 @@ print_string_v2:
 
 ; Loads the screen image using the tile map
 
-load_screen_v2:
+load_screen_v2:	
 	LD IY, stg1_map_back
 
 .map_element	
@@ -607,7 +607,7 @@ load_screen_v2:
 	LD E, (IY+DY_OFFSET)	
 	
 	PUSH BC
-	PUSH IY
+	PUSH IY	
 	call draw_tile
 	POP IY
 	POP BC
@@ -631,5 +631,51 @@ load_screen_v2:
 	LD A, (IY)
 	CP 255
 	JR NZ, .map_element
+	; Transparent Tiles
+	LD IY, stg1_map_front
 
+.map_element_trans
+	LD A, (IY+TILENUM_OFFSET)
+	LD HL, metatiles_data
+	ADD A,A
+	ADD A,A ; A*4 (size of metatiles data)
+	ADD A, METATILE_NX
+	LD B, 0
+	LD C, A
+	ADD HL, BC
+	
+	LD C, (HL)	; Guardamos el ancho de la tile
+	
+	LD D, (IY+DX_OFFSET)
+	LD B, (IY+REPS_OFFSET)
+	
+.loop1_trans
+	LD A, (IY+TILENUM_OFFSET)	
+	LD E, (IY+DY_OFFSET)	
+	
+	PUSH BC
+	PUSH IY	
+	call draw_tile_trans
+	POP IY
+	POP BC
+	LD A, D
+	ADD C
+	LD D, a		; We add the tile width
+
+	LD A, B
+	DEC A
+	LD B, A
+	JR NZ, .loop1_trans 
+
+	LD A, D
+	CP 255
+	JR NZ, .next_element_trans
+	XOR a
+	LD D, A
+
+.next_element_trans
+[4]	INC IY		; TILEMAP_SIZE
+	LD A, (IY)
+	CP 255
+	JR NZ, .map_element_trans
 	ret
