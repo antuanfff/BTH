@@ -46,7 +46,7 @@ stg1_map_back:
 
 	db 9, 0, 176, 16
 
-	db 255
+	db 255		; fin
 	
 stg1_map_front:
 	; Transparent Tiles
@@ -57,5 +57,5 @@ stg1_map_front:
 
 	db 11, 158, 52, 1	; Tree 1
 	db 11, 172, 52, 1	; Tree 1
-	db 255
+	db 255	; fin
 

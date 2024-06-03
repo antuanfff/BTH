@@ -140,7 +140,7 @@ STAGE1:
     LD HL, CEMENTER1
     LD (BITMAP), HL
     LD B, :CEMENTER1
-    call load_screen
+    ;call load_screen
 
     ld	a, BTH_DATA			; page 
 	ld	(_bank2),a
@@ -153,7 +153,7 @@ STAGE1:
     call load_font_vdp
 
     ; Draw screen using map and metatile
-    ;call load_screen_v2    
+    call load_screen_v2    
     
     call DUMP_SPR_ALL
     CALL DUMP_SPR_P1
@@ -178,13 +178,10 @@ STAGE1:
     CP 3
     JR NZ, .nobackfromstg2
         ; Open the gate!
-    LD IY, tileDat
-    LD (IY + VDP_SX), 96      ; SXL - Tile 2
-    LD (IY+VDP_SY), 0      ; SYL
-    LD (IY + VDP_DX), 112     ; DXL    
-    LD (IY + VDP_DY), 0      ; DYL    
-    LD HL, tileDat
-    CALL VDPCMD
+    LD A, 3
+    LD D, 112
+    LD E, 0
+    CALL draw_tile
 
     ; Modify MAP
     LD HL,stg1_gate
