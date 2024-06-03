@@ -1,21 +1,21 @@
-Sjasm Z80 Assembler v0.42c - www.xl2s.tk             [2024.06.03 - 14:03:38]
+Sjasm Z80 Assembler v0.42c - www.xl2s.tk             [2024.06.03 - 16:06:58]
 
 .\BTH.asm
 Errors: 0
 
        1   00:0000                      	output "BTH.rom" 
-       2   00:66CC                      
-       3   00:66CC                      ;ROM ASCII16
-       4   00:66CC                      		defpage	0,0x4000, 0x4000
-       5   00:66CC                      		defpage	1,0x8000, 0x4000        
-       6   00:66CC                      		defpage	2..14 ;Here it is determined rom size        
-       7   00:66CC                              defpage	15,0xC000, 0x4000
-       8   00:66CC                      
-       9   00:66CC  (00:4000)           PageSize:	    equ	0x4000	        ; 16kB
-      10   00:66CC  (00:6000)           _bank1	equ	6000h
-      11   00:66CC  (00:7000)           _bank2	equ	7000h
-      12   00:66CC  32 00 70 32 FF 77   		DB 32h,0,70h,32h,0FFh,77h		; Para evitar seleccionar el tipo de ROM ASCII16 en OpenMSX
-      13   00:66D2  (00)                		page 0			
+       2   00:664A                      
+       3   00:664A                      ;ROM ASCII16
+       4   00:664A                      		defpage	0,0x4000, 0x4000
+       5   00:664A                      		defpage	1,0x8000, 0x4000        
+       6   00:664A                      		defpage	2..14 ;Here it is determined rom size        
+       7   00:664A                              defpage	15,0xC000, 0x4000
+       8   00:664A                      
+       9   00:664A  (00:4000)           PageSize:	    equ	0x4000	        ; 16kB
+      10   00:664A  (00:6000)           _bank1	equ	6000h
+      11   00:664A  (00:7000)           _bank2	equ	7000h
+      12   00:664A  32 00 70 32 FF 77   		DB 32h,0,70h,32h,0FFh,77h		; Para evitar seleccionar el tipo de ROM ASCII16 en OpenMSX
+      13   00:6650  (00)                		page 0			
       14   00:4000                              org 4000h		
       15   00:4000                              dw  4241h,START,0,0,0,0,0,0
       15   00:4000  41 42 92 51 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -3203,7 +3203,7 @@ Errors: 0
      146   00:5273  32 00 70            	ld	(_bank2),a
      147   00:5276                      
      148   00:5276                          ;We load the tiles on page 1 of VDP
-     149   00:5276  21 BB 56                LD HL, TILES1    
+     149   00:5276  21 39 56                LD HL, TILES1    
      150   00:5279  CD E5 42                call load_tiles_vdp
      151   00:527C                          
      152   00:527C                          ;We load the font on page 1 of VDP
@@ -3257,520 +3257,496 @@ Errors: 0
      200   00:52CC  CD DF 47            	call VDPCMD
      201   00:52CF                      ;	call VDP_Ready
      202   00:52CF  CD 0A 48                CALL ENASCR    
-     203   00:52D2                          
-     204   00:52D2                          ; Testing transparency
-     205   00:52D2  FD 21 3C C0             LD IY, tileDatTrans
-     206   00:52D6  FD 36 00 E0             LD (IY + VDP_SX), 224      ; SXL - Tile 2
-     207   00:52DA  FD 36 02 00             LD (IY+VDP_SY), 0      ; SYL
-     208   00:52DE  FD 36 04 00             LD (IY + VDP_DX), 0     ; DXL    
-     209   00:52E2  FD 36 06 00             LD (IY + VDP_DY), 0      ; DYL    
-     210   00:52E6  21 3C C0                LD HL, tileDatTrans
-     211   00:52E9  CD DF 47                CALL VDPCMD
-     212   00:52EC                        
-     213   00:52EC  3E 0D                   LD A, 13
-     214   00:52EE  16 00                   LD D, 0
-     215   00:52F0  1E 10                   LD E, 16
-     216   00:52F2  CD E1 48                CALL draw_tile_trans
-     217   00:52F5                      
-     218   00:52F5                      MAIN_LOOP:
-     219   00:52F5                          ;halt ; sincroniza el teclado y pantalla con el procesador (que va muy rápido)    
-     220   00:52F5                          
-     221   00:52F5  DD 7E 00                LD A, (ix)  ; Cargamos la Y
-     222   00:52F8  FE 00                   CP $00
-     223   00:52FA  CA 70 55                JP Z, STAGE2
-     224   00:52FD  CD FC 42                call DUMP_SPR_ATTS    
-     225   00:5300                      
-     226   00:5300                      .check_tombs:
-     227   00:5300                      
-     228   00:5300  3A 5A C0                LD A, (stg1_puzzle_solved)
-     229   00:5303  FE 03                   CP 3
-     230   00:5305  CA 6E 54                JP Z, .animate_ghost
-     231   00:5308                      
-     232   00:5308  DD 7E 01                LD A, (ix +1)   ; Cargamos la X para mirar si hay colisión con la tumba
-     233   00:530B  FE C8                   CP MIKE_TOMB_STG1_X
-     234   00:530D  C2 83 53                JP NZ, .check_john_tomb    
-     235   00:5310                          
-     236   00:5310  3A 5A C0                LD A, (stg1_puzzle_solved)
-     237   00:5313  FE 02                   CP 2
-     238   00:5315  C2 5D 53                JP NZ, .puzzle_wrong_order
-     239   00:5318  3C                      INC A
-     240   00:5319  32 5A C0                LD (stg1_puzzle_solved), A
-     241   00:531C                          ; Open the gate!
-     242   00:531C  FD 21 2D C0             LD IY, tileDat
-     243   00:5320  FD 36 00 60             LD (IY + VDP_SX), 96      ; SXL - Tile 2
-     244   00:5324  FD 36 02 00             LD (IY+VDP_SY), 0      ; SYL
-     245   00:5328  FD 36 04 70             LD (IY + VDP_DX), 112     ; DXL    
-     246   00:532C  FD 36 06 00             LD (IY + VDP_DY), 0      ; DYL    
-     247   00:5330  21 2D C0                LD HL, tileDat
-     248   00:5333  CD DF 47                CALL VDPCMD
-     249   00:5336                      
-     250   00:5336  FD 21 10 41             LD IY, stg1_puzzle_solved_strings
-     251   00:533A  CD 0E 49                CALL print_strings_dialog_box_v2
-     252   00:533D                      
-     253   00:533D                          ; Modify MAP
-     254   00:533D  21 80 87                LD HL,stg1_gate
-     255   00:5340  11 10 C1                LD DE, MAP_RAM+14
-     256   00:5343  01 04 00                LD BC, 4
-     257   00:5346  ED B0                   LDIR
-     258   00:5348                      
-     259   00:5348  21 80 87                LD HL,stg1_gate
-     260   00:534B  11 30 C1                LD DE, MAP_RAM+46
-     261   00:534E  01 04 00                LD BC, 4
-     262   00:5351  ED B0                   LDIR
-     263   00:5353                          ; afx
-     264   00:5353  3E 02                   LD A,2
-     265   00:5355  0E 00                   LD C, 0
-     266   00:5357  CD 79 50                CALL ayFX_INIT
-     267   00:535A                      
-     268   00:535A  C3 6E 54                JP .animate_ghost
-     269   00:535D                      
-     270   00:535D                      .puzzle_wrong_order
-     271   00:535D  3A 5C C0                LD A, (SHOWING_MIKE_DIALOG)
-     272   00:5360  FE 01                   CP 1
-     273   00:5362  CA 6E 54                JP Z, .animate_ghost    
-     274   00:5365  FD 21 16 40             LD IY, mike_tomb_strings
-     275   00:5369  CD 0E 49                CALL print_strings_dialog_box_v2
-     276   00:536C  3E 01                   LD A,1
-     277   00:536E  32 5C C0                LD (SHOWING_MIKE_DIALOG), A
-     278   00:5371  AF                      XOR A
-     279   00:5372  32 5A C0                LD (stg1_puzzle_solved), A
-     280   00:5375                                  ; Close the gate!
-     281   00:5375                          ;LD IY, tileDat
-     282   00:5375                          ;LD (IY + VDP_SX), 0      ; SXL - Tile 2
-     283   00:5375                          ;LD (IY+VDP_SY), 0      ; SYL
-     284   00:5375                          ;LD (IY + VDP_DX), 112     ; DXL    
-     285   00:5375                          ;LD (IY + VDP_DY), 0      ; DYL    
-     286   00:5375                          ;LD HL, tileDat
-     287   00:5375                          ;CALL VDPCMD
-     288   00:5375                      
-     289   00:5375  21 86 87                LD HL,stg1_gate_blocked
-     290   00:5378  11 2F C1                LD DE, MAP_RAM+45
-     291   00:537B  01 06 00                LD BC, 6
-     292   00:537E  ED B0                   LDIR
-     293   00:5380                      
-     294   00:5380  C3 6E 54                JP .animate_ghost
-     295   00:5383                      
-     296   00:5383                      .check_john_tomb:
-     297   00:5383  FE 29                   CP JOHN_TOMB_STG1_X
-     298   00:5385  20 44                   jr nz, .check_gus_tomb
-     299   00:5387  3A 5D C0                LD A, (SHOWING_JOHN_DIALOG)
-     300   00:538A  FE 01                   CP 1
-     301   00:538C  CA 6E 54                JP Z, .animate_ghost
-     302   00:538F  FD 21 55 40             LD IY, john_tomb_strings
-     303   00:5393  CD 0E 49                CALL print_strings_dialog_box_v2
-     304   00:5396  3E 01                   LD A,1
-     305   00:5398  32 5D C0                LD (SHOWING_JOHN_DIALOG), A
-     306   00:539B  3A 5A C0                LD A, (stg1_puzzle_solved)
-     307   00:539E  FE 01                   CP 1
-     308   00:53A0  C2 6E 54                JP NZ, .animate_ghost
-     309   00:53A3  3C                      INC A
-     310   00:53A4  32 5A C0                LD (stg1_puzzle_solved), A
-     311   00:53A7                          ; Half open gate
-     312   00:53A7  FD 21 2D C0             LD IY, tileDat
-     313   00:53AB  FD 36 00 40             LD (IY + VDP_SX), 64      ; SXL - Tile 2
-     314   00:53AF  FD 36 02 00             LD (IY+VDP_SY), 0      ; SYL
-     315   00:53B3  FD 36 04 70             LD (IY + VDP_DX), 112     ; DXL    
-     316   00:53B7  FD 36 06 00             LD (IY + VDP_DY), 0      ; DYL    
-     317   00:53BB  21 2D C0                LD HL, tileDat
-     318   00:53BE  CD DF 47                CALL VDPCMD
-     319   00:53C1                          ; afx
-     320   00:53C1  3E 00                   LD A,0
-     321   00:53C3  0E 00                   LD C, 0
-     322   00:53C5  CD 79 50                CALL ayFX_INIT
-     323   00:53C8                      
-     324   00:53C8  C3 6E 54                JP .animate_ghost
-     325   00:53CB                      
-     326   00:53CB                      .check_gus_tomb:
-     327   00:53CB  FE 49                   CP GUS_TOMB_STG1_X
-     328   00:53CD  C2 0C 54                JP nz, .check_skull_hint
-     329   00:53D0  3A 5E C0                LD A, (SHOWING_GUS_DIALOG)
-     330   00:53D3  FE 01                   CP 1
-     331   00:53D5  CA 6E 54                JP Z, .animate_ghost
-     332   00:53D8  DD 7E 00                LD A, (ix)
-     333   00:53DB  FE 78                   CP GUS_TOMB_STG1_Y
-     334   00:53DD  DA 6E 54                jp c, .animate_ghost
-     335   00:53E0  FD 21 92 40             LD IY, gus_tomb_strings
-     336   00:53E4  CD 0E 49                CALL print_strings_dialog_box_v2
-     337   00:53E7  3E 01                   LD A,1
-     338   00:53E9  32 5E C0                LD (SHOWING_GUS_DIALOG), A
-     339   00:53EC  32 5A C0                LD (stg1_puzzle_solved), A
-     340   00:53EF                          ; Remove the lockpad    
-     341   00:53EF  3E 01                   LD A, 1
-     342   00:53F1  16 70                   LD D, 112
-     343   00:53F3  1E 00                   LD E, 0
-     344   00:53F5  CD DA 48                call draw_tile
-     345   00:53F8                      
-     346   00:53F8  21 80 87                LD HL,stg1_gate
-     347   00:53FB  11 31 C1                LD DE, MAP_RAM+47
-     348   00:53FE  01 02 00                LD BC, 2
-     349   00:5401  ED B0                   LDIR
-     350   00:5403                      
-     351   00:5403                          ; afx
-     352   00:5403  3E 01                   LD A,1
-     353   00:5405  0E 00                   LD C, 0
-     354   00:5407  CD 79 50                CALL ayFX_INIT
-     355   00:540A                      
-     356   00:540A  18 62                   JR .animate_ghost
-     357   00:540C                      
-     358   00:540C                      .check_skull_hint:
-     359   00:540C  FE 69                   CP SKULL_TOMB_STG1_X
-     360   00:540E  20 20                   jr nz, .check_mike_dialog_box
-     361   00:5410                              
-     362   00:5410  DD 7E 00                LD A, (ix)
-     363   00:5413  FE 5A                   CP SKULL_TOMB_STG1_Y1
-     364   00:5415  38 19                   jr c, .check_mike_dialog_box
-     365   00:5417  FE 64                   CP SKULL_TOMB_STG1_Y2
-     366   00:5419  30 15                   jr nc, .check_mike_dialog_box
-     367   00:541B                      
-     368   00:541B  3A 5B C0                LD A, (SHOWING_SKULL_STG1_DIALOG)
-     369   00:541E  FE 01                   CP 1
-     370   00:5420  28 4C                   JR Z, .animate_ghost
-     371   00:5422  FD 21 D3 40             LD IY, stg1_skull_strings
-     372   00:5426  CD 0E 49                CALL print_strings_dialog_box_v2
-     373   00:5429  3E 01                   LD A,1
-     374   00:542B  32 5B C0                LD (SHOWING_SKULL_STG1_DIALOG), A
-     375   00:542E  18 3E                   JR .animate_ghost
-     376   00:5430                      
-     377   00:5430                      .check_mike_dialog_box
-     378   00:5430  3A 5C C0                LD A, (SHOWING_MIKE_DIALOG)
-     379   00:5433  FE 01                   CP 1
-     380   00:5435  20 09                   JR nz, .check_gus_dialog
-     381   00:5437  CD 96 47                CALL CLEAR_DIALOG_BOX
-     382   00:543A  AF                      XOR A
-     383   00:543B  32 5C C0                LD (SHOWING_MIKE_DIALOG), A
-     384   00:543E  18 2E                   JR .animate_ghost
-     385   00:5440                      
-     386   00:5440                      .check_gus_dialog
-     387   00:5440  3A 5E C0                LD A, (SHOWING_GUS_DIALOG)
-     388   00:5443  FE 01                   CP 1
-     389   00:5445  20 09                   JR nz, .check_john_dialog
-     390   00:5447  CD 96 47                CALL CLEAR_DIALOG_BOX
-     391   00:544A  AF                      XOR A
-     392   00:544B  32 5E C0                LD (SHOWING_GUS_DIALOG), A
-     393   00:544E  18 1E                   JR .animate_ghost
-     394   00:5450                      
-     395   00:5450                      .check_john_dialog
-     396   00:5450  3A 5D C0                LD A, (SHOWING_JOHN_DIALOG)
-     397   00:5453  FE 01                   CP 1
-     398   00:5455  20 09                   JR nz, .check_skull_dialog
-     399   00:5457  CD 96 47                CALL CLEAR_DIALOG_BOX
-     400   00:545A  AF                      XOR A
-     401   00:545B  32 5D C0                LD (SHOWING_JOHN_DIALOG), A
-     402   00:545E  18 0E                   JR .animate_ghost
-     403   00:5460                      
-     404   00:5460                      .check_skull_dialog
-     405   00:5460  3A 5B C0                LD A, (SHOWING_SKULL_STG1_DIALOG)
-     406   00:5463  FE 01                   CP 1
-     407   00:5465  20 07                   JR nz, .animate_ghost
-     408   00:5467  CD 96 47                CALL CLEAR_DIALOG_BOX
-     409   00:546A  AF                      XOR A
-     410   00:546B  32 5B C0                LD (SHOWING_SKULL_STG1_DIALOG), A
-     411   00:546E                      
-     412   00:546E                      .animate_ghost    
-     413   00:546E  3A 6A C0                LD A,(CHAR_GHOST_DEAD)
-     414   00:5471  FE 01                   CP $01
-     415   00:5473  CA E7 54                JP Z,.continue
-     416   00:5476  DD 7E 11                LD A, (ix+SPR_GHOST_STG1+1)          ;cargamos la X del Fantasma
-     417   00:5479  2A 68 C0            	LD HL, (CHAR_SPEED_X_GHOST)
-     418   00:547C  85                  	ADD L					; Actualizamos la posicion en base a la velocidad
-     419   00:547D                          
-     420   00:547D  DD 77 11            	LD (ix+SPR_GHOST_STG1+1), A
-     421   00:5480  DD 77 15                LD (ix+SPR_GHOST_STG1+5), A
-     422   00:5483  FE 50                   CP $50
-     423   00:5485  CA 90 54                JP Z,.CHANGE_DIR_RIGHT
-     424   00:5488  FE AF                   CP $AF
-     425   00:548A  CA 9D 54                JP Z,.CHANGE_DIR_LEFT
-     426   00:548D                          		
-     427   00:548D  C3 A6 54                JP .check_pattern
-     428   00:5490                      
-     429   00:5490                      .CHANGE_DIR_RIGHT:
-     430   00:5490  3E 01                   LD A, MOV_SPEED_GHOST
-     431   00:5492  32 68 C0            	LD (CHAR_SPEED_X_GHOST), A
-     432   00:5495  3E FF                   LD A,$FF
-     433   00:5497  32 6D C0                LD (CHAR_DIR_GHOST1),A
-     434   00:549A  C3 A6 54                JP .check_pattern
-     435   00:549D                      
-     436   00:549D                      .CHANGE_DIR_LEFT:
-     437   00:549D  3E FF                   LD A, -MOV_SPEED_GHOST
-     438   00:549F  32 68 C0            	LD (CHAR_SPEED_X_GHOST), A
-     439   00:54A2  AF                      XOR A   ; Pone A a 0
-     440   00:54A3  32 6D C0                LD (CHAR_DIR_GHOST1),A
-     441   00:54A6                      
-     442   00:54A6                      .check_pattern:
-     443   00:54A6  3A 6D C0                LD A,(CHAR_DIR_GHOST1)
-     444   00:54A9  FE FF                   CP $FF
-     445   00:54AB  CA CC 54                JP Z,.check_pattern_RIGHT
-     446   00:54AE  DD 7E 12                LD A, (ix+SPR_GHOST_STG1+2)       ; Cargamos el patrón y lo cambiamos
-     447   00:54B1  FE 1C                   CP SPR_GHOST_STG1_PTRN_L1
-     448   00:54B3  CA C1 54                jp z,.change_pattern_L
-     449   00:54B6  DD 36 12 1C             LD (ix+SPR_GHOST_STG1+2),SPR_GHOST_STG1_PTRN_L1
-     450   00:54BA  DD 36 16 20             LD (ix+SPR_GHOST_STG1+6),SPR_GHOST_STG1_PTRN_L1+4
-     451   00:54BE  C3 E7 54                jp .continue
-     452   00:54C1                      .change_pattern_L:
-     453   00:54C1  DD 36 12 24             LD (ix+SPR_GHOST_STG1+2),SPR_GHOST_STG1_PTRN_L2
-     454   00:54C5  DD 36 16 28             LD (ix+SPR_GHOST_STG1+6),SPR_GHOST_STG1_PTRN_L2+4
-     455   00:54C9  C3 E7 54                jp .continue
-     456   00:54CC                      
-     457   00:54CC                      .check_pattern_RIGHT
-     458   00:54CC  DD 7E 12                LD A, (ix+SPR_GHOST_STG1+2)       ; Cargamos el patrón y lo cambiamos
-     459   00:54CF  FE 2C                   CP SPR_GHOST_STG1_PTRN_R1
-     460   00:54D1  CA DF 54                jp z,.change_pattern_R
-     461   00:54D4  DD 36 12 2C             LD (ix+SPR_GHOST_STG1+2),SPR_GHOST_STG1_PTRN_R1
-     462   00:54D8  DD 36 16 30             LD (ix+SPR_GHOST_STG1+6),SPR_GHOST_STG1_PTRN_R1+4
-     463   00:54DC  C3 E7 54                jp .continue
-     464   00:54DF                      .change_pattern_R:
-     465   00:54DF  DD 36 12 34             LD (ix+SPR_GHOST_STG1+2),SPR_GHOST_STG1_PTRN_R2
-     466   00:54E3  DD 36 16 38             LD (ix+SPR_GHOST_STG1+6),SPR_GHOST_STG1_PTRN_R2+4
-     467   00:54E7                      
-     468   00:54E7                      .continue:    
-     469   00:54E7  DD 7E 11                LD A, (ix+SPR_GHOST_STG1+1)     ; Cargamos la X
-     470   00:54EA  32 0C C0                LD (ENTITY_ENEMY1_POINTER+1), A
-     471   00:54ED  DD 7E 10                LD A, (ix+SPR_GHOST_STG1)           ; Cargamos la Y
-     472   00:54F0  32 0D C0                LD (ENTITY_ENEMY1_POINTER+2), A
-     473   00:54F3                          
-     474   00:54F3  FD 21 0B C0             LD IY, ENTITY_ENEMY1_POINTER
-     475   00:54F7  CD 6D 41                CALL EnemyCollisionCheck
-     476   00:54FA  30 16                   JR NC, .move_shoot
-     477   00:54FC                          ; Collision
-     478   00:54FC  3A 05 C0                LD A, (ENTITY_PLAYER_POINTER+ENTITY_ENERGY)
-     479   00:54FF  D6 04                   SUB 4    
-     480   00:5501  32 05 C0                LD (ENTITY_PLAYER_POINTER+ENTITY_ENERGY), A
-     481   00:5504  CD 6B 48                call DRAW_ANDY_ENERGY
-     482   00:5507  CD 4B 46                call BOUNCE_ANDY
-     483   00:550A  3A 05 C0                LD A, (ENTITY_PLAYER_POINTER+ENTITY_ENERGY)
-     484   00:550D  FE 00                   CP 0
-     485   00:550F  CA A8 56                JP Z, game_over
-     486   00:5512                      
-     487   00:5512                      .move_shoot:
-     488   00:5512  CD 70 45                CALL MOVE_SHOOT
-     489   00:5515                      .CHECK_GHOST:
-     490   00:5515                          ; Comprobamos si hay colision con el fantasma
-     491   00:5515  3A 6A C0                LD A,(CHAR_GHOST_DEAD)  ; si está muerto,no lo miramos
-     492   00:5518  FE 01                   CP $01
-     493   00:551A  CA 3E 55                JP Z,.check_KB
-     494   00:551D                      
-     495   00:551D  DD 46 0C                LD B,(ix+SPR_SHOOT_P1)         ; Y del disparo
-     496   00:5520  DD 4E 0D                LD C,(ix+SPR_SHOOT_P1+1)         ; X del disparo
-     497   00:5523  DD 56 10                LD D,(ix+SPR_GHOST_STG1)         ; Y del fantasma 
-     498   00:5526  DD 5E 11                LD E,(ix+SPR_GHOST_STG1+1)         ; X del fantasma
-     499   00:5529  CD 9C 41                call check_spr_collision
-     500   00:552C  FE 01                   CP 1
-     501   00:552E  C2 3E 55                JP NZ,.check_KB
-     502   00:5531                      
-     503   00:5531                      .KILL_GHOST:
-     504   00:5531  3E 01                   LD A,1
-     505   00:5533  32 6A C0                LD (CHAR_GHOST_DEAD),A
-     506   00:5536  DD 36 10 D9             LD (ix+SPR_GHOST_STG1),217    
-     507   00:553A  DD 36 14 D9             LD (ix+SPR_GHOST_STG1+4),217    
-     508   00:553E                      
-     509   00:553E                      .check_KB:
-     510   00:553E  76                      halt    
-     511   00:553F                      	
-     512   00:553F  F3                  	di       
-     513   00:5540  DD E5                   PUSH IX
-     514   00:5542  CD BE 4F            	call	PT3_ROUT			;envia datos a al PSG 	   
-     515   00:5545  CD C6 4E            	call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
-     516   00:5548  CD AF 50            	call ayFX_PLAY
-     517   00:554B  DD E1                   POP IX
-     518   00:554D  FB                      ei
-     519   00:554E                      
-     520   00:554E  3E 08                   ld a, 8
-     521   00:5550  CD 41 01            	call SNSMAT   
-     522   00:5553                          
-     523   00:5553  4F                      LD C,A    
-     524   00:5554                          
-     525   00:5554  CB 79                   BIT KB_RIGHT, C			; La tecla presionada es RIGHT?
-     526   00:5556  CC B8 43                call z, move_right
-     527   00:5559                          
-     528   00:5559  CB 61                   BIT KB_LEFT, C			; La tecla presionada es LEFT?
-     529   00:555B  CC 17 44                call z, move_left
-     530   00:555E                      
-     531   00:555E  CB 69                   BIT KB_UP, C			; La tecla presionada es UP?
-     532   00:5560  CC 43 43                call z, move_up
-     533   00:5563                      
-     534   00:5563  CB 71                   BIT KB_DOWN, C			; La tecla presionada es DOWN?
-     535   00:5565  CC 7D 43                call z, move_down
-     536   00:5568                      
-     537   00:5568                      no_arrows:
-     538   00:5568  CB 41                   BIT KB_SPACE, C			; La tecla presionada es SPACE
-     539   00:556A  CC DB 45                call z,SHOOT_MAIN_CHAR
-     540   00:556D                      
-     541   00:556D                          ;BIT KB_DEL, C			; La tecla presionada es DEL    
-     542   00:556D                          ;ret z
-     543   00:556D                          
-     544   00:556D  C3 F5 52                jp MAIN_LOOP
-     545   00:5570                      
-     546   00:5570                      
-     547   00:5570                      STAGE2:
-     548   00:5570  CD 11 48                CALL DISSCR
-     549   00:5573  76                      halt
-     550   00:5574  F3                  	di       
-     551   00:5575  DD E5                   PUSH IX
-     552   00:5577  CD BE 4F            	call	PT3_ROUT			;envia datos a al PSG 	   
-     553   00:557A  CD C6 4E            	call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
-     554   00:557D  DD E1               	POP IX
-     555   00:557F  FB                      ei
-     556   00:5580  21 00 80                LD HL, CEMENTER2
-     557   00:5583  22 00 C1                LD (BITMAP), HL
-     558   00:5586  06 0D                   LD B, :CEMENTER2
-     559   00:5588                      
-     560   00:5588  CD 33 42                call load_screen
-     561   00:558B  21 6C 8A                LD HL, mapa2
-     562   00:558E  22 FE C0                LD (MAPA), HL
-     563   00:5591                      
-     564   00:5591  3E 01                   ld	a, BTH_DATA			; page 
-     565   00:5593  32 00 70            	ld	(_bank2),a
-     566   00:5596                       
-     567   00:5596                          ; Ponemos el P1 por encima del marco
-     568   00:5596  DD 36 00 AF             LD (ix), 175      ; mask 0
-     569   00:559A  DD 36 04 AF             LD (ix+4), 175    ; mask 1
-     570   00:559E  DD 36 08 AF             LD (ix+8), 175    ; mask 2
-     571   00:55A2                          
-     572   00:55A2  DD 36 10 D9             LD (ix+SPR_GHOST_STG1),217  ; ocultamos el fantasma
-     573   00:55A6  DD 36 14 D9             LD (ix+SPR_GHOST_STG1+4),217  ; ocultamos el fantasma
-     574   00:55AA                          
-     575   00:55AA  CD C0 42                CALL DUMP_SPR_ALL
-     576   00:55AD  CD 17 43                CALL DUMP_SPR_P1        
-     577   00:55B0                          
-     578   00:55B0                          ;LD HL, ANDY_MAX_ENERGY
-     579   00:55B0                          ;LD A, (HL)  
-     580   00:55B0                          ;INC A           ; level 1
-     581   00:55B0                          ;LD (ENTITY_PLAYER_POINTER+3), A
-     582   00:55B0                      
-     583   00:55B0                          ;XOR a
-     584   00:55B0                          ;LD (current_level), A
-     585   00:55B0  CD 6B 48                CALL DRAW_ANDY_ENERGY
-     586   00:55B3                          
-     587   00:55B3  CD 0A 48                CALL ENASCR
-     588   00:55B6                          
-     589   00:55B6                      MAIN_LOOP2:
-     590   00:55B6                          ;halt    
-     591   00:55B6  76                      halt
-     592   00:55B7  F3                  	di       
-     593   00:55B8  DD E5                   PUSH IX
-     594   00:55BA  CD BE 4F            	call	PT3_ROUT			;envia datos a al PSG 	   
-     595   00:55BD  CD C6 4E            	call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
-     596   00:55C0  CD AF 50            	call ayFX_PLAY
-     597   00:55C3  DD E1                   POP IX
-     598   00:55C5  FB                      ei
-     599   00:55C6  DD 7E 00                LD A, (ix)    
-     600   00:55C9  FE B0                   CP 176      ; Miramos si la Y es 160 para pasar a stg1
-     601   00:55CB  C2 ED 55                JP NZ, .no_screen_change
-     602   00:55CE                          ; Ponemos el P1 al principio de la pantalla 1
-     603   00:55CE  DD 36 00 01             LD (ix), 1          ; P1.Y = 1
-     604   00:55D2  DD 36 04 01             LD (ix+4), 1
-     605   00:55D6  DD 36 08 01             LD (ix+8), 1
-     606   00:55DA                      
-     607   00:55DA  3A 6A C0                LD A, (CHAR_GHOST_DEAD)
-     608   00:55DD  FE 01                   CP $01
-     609   00:55DF  CA EA 55                JP Z, .GHOST_DEAD
-     610   00:55E2  DD 36 10 0F             ld (ix+SPR_GHOST_STG1), $0F      ; Sprite 1 - Ghost
-     611   00:55E6  DD 36 14 0F             ld (ix+SPR_GHOST_STG1+4), $0F      ; Sprite 1 - Ghost
-     612   00:55EA                      .GHOST_DEAD:    
-     613   00:55EA  CD 66 52                CALL STAGE1
-     614   00:55ED                      
-     615   00:55ED                      .no_screen_change:
-     616   00:55ED                          
-     617   00:55ED                          ; check X,Y to play Black Sabbath
-     618   00:55ED                          ; Ya tenemos en A la Y
-     619   00:55ED  FE 6E                   CP STG2_TILE1_Y
-     620   00:55EF  C2 4B 56                JP NZ, .check_tile3
-     621   00:55F2  DD 7E 01                LD A, (ix+1)
-     622   00:55F5  FE 71                   CP STG2_TILE1_X
-     623   00:55F7  C2 21 56                JP NZ, .check_next_tile
-     624   00:55FA  3E 03                   LD A, 3
-     625   00:55FC  0E 00                   LD C, 0
-     626   00:55FE  CD 79 50                CALL ayFX_INIT    
-     627   00:5601                      
-     628   00:5601  FD 21 2D C0             LD IY, tileDat
-     629   00:5605  FD 36 00 C0             LD (IY + VDP_SX), 192      ; SXL - Tile 2
-     630   00:5609  FD 36 02 00             LD (IY+VDP_SY), 0      ; SYL
-     631   00:560D  FD 36 08 10             LD (IY+VDP_NX), 16      ; NX    
-     632   00:5611  FD 36 04 70             LD (IY + VDP_DX), 112     ; DXL    
-     633   00:5615  FD 36 06 70             LD (IY + VDP_DY), 112      ; DYL    
-     634   00:5619  21 2D C0                LD HL, tileDat
-     635   00:561C  CD DF 47                CALL VDPCMD
-     636   00:561F  18 5C                   jr .continue
-     637   00:5621                      
-     638   00:5621                      .check_next_tile:
-     639   00:5621  FE 80                   CP STG2_TILE2_X
-     640   00:5623  C2 4B 56                JP NZ, .check_tile3
-     641   00:5626  3E 04                   LD A, 4
-     642   00:5628  0E 00                   LD C, 0
-     643   00:562A  CD 79 50                CALL ayFX_INIT    
-     644   00:562D                      
-     645   00:562D  FD 21 2D C0             LD IY, tileDat
-     646   00:5631  FD 36 00 C0             LD (IY + VDP_SX), 192      ; SXL - Tile 2
-     647   00:5635  FD 36 02 00             LD (IY+VDP_SY), 0      ; SYL
-     648   00:5639  FD 36 08 10             LD (IY+VDP_NX), 16      ; NX    
-     649   00:563D  FD 36 04 80             LD (IY + VDP_DX), 128     ; DXL    
-     650   00:5641  FD 36 06 70             LD (IY + VDP_DY), 112      ; DYL    
-     651   00:5645  21 2D C0                LD HL, tileDat
-     652   00:5648  CD DF 47                CALL VDPCMD
-     653   00:564B                      
-     654   00:564B                      .check_tile3:
-     655   00:564B  FE 8E                   CP STG2_TILE3_Y
-     656   00:564D  C2 7D 56                JP NZ, .continue
-     657   00:5650  DD 7E 01                LD A, (ix+1)
-     658   00:5653  FE 80                   CP STG2_TILE3_X
-     659   00:5655  C2 7D 56                JP NZ, .continue
-     660   00:5658  3E 05                   LD A, 5
-     661   00:565A  0E 00                   LD C, 0
-     662   00:565C  CD 79 50                CALL ayFX_INIT    
-     663   00:565F                      
-     664   00:565F  FD 21 2D C0             LD IY, tileDat
-     665   00:5663  FD 36 00 C0             LD (IY + VDP_SX), 192      ; SXL - Tile 2
-     666   00:5667  FD 36 02 00             LD (IY+VDP_SY), 0      ; SYL
-     667   00:566B  FD 36 08 10             LD (IY+VDP_NX), 16      ; NX    
-     668   00:566F  FD 36 04 80             LD (IY + VDP_DX), 128     ; DXL    
-     669   00:5673  FD 36 06 90             LD (IY + VDP_DY), 144      ; DYL    
-     670   00:5677  21 2D C0                LD HL, tileDat
-     671   00:567A  CD DF 47                CALL VDPCMD
-     672   00:567D                      
-     673   00:567D                      .continue:
-     674   00:567D  CD FC 42                call DUMP_SPR_ATTS      
-     675   00:5680  CD 70 45                CALL MOVE_SHOOT    
-     676   00:5683                      
-     677   00:5683  3E 08                   ld a, 8
-     678   00:5685  CD 41 01            	call SNSMAT   
-     679   00:5688  4F                      LD C,A    
-     680   00:5689                              
-     681   00:5689  CB 79                   BIT KB_RIGHT, C			; La tecla presionada es RIGHT?
-     682   00:568B  CC B8 43                call z, move_right
-     683   00:568E                          
-     684   00:568E  CB 61                   BIT KB_LEFT, C			; La tecla presionada es LEFT?
-     685   00:5690  CC 17 44                call z, move_left
-     686   00:5693                      
-     687   00:5693  CB 69                   BIT KB_UP, C			; La tecla presionada es UP?
-     688   00:5695  CC 43 43                call z, move_up
-     689   00:5698                      
-     690   00:5698  CB 71                   BIT KB_DOWN, C			; La tecla presionada es DOWN?
-     691   00:569A  CC 7D 43                call z, move_down
-     692   00:569D                      
-     693   00:569D  CB 41                   BIT KB_SPACE, C			; La tecla presionada es SPACE
-     694   00:569F  CC DB 45                call z,SHOOT_MAIN_CHAR
-     695   00:56A2                      
-     696   00:56A2  CB 59                   BIT KB_DEL, C			; La tecla presionada es DEL    
-     697   00:56A4  C8                      ret z
-     698   00:56A5                      
-     699   00:56A5                      
-     700   00:56A5                      
-     701   00:56A5  C3 B6 55                jp MAIN_LOOP2
-     702   00:56A8                      
-     703   00:56A8                      game_over:
-     704   00:56A8  FD 21 49 41             LD IY, game_over_strings
-     705   00:56AC  CD 0E 49                call print_strings_dialog_box_v2
-     706   00:56AF  CD 9F 00                call CHGET
-     707   00:56B2  CD 9F 00                call CHGET
-     708   00:56B5  CD 9F 00                call CHGET
-     709   00:56B8  C3 92 51                JP START
-     710   00:56BB                      
-     711   00:56BB                      TILES1:
-     712   00:56BB  (1011)               INCBIN "gfx\tiles1.sc5",#7
-     713   00:66CC                      
-     714   00:66CC  (01)                 PAGE 1
-     715   01:8000                      ; CODE O NO
-     716   01:8000                          include "include\BTH_data.asm"
+     203   00:52D2                        
+     204   00:52D2                      MAIN_LOOP:
+     205   00:52D2                          ;halt ; sincroniza el teclado y pantalla con el procesador (que va muy rápido)    
+     206   00:52D2                          
+     207   00:52D2  DD 7E 00                LD A, (ix)  ; Cargamos la Y
+     208   00:52D5  FE 00                   CP $00
+     209   00:52D7  CA 2B 55                JP Z, STAGE2
+     210   00:52DA  CD FC 42                call DUMP_SPR_ATTS    
+     211   00:52DD                      
+     212   00:52DD                      .check_tombs:
+     213   00:52DD                      
+     214   00:52DD  3A 5A C0                LD A, (stg1_puzzle_solved)
+     215   00:52E0  FE 03                   CP 3
+     216   00:52E2  CA 29 54                JP Z, .animate_ghost
+     217   00:52E5                      
+     218   00:52E5  DD 7E 01                LD A, (ix +1)   ; Cargamos la X para mirar si hay colisión con la tumba
+     219   00:52E8  FE C8                   CP MIKE_TOMB_STG1_X
+     220   00:52EA  C2 4F 53                JP NZ, .check_john_tomb    
+     221   00:52ED                          
+     222   00:52ED  3A 5A C0                LD A, (stg1_puzzle_solved)
+     223   00:52F0  FE 02                   CP 2
+     224   00:52F2  C2 29 53                JP NZ, .puzzle_wrong_order
+     225   00:52F5  3C                      INC A
+     226   00:52F6  32 5A C0                LD (stg1_puzzle_solved), A
+     227   00:52F9                          ; Open the gate!    
+     228   00:52F9  3E 03                   LD A, 3
+     229   00:52FB  16 70                   LD D, 112
+     230   00:52FD  1E 00                   LD E, 0
+     231   00:52FF  CD DA 48                CALL draw_tile
+     232   00:5302                      
+     233   00:5302  FD 21 10 41             LD IY, stg1_puzzle_solved_strings
+     234   00:5306  CD 0E 49                CALL print_strings_dialog_box_v2
+     235   00:5309                      
+     236   00:5309                          ; Modify MAP
+     237   00:5309  21 80 87                LD HL,stg1_gate
+     238   00:530C  11 10 C1                LD DE, MAP_RAM+14
+     239   00:530F  01 04 00                LD BC, 4
+     240   00:5312  ED B0                   LDIR
+     241   00:5314                      
+     242   00:5314  21 80 87                LD HL,stg1_gate
+     243   00:5317  11 30 C1                LD DE, MAP_RAM+46
+     244   00:531A  01 04 00                LD BC, 4
+     245   00:531D  ED B0                   LDIR
+     246   00:531F                          ; afx
+     247   00:531F  3E 02                   LD A,2
+     248   00:5321  0E 00                   LD C, 0
+     249   00:5323  CD 79 50                CALL ayFX_INIT
+     250   00:5326                      
+     251   00:5326  C3 29 54                JP .animate_ghost
+     252   00:5329                      
+     253   00:5329                      .puzzle_wrong_order
+     254   00:5329  3A 5C C0                LD A, (SHOWING_MIKE_DIALOG)
+     255   00:532C  FE 01                   CP 1
+     256   00:532E  CA 29 54                JP Z, .animate_ghost    
+     257   00:5331  FD 21 16 40             LD IY, mike_tomb_strings
+     258   00:5335  CD 0E 49                CALL print_strings_dialog_box_v2
+     259   00:5338  3E 01                   LD A,1
+     260   00:533A  32 5C C0                LD (SHOWING_MIKE_DIALOG), A
+     261   00:533D  AF                      XOR A
+     262   00:533E  32 5A C0                LD (stg1_puzzle_solved), A
+     263   00:5341                                  ; Close the gate!
+     264   00:5341                          ;LD IY, tileDat
+     265   00:5341                          ;LD (IY + VDP_SX), 0      ; SXL - Tile 2
+     266   00:5341                          ;LD (IY+VDP_SY), 0      ; SYL
+     267   00:5341                          ;LD (IY + VDP_DX), 112     ; DXL    
+     268   00:5341                          ;LD (IY + VDP_DY), 0      ; DYL    
+     269   00:5341                          ;LD HL, tileDat
+     270   00:5341                          ;CALL VDPCMD
+     271   00:5341                      
+     272   00:5341  21 86 87                LD HL,stg1_gate_blocked
+     273   00:5344  11 2F C1                LD DE, MAP_RAM+45
+     274   00:5347  01 06 00                LD BC, 6
+     275   00:534A  ED B0                   LDIR
+     276   00:534C                      
+     277   00:534C  C3 29 54                JP .animate_ghost
+     278   00:534F                      
+     279   00:534F                      .check_john_tomb:
+     280   00:534F  FE 29                   CP JOHN_TOMB_STG1_X
+     281   00:5351  20 33                   jr nz, .check_gus_tomb
+     282   00:5353  3A 5D C0                LD A, (SHOWING_JOHN_DIALOG)
+     283   00:5356  FE 01                   CP 1
+     284   00:5358  CA 29 54                JP Z, .animate_ghost
+     285   00:535B  FD 21 55 40             LD IY, john_tomb_strings
+     286   00:535F  CD 0E 49                CALL print_strings_dialog_box_v2
+     287   00:5362  3E 01                   LD A,1
+     288   00:5364  32 5D C0                LD (SHOWING_JOHN_DIALOG), A
+     289   00:5367  3A 5A C0                LD A, (stg1_puzzle_solved)
+     290   00:536A  FE 01                   CP 1
+     291   00:536C  C2 29 54                JP NZ, .animate_ghost
+     292   00:536F  3C                      INC A
+     293   00:5370  32 5A C0                LD (stg1_puzzle_solved), A
+     294   00:5373                          ; Half open gate
+     295   00:5373  3E 02                   LD A, 2
+     296   00:5375  16 70                   LD D, 112
+     297   00:5377  1E 00                   LD E, 0
+     298   00:5379  CD DA 48                CALL draw_tile
+     299   00:537C                      
+     300   00:537C                          ; afx
+     301   00:537C  3E 00                   LD A,0
+     302   00:537E  0E 00                   LD C, 0
+     303   00:5380  CD 79 50                CALL ayFX_INIT
+     304   00:5383                      
+     305   00:5383  C3 29 54                JP .animate_ghost
+     306   00:5386                      
+     307   00:5386                      .check_gus_tomb:
+     308   00:5386  FE 49                   CP GUS_TOMB_STG1_X
+     309   00:5388  C2 C7 53                JP nz, .check_skull_hint
+     310   00:538B  3A 5E C0                LD A, (SHOWING_GUS_DIALOG)
+     311   00:538E  FE 01                   CP 1
+     312   00:5390  CA 29 54                JP Z, .animate_ghost
+     313   00:5393  DD 7E 00                LD A, (ix)
+     314   00:5396  FE 78                   CP GUS_TOMB_STG1_Y
+     315   00:5398  DA 29 54                jp c, .animate_ghost
+     316   00:539B  FD 21 92 40             LD IY, gus_tomb_strings
+     317   00:539F  CD 0E 49                CALL print_strings_dialog_box_v2
+     318   00:53A2  3E 01                   LD A,1
+     319   00:53A4  32 5E C0                LD (SHOWING_GUS_DIALOG), A
+     320   00:53A7  32 5A C0                LD (stg1_puzzle_solved), A
+     321   00:53AA                          ; Remove the lockpad    
+     322   00:53AA  3E 01                   LD A, 1
+     323   00:53AC  16 70                   LD D, 112
+     324   00:53AE  1E 00                   LD E, 0
+     325   00:53B0  CD DA 48                call draw_tile
+     326   00:53B3                      
+     327   00:53B3  21 80 87                LD HL,stg1_gate
+     328   00:53B6  11 31 C1                LD DE, MAP_RAM+47
+     329   00:53B9  01 02 00                LD BC, 2
+     330   00:53BC  ED B0                   LDIR
+     331   00:53BE                      
+     332   00:53BE                          ; afx
+     333   00:53BE  3E 01                   LD A,1
+     334   00:53C0  0E 00                   LD C, 0
+     335   00:53C2  CD 79 50                CALL ayFX_INIT
+     336   00:53C5                      
+     337   00:53C5  18 62                   JR .animate_ghost
+     338   00:53C7                      
+     339   00:53C7                      .check_skull_hint:
+     340   00:53C7  FE 69                   CP SKULL_TOMB_STG1_X
+     341   00:53C9  20 20                   jr nz, .check_mike_dialog_box
+     342   00:53CB                              
+     343   00:53CB  DD 7E 00                LD A, (ix)
+     344   00:53CE  FE 5A                   CP SKULL_TOMB_STG1_Y1
+     345   00:53D0  38 19                   jr c, .check_mike_dialog_box
+     346   00:53D2  FE 64                   CP SKULL_TOMB_STG1_Y2
+     347   00:53D4  30 15                   jr nc, .check_mike_dialog_box
+     348   00:53D6                      
+     349   00:53D6  3A 5B C0                LD A, (SHOWING_SKULL_STG1_DIALOG)
+     350   00:53D9  FE 01                   CP 1
+     351   00:53DB  28 4C                   JR Z, .animate_ghost
+     352   00:53DD  FD 21 D3 40             LD IY, stg1_skull_strings
+     353   00:53E1  CD 0E 49                CALL print_strings_dialog_box_v2
+     354   00:53E4  3E 01                   LD A,1
+     355   00:53E6  32 5B C0                LD (SHOWING_SKULL_STG1_DIALOG), A
+     356   00:53E9  18 3E                   JR .animate_ghost
+     357   00:53EB                      
+     358   00:53EB                      .check_mike_dialog_box
+     359   00:53EB  3A 5C C0                LD A, (SHOWING_MIKE_DIALOG)
+     360   00:53EE  FE 01                   CP 1
+     361   00:53F0  20 09                   JR nz, .check_gus_dialog
+     362   00:53F2  CD 96 47                CALL CLEAR_DIALOG_BOX
+     363   00:53F5  AF                      XOR A
+     364   00:53F6  32 5C C0                LD (SHOWING_MIKE_DIALOG), A
+     365   00:53F9  18 2E                   JR .animate_ghost
+     366   00:53FB                      
+     367   00:53FB                      .check_gus_dialog
+     368   00:53FB  3A 5E C0                LD A, (SHOWING_GUS_DIALOG)
+     369   00:53FE  FE 01                   CP 1
+     370   00:5400  20 09                   JR nz, .check_john_dialog
+     371   00:5402  CD 96 47                CALL CLEAR_DIALOG_BOX
+     372   00:5405  AF                      XOR A
+     373   00:5406  32 5E C0                LD (SHOWING_GUS_DIALOG), A
+     374   00:5409  18 1E                   JR .animate_ghost
+     375   00:540B                      
+     376   00:540B                      .check_john_dialog
+     377   00:540B  3A 5D C0                LD A, (SHOWING_JOHN_DIALOG)
+     378   00:540E  FE 01                   CP 1
+     379   00:5410  20 09                   JR nz, .check_skull_dialog
+     380   00:5412  CD 96 47                CALL CLEAR_DIALOG_BOX
+     381   00:5415  AF                      XOR A
+     382   00:5416  32 5D C0                LD (SHOWING_JOHN_DIALOG), A
+     383   00:5419  18 0E                   JR .animate_ghost
+     384   00:541B                      
+     385   00:541B                      .check_skull_dialog
+     386   00:541B  3A 5B C0                LD A, (SHOWING_SKULL_STG1_DIALOG)
+     387   00:541E  FE 01                   CP 1
+     388   00:5420  20 07                   JR nz, .animate_ghost
+     389   00:5422  CD 96 47                CALL CLEAR_DIALOG_BOX
+     390   00:5425  AF                      XOR A
+     391   00:5426  32 5B C0                LD (SHOWING_SKULL_STG1_DIALOG), A
+     392   00:5429                      
+     393   00:5429                      .animate_ghost    
+     394   00:5429  3A 6A C0                LD A,(CHAR_GHOST_DEAD)
+     395   00:542C  FE 01                   CP $01
+     396   00:542E  CA A2 54                JP Z,.continue
+     397   00:5431  DD 7E 11                LD A, (ix+SPR_GHOST_STG1+1)          ;cargamos la X del Fantasma
+     398   00:5434  2A 68 C0            	LD HL, (CHAR_SPEED_X_GHOST)
+     399   00:5437  85                  	ADD L					; Actualizamos la posicion en base a la velocidad
+     400   00:5438                          
+     401   00:5438  DD 77 11            	LD (ix+SPR_GHOST_STG1+1), A
+     402   00:543B  DD 77 15                LD (ix+SPR_GHOST_STG1+5), A
+     403   00:543E  FE 50                   CP $50
+     404   00:5440  CA 4B 54                JP Z,.CHANGE_DIR_RIGHT
+     405   00:5443  FE AF                   CP $AF
+     406   00:5445  CA 58 54                JP Z,.CHANGE_DIR_LEFT
+     407   00:5448                          		
+     408   00:5448  C3 61 54                JP .check_pattern
+     409   00:544B                      
+     410   00:544B                      .CHANGE_DIR_RIGHT:
+     411   00:544B  3E 01                   LD A, MOV_SPEED_GHOST
+     412   00:544D  32 68 C0            	LD (CHAR_SPEED_X_GHOST), A
+     413   00:5450  3E FF                   LD A,$FF
+     414   00:5452  32 6D C0                LD (CHAR_DIR_GHOST1),A
+     415   00:5455  C3 61 54                JP .check_pattern
+     416   00:5458                      
+     417   00:5458                      .CHANGE_DIR_LEFT:
+     418   00:5458  3E FF                   LD A, -MOV_SPEED_GHOST
+     419   00:545A  32 68 C0            	LD (CHAR_SPEED_X_GHOST), A
+     420   00:545D  AF                      XOR A   ; Pone A a 0
+     421   00:545E  32 6D C0                LD (CHAR_DIR_GHOST1),A
+     422   00:5461                      
+     423   00:5461                      .check_pattern:
+     424   00:5461  3A 6D C0                LD A,(CHAR_DIR_GHOST1)
+     425   00:5464  FE FF                   CP $FF
+     426   00:5466  CA 87 54                JP Z,.check_pattern_RIGHT
+     427   00:5469  DD 7E 12                LD A, (ix+SPR_GHOST_STG1+2)       ; Cargamos el patrón y lo cambiamos
+     428   00:546C  FE 1C                   CP SPR_GHOST_STG1_PTRN_L1
+     429   00:546E  CA 7C 54                jp z,.change_pattern_L
+     430   00:5471  DD 36 12 1C             LD (ix+SPR_GHOST_STG1+2),SPR_GHOST_STG1_PTRN_L1
+     431   00:5475  DD 36 16 20             LD (ix+SPR_GHOST_STG1+6),SPR_GHOST_STG1_PTRN_L1+4
+     432   00:5479  C3 A2 54                jp .continue
+     433   00:547C                      .change_pattern_L:
+     434   00:547C  DD 36 12 24             LD (ix+SPR_GHOST_STG1+2),SPR_GHOST_STG1_PTRN_L2
+     435   00:5480  DD 36 16 28             LD (ix+SPR_GHOST_STG1+6),SPR_GHOST_STG1_PTRN_L2+4
+     436   00:5484  C3 A2 54                jp .continue
+     437   00:5487                      
+     438   00:5487                      .check_pattern_RIGHT
+     439   00:5487  DD 7E 12                LD A, (ix+SPR_GHOST_STG1+2)       ; Cargamos el patrón y lo cambiamos
+     440   00:548A  FE 2C                   CP SPR_GHOST_STG1_PTRN_R1
+     441   00:548C  CA 9A 54                jp z,.change_pattern_R
+     442   00:548F  DD 36 12 2C             LD (ix+SPR_GHOST_STG1+2),SPR_GHOST_STG1_PTRN_R1
+     443   00:5493  DD 36 16 30             LD (ix+SPR_GHOST_STG1+6),SPR_GHOST_STG1_PTRN_R1+4
+     444   00:5497  C3 A2 54                jp .continue
+     445   00:549A                      .change_pattern_R:
+     446   00:549A  DD 36 12 34             LD (ix+SPR_GHOST_STG1+2),SPR_GHOST_STG1_PTRN_R2
+     447   00:549E  DD 36 16 38             LD (ix+SPR_GHOST_STG1+6),SPR_GHOST_STG1_PTRN_R2+4
+     448   00:54A2                      
+     449   00:54A2                      .continue:    
+     450   00:54A2  DD 7E 11                LD A, (ix+SPR_GHOST_STG1+1)     ; Cargamos la X
+     451   00:54A5  32 0C C0                LD (ENTITY_ENEMY1_POINTER+1), A
+     452   00:54A8  DD 7E 10                LD A, (ix+SPR_GHOST_STG1)           ; Cargamos la Y
+     453   00:54AB  32 0D C0                LD (ENTITY_ENEMY1_POINTER+2), A
+     454   00:54AE                          
+     455   00:54AE  FD 21 0B C0             LD IY, ENTITY_ENEMY1_POINTER
+     456   00:54B2  CD 6D 41                CALL EnemyCollisionCheck
+     457   00:54B5  30 16                   JR NC, .move_shoot
+     458   00:54B7                          ; Collision
+     459   00:54B7  3A 05 C0                LD A, (ENTITY_PLAYER_POINTER+ENTITY_ENERGY)
+     460   00:54BA  D6 04                   SUB 4    
+     461   00:54BC  32 05 C0                LD (ENTITY_PLAYER_POINTER+ENTITY_ENERGY), A
+     462   00:54BF  CD 6B 48                call DRAW_ANDY_ENERGY
+     463   00:54C2  CD 4B 46                call BOUNCE_ANDY
+     464   00:54C5  3A 05 C0                LD A, (ENTITY_PLAYER_POINTER+ENTITY_ENERGY)
+     465   00:54C8  FE 00                   CP 0
+     466   00:54CA  CA 24 56                JP Z, game_over
+     467   00:54CD                      
+     468   00:54CD                      .move_shoot:
+     469   00:54CD  CD 70 45                CALL MOVE_SHOOT
+     470   00:54D0                      .CHECK_GHOST:
+     471   00:54D0                          ; Comprobamos si hay colision con el fantasma
+     472   00:54D0  3A 6A C0                LD A,(CHAR_GHOST_DEAD)  ; si está muerto,no lo miramos
+     473   00:54D3  FE 01                   CP $01
+     474   00:54D5  CA F9 54                JP Z,.check_KB
+     475   00:54D8                      
+     476   00:54D8  DD 46 0C                LD B,(ix+SPR_SHOOT_P1)         ; Y del disparo
+     477   00:54DB  DD 4E 0D                LD C,(ix+SPR_SHOOT_P1+1)         ; X del disparo
+     478   00:54DE  DD 56 10                LD D,(ix+SPR_GHOST_STG1)         ; Y del fantasma 
+     479   00:54E1  DD 5E 11                LD E,(ix+SPR_GHOST_STG1+1)         ; X del fantasma
+     480   00:54E4  CD 9C 41                call check_spr_collision
+     481   00:54E7  FE 01                   CP 1
+     482   00:54E9  C2 F9 54                JP NZ,.check_KB
+     483   00:54EC                      
+     484   00:54EC                      .KILL_GHOST:
+     485   00:54EC  3E 01                   LD A,1
+     486   00:54EE  32 6A C0                LD (CHAR_GHOST_DEAD),A
+     487   00:54F1  DD 36 10 D9             LD (ix+SPR_GHOST_STG1),217    
+     488   00:54F5  DD 36 14 D9             LD (ix+SPR_GHOST_STG1+4),217    
+     489   00:54F9                      
+     490   00:54F9                      .check_KB:
+     491   00:54F9  76                      halt    
+     492   00:54FA                      	
+     493   00:54FA  F3                  	di       
+     494   00:54FB  DD E5                   PUSH IX
+     495   00:54FD  CD BE 4F            	call	PT3_ROUT			;envia datos a al PSG 	   
+     496   00:5500  CD C6 4E            	call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
+     497   00:5503  CD AF 50            	call ayFX_PLAY
+     498   00:5506  DD E1                   POP IX
+     499   00:5508  FB                      ei
+     500   00:5509                      
+     501   00:5509  3E 08                   ld a, 8
+     502   00:550B  CD 41 01            	call SNSMAT   
+     503   00:550E                          
+     504   00:550E  4F                      LD C,A    
+     505   00:550F                          
+     506   00:550F  CB 79                   BIT KB_RIGHT, C			; La tecla presionada es RIGHT?
+     507   00:5511  CC B8 43                call z, move_right
+     508   00:5514                          
+     509   00:5514  CB 61                   BIT KB_LEFT, C			; La tecla presionada es LEFT?
+     510   00:5516  CC 17 44                call z, move_left
+     511   00:5519                      
+     512   00:5519  CB 69                   BIT KB_UP, C			; La tecla presionada es UP?
+     513   00:551B  CC 43 43                call z, move_up
+     514   00:551E                      
+     515   00:551E  CB 71                   BIT KB_DOWN, C			; La tecla presionada es DOWN?
+     516   00:5520  CC 7D 43                call z, move_down
+     517   00:5523                      
+     518   00:5523                      no_arrows:
+     519   00:5523  CB 41                   BIT KB_SPACE, C			; La tecla presionada es SPACE
+     520   00:5525  CC DB 45                call z,SHOOT_MAIN_CHAR
+     521   00:5528                      
+     522   00:5528                          ;BIT KB_DEL, C			; La tecla presionada es DEL    
+     523   00:5528                          ;ret z
+     524   00:5528                          
+     525   00:5528  C3 D2 52                jp MAIN_LOOP
+     526   00:552B                      
+     527   00:552B                      
+     528   00:552B                      STAGE2:
+     529   00:552B  CD 11 48                CALL DISSCR
+     530   00:552E  76                      halt
+     531   00:552F  F3                  	di       
+     532   00:5530  DD E5                   PUSH IX
+     533   00:5532  CD BE 4F            	call	PT3_ROUT			;envia datos a al PSG 	   
+     534   00:5535  CD C6 4E            	call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
+     535   00:5538  DD E1               	POP IX
+     536   00:553A  FB                      ei
+     537   00:553B  21 00 80                LD HL, CEMENTER2
+     538   00:553E  22 00 C1                LD (BITMAP), HL
+     539   00:5541  06 0D                   LD B, :CEMENTER2
+     540   00:5543                      
+     541   00:5543  CD 33 42                call load_screen
+     542   00:5546  21 6C 8A                LD HL, mapa2
+     543   00:5549  22 FE C0                LD (MAPA), HL
+     544   00:554C                      
+     545   00:554C  3E 01                   ld	a, BTH_DATA			; page 
+     546   00:554E  32 00 70            	ld	(_bank2),a
+     547   00:5551                       
+     548   00:5551                          ; Ponemos el P1 por encima del marco
+     549   00:5551  DD 36 00 AF             LD (ix), 175      ; mask 0
+     550   00:5555  DD 36 04 AF             LD (ix+4), 175    ; mask 1
+     551   00:5559  DD 36 08 AF             LD (ix+8), 175    ; mask 2
+     552   00:555D                          
+     553   00:555D  DD 36 10 D9             LD (ix+SPR_GHOST_STG1),217  ; ocultamos el fantasma
+     554   00:5561  DD 36 14 D9             LD (ix+SPR_GHOST_STG1+4),217  ; ocultamos el fantasma
+     555   00:5565                          
+     556   00:5565  CD C0 42                CALL DUMP_SPR_ALL
+     557   00:5568  CD 17 43                CALL DUMP_SPR_P1        
+     558   00:556B                          
+     559   00:556B                          ;LD HL, ANDY_MAX_ENERGY
+     560   00:556B                          ;LD A, (HL)  
+     561   00:556B                          ;INC A           ; level 1
+     562   00:556B                          ;LD (ENTITY_PLAYER_POINTER+3), A
+     563   00:556B                      
+     564   00:556B                          ;XOR a
+     565   00:556B                          ;LD (current_level), A
+     566   00:556B  CD 6B 48                CALL DRAW_ANDY_ENERGY
+     567   00:556E                          
+     568   00:556E  CD 0A 48                CALL ENASCR
+     569   00:5571                          
+     570   00:5571                      MAIN_LOOP2:
+     571   00:5571                          ;halt    
+     572   00:5571  76                      halt
+     573   00:5572  F3                  	di       
+     574   00:5573  DD E5                   PUSH IX
+     575   00:5575  CD BE 4F            	call	PT3_ROUT			;envia datos a al PSG 	   
+     576   00:5578  CD C6 4E            	call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
+     577   00:557B  CD AF 50            	call ayFX_PLAY
+     578   00:557E  DD E1                   POP IX
+     579   00:5580  FB                      ei
+     580   00:5581  DD 7E 00                LD A, (ix)    
+     581   00:5584  FE B0                   CP 176      ; Miramos si la Y es 160 para pasar a stg1
+     582   00:5586  C2 A8 55                JP NZ, .no_screen_change
+     583   00:5589                          ; Ponemos el P1 al principio de la pantalla 1
+     584   00:5589  DD 36 00 01             LD (ix), 1          ; P1.Y = 1
+     585   00:558D  DD 36 04 01             LD (ix+4), 1
+     586   00:5591  DD 36 08 01             LD (ix+8), 1
+     587   00:5595                      
+     588   00:5595  3A 6A C0                LD A, (CHAR_GHOST_DEAD)
+     589   00:5598  FE 01                   CP $01
+     590   00:559A  CA A5 55                JP Z, .GHOST_DEAD
+     591   00:559D  DD 36 10 0F             ld (ix+SPR_GHOST_STG1), $0F      ; Sprite 1 - Ghost
+     592   00:55A1  DD 36 14 0F             ld (ix+SPR_GHOST_STG1+4), $0F      ; Sprite 1 - Ghost
+     593   00:55A5                      .GHOST_DEAD:    
+     594   00:55A5  CD 66 52                CALL STAGE1
+     595   00:55A8                      
+     596   00:55A8                      .no_screen_change:
+     597   00:55A8                          
+     598   00:55A8                          ; check X,Y to play Black Sabbath
+     599   00:55A8                          ; Ya tenemos en A la Y
+     600   00:55A8  FE 6E                   CP STG2_TILE1_Y
+     601   00:55AA  C2 DC 55                JP NZ, .check_tile3
+     602   00:55AD  DD 7E 01                LD A, (ix+1)
+     603   00:55B0  FE 71                   CP STG2_TILE1_X
+     604   00:55B2  C2 C7 55                JP NZ, .check_next_tile
+     605   00:55B5  3E 03                   LD A, 3
+     606   00:55B7  0E 00                   LD C, 0
+     607   00:55B9  CD 79 50                CALL ayFX_INIT    
+     608   00:55BC                          
+     609   00:55BC  3E 08                   LD A, 8
+     610   00:55BE  16 70                   LD D, 112
+     611   00:55C0  1E 70                   LD E, 112
+     612   00:55C2  CD DA 48                CALL draw_tile
+     613   00:55C5  18 32                   jr .continue
+     614   00:55C7                      
+     615   00:55C7                      .check_next_tile:
+     616   00:55C7  FE 80                   CP STG2_TILE2_X
+     617   00:55C9  C2 DC 55                JP NZ, .check_tile3
+     618   00:55CC  3E 04                   LD A, 4
+     619   00:55CE  0E 00                   LD C, 0
+     620   00:55D0  CD 79 50                CALL ayFX_INIT    
+     621   00:55D3                      
+     622   00:55D3  3E 08                   LD A, 8
+     623   00:55D5  16 80                   LD D, 128
+     624   00:55D7  1E 70                   LD E, 112
+     625   00:55D9  CD DA 48                CALL draw_tile
+     626   00:55DC                      
+     627   00:55DC                      .check_tile3:
+     628   00:55DC  FE 8E                   CP STG2_TILE3_Y
+     629   00:55DE  C2 F9 55                JP NZ, .continue
+     630   00:55E1  DD 7E 01                LD A, (ix+1)
+     631   00:55E4  FE 80                   CP STG2_TILE3_X
+     632   00:55E6  C2 F9 55                JP NZ, .continue
+     633   00:55E9  3E 05                   LD A, 5
+     634   00:55EB  0E 00                   LD C, 0
+     635   00:55ED  CD 79 50                CALL ayFX_INIT    
+     636   00:55F0                      
+     637   00:55F0  3E 08                   LD A, 8
+     638   00:55F2  16 80                   LD D, 128
+     639   00:55F4  1E 90                   LD E, 144
+     640   00:55F6  CD DA 48                CALL draw_tile
+     641   00:55F9                      
+     642   00:55F9                      .continue:
+     643   00:55F9  CD FC 42                call DUMP_SPR_ATTS      
+     644   00:55FC  CD 70 45                CALL MOVE_SHOOT    
+     645   00:55FF                      
+     646   00:55FF  3E 08                   ld a, 8
+     647   00:5601  CD 41 01            	call SNSMAT   
+     648   00:5604  4F                      LD C,A    
+     649   00:5605                              
+     650   00:5605  CB 79                   BIT KB_RIGHT, C			; La tecla presionada es RIGHT?
+     651   00:5607  CC B8 43                call z, move_right
+     652   00:560A                          
+     653   00:560A  CB 61                   BIT KB_LEFT, C			; La tecla presionada es LEFT?
+     654   00:560C  CC 17 44                call z, move_left
+     655   00:560F                      
+     656   00:560F  CB 69                   BIT KB_UP, C			; La tecla presionada es UP?
+     657   00:5611  CC 43 43                call z, move_up
+     658   00:5614                      
+     659   00:5614  CB 71                   BIT KB_DOWN, C			; La tecla presionada es DOWN?
+     660   00:5616  CC 7D 43                call z, move_down
+     661   00:5619                      
+     662   00:5619  CB 41                   BIT KB_SPACE, C			; La tecla presionada es SPACE
+     663   00:561B  CC DB 45                call z,SHOOT_MAIN_CHAR
+     664   00:561E                      
+     665   00:561E  CB 59                   BIT KB_DEL, C			; La tecla presionada es DEL    
+     666   00:5620  C8                      ret z
+     667   00:5621                      
+     668   00:5621                      
+     669   00:5621                      
+     670   00:5621  C3 71 55                jp MAIN_LOOP2
+     671   00:5624                      
+     672   00:5624                      game_over:
+     673   00:5624  FD 21 49 41             LD IY, game_over_strings
+     674   00:5628  CD 0E 49                call print_strings_dialog_box_v2    
+     675   00:562B                          
+     676   00:562B                      .loop1   
+     677   00:562B  76                      halt
+     678   00:562C  3E 08                   ld a, 8
+     679   00:562E  CD 41 01            	call SNSMAT   
+     680   00:5631  4F                      LD C,A    
+     681   00:5632                              
+     682   00:5632  CB 41                   BIT KB_SPACE, C			; La tecla presionada es SPACE
+     683   00:5634  CA 92 51                JP z,START
+     684   00:5637                      
+     685   00:5637  18 F2                   JR .loop1
+     686   00:5639                      
+     687   00:5639                      TILES1:
+     688   00:5639  (1011)               INCBIN "gfx\tiles1.sc5",#7
+     689   00:664A                      
+     690   00:664A  (01)                 PAGE 1
+     691   01:8000                      ; CODE O NO
+     692   01:8000                          include "include\BTH_data.asm"
        1.  01:8000                      SPRITE_P1_UP:
        2.  01:8000                          ; UP 1        
        3.  01:8000                          ; mask 0
@@ -4616,7 +4592,7 @@ Errors: 0
      487.  01:8E86  02 04                   db 0x02, 0x04 ; Color index 13
      488.  01:8E88  01 02                   db 0x01, 0x02 ; Color index 14
      489.  01:8E8A  00 00                   db 0x00, 0x00 ; Color index 15
-     717   01:8E8C                          include "gfx\stg1_map.asm"
+     693   01:8E8C                          include "gfx\stg1_map.asm"
        1.  01:8E8C                      stg1_map_back:
        2.  01:8E8C                      ; Compressed: #Tile, X, Y, #reps
        3.  01:8E8C  09 00 00 07         	db 9, 0, 0, 7	
@@ -4678,57 +4654,57 @@ Errors: 0
       59.  01:8F29  0B AC 34 01         	db 11, 172, 52, 1	; Tree 1
       60.  01:8F2D  FF                  	db 255	; fin
       61.  01:8F2E                      
-     718   01:8F2E                      FONT:
-     719   01:8F2E  (07F7)               INCBIN "gfx\FONT.SC5",#7
-     720   01:9725                      AFX:
-     721   01:9725  (01F6)                  incbin "sfx\cementer_sounds.afb"
-     722   01:991B                      SONG:
-     723   01:991B                      	;incbin "sfx\Nostalgy_sincabecera.pt3"
-     724   01:991B  (0EE7)                  incbin "sfx\test.pt3"
-     725   01:A802                          ;incbin "sfx\G-6sin_cabecera.pt3"
-     726   01:A802                      
-     727   01:A802  (02)                 PAGE 2
-     728   02:8000                      
-     729   02:8000  (03)                 PAGE 3
-     730   03:8000                      
-     731   03:8000  (04)                 PAGE 4
-     732   04:8000  (05)                 PAGE 5
-     733   05:8000  (06)                 PAGE 6
-     734   06:8000  (07)                 PAGE 7
-     735   07:8000                      CEMENTER1
-     736   07:8000                       ;#Para el fondo borrar de BDA0 en adelante para quitar la parte de la energia
-     737   07:8000  (4000)               INCBIN "gfx\CEMENTER1.SC5",#7,#4000			; Cada página tiene 16K = 4000h
-     738   07:C000  (08)                 PAGE 8
-     739   08:8000  (200D)               INCBIN "gfx\CEMENTER1.SC5",#4007			; Cada página tiene 16K = 4000h 
-     740   08:A00D  (09)                 PAGE 9
-     741   09:8000                      GRAPHIC
-     742   09:8000  (4000)               INCBIN "gfx\BTH.SR8",#7,#4000			; Cada página tiene 16K = 4000h
-     743   09:C000  (0A)                 PAGE 10
-     744   0A:8000  (4000)               INCBIN "gfx\BTH.SR8",#4007,#4000
-     745   0A:C000                      
-     746   0A:C000  (0B)                 PAGE 11
-     747   0B:8000  (4000)               INCBIN "gfx\BTH.SR8",#8007,#4000
-     748   0B:C000                      
-     749   0B:C000  (0C)                 PAGE 12
-     750   0C:8000  (1400)               INCBIN "gfx\BTH.SR8",#C007
-     751   0C:9400                      
-     752   0C:9400  (0D)                 PAGE 13
-     753   0D:8000                      CEMENTER2
-     754   0D:8000                      ;#Para el fondo borrar de BDA0 en adelante para quitar la parte de la energia
-     755   0D:8000  (4000)               INCBIN "gfx\CEMENTER2.SC5",#7,#4000			; Cada página tiene 16K = 4000h
-     756   0D:C000  (0E)                 PAGE 14
-     757   0E:8000  (200E)               INCBIN "gfx\CEMENTER2.SC5",#4007			; Cada página tiene 16K = 4000h 
-     758   0E:A00E  (0F)                 PAGE 15
-     759   0F:C000                      ;---------------------------------------------------------
-     760   0F:C000                      ; Variables
-     761   0F:C000                      ;---------------------------------------------------------
-     762   0F:C000                      	
-     763   0F:C000  (C000)              	MAP #C000  ;Ram page 3
-     764   0F:C000                      ;	MAP #E5FF  ;Ram page 3
-     765   0F:C000                      ;NAME #1  ;a byte is reserved for this variable
-     766   0F:C000                      ;ETC
-     767   0F:C000                      ;
-     768   0F:C000                      	include "include\BTH_RAM.asm"
+     694   01:8F2E                      FONT:
+     695   01:8F2E  (07F7)               INCBIN "gfx\FONT.SC5",#7
+     696   01:9725                      AFX:
+     697   01:9725  (01F6)                  incbin "sfx\cementer_sounds.afb"
+     698   01:991B                      SONG:
+     699   01:991B                      	;incbin "sfx\Nostalgy_sincabecera.pt3"
+     700   01:991B  (0EE7)                  incbin "sfx\test.pt3"
+     701   01:A802                          ;incbin "sfx\G-6sin_cabecera.pt3"
+     702   01:A802                      
+     703   01:A802  (02)                 PAGE 2
+     704   02:8000                      
+     705   02:8000  (03)                 PAGE 3
+     706   03:8000                      
+     707   03:8000  (04)                 PAGE 4
+     708   04:8000  (05)                 PAGE 5
+     709   05:8000  (06)                 PAGE 6
+     710   06:8000  (07)                 PAGE 7
+     711   07:8000                      CEMENTER1
+     712   07:8000                       ;#Para el fondo borrar de BDA0 en adelante para quitar la parte de la energia
+     713   07:8000  (4000)               INCBIN "gfx\CEMENTER1.SC5",#7,#4000			; Cada página tiene 16K = 4000h
+     714   07:C000  (08)                 PAGE 8
+     715   08:8000  (200D)               INCBIN "gfx\CEMENTER1.SC5",#4007			; Cada página tiene 16K = 4000h 
+     716   08:A00D  (09)                 PAGE 9
+     717   09:8000                      GRAPHIC
+     718   09:8000  (4000)               INCBIN "gfx\BTH.SR8",#7,#4000			; Cada página tiene 16K = 4000h
+     719   09:C000  (0A)                 PAGE 10
+     720   0A:8000  (4000)               INCBIN "gfx\BTH.SR8",#4007,#4000
+     721   0A:C000                      
+     722   0A:C000  (0B)                 PAGE 11
+     723   0B:8000  (4000)               INCBIN "gfx\BTH.SR8",#8007,#4000
+     724   0B:C000                      
+     725   0B:C000  (0C)                 PAGE 12
+     726   0C:8000  (1400)               INCBIN "gfx\BTH.SR8",#C007
+     727   0C:9400                      
+     728   0C:9400  (0D)                 PAGE 13
+     729   0D:8000                      CEMENTER2
+     730   0D:8000                      ;#Para el fondo borrar de BDA0 en adelante para quitar la parte de la energia
+     731   0D:8000  (4000)               INCBIN "gfx\CEMENTER2.SC5",#7,#4000			; Cada página tiene 16K = 4000h
+     732   0D:C000  (0E)                 PAGE 14
+     733   0E:8000  (200E)               INCBIN "gfx\CEMENTER2.SC5",#4007			; Cada página tiene 16K = 4000h 
+     734   0E:A00E  (0F)                 PAGE 15
+     735   0F:C000                      ;---------------------------------------------------------
+     736   0F:C000                      ; Variables
+     737   0F:C000                      ;---------------------------------------------------------
+     738   0F:C000                      	
+     739   0F:C000  (C000)              	MAP #C000  ;Ram page 3
+     740   0F:C000                      ;	MAP #E5FF  ;Ram page 3
+     741   0F:C000                      ;NAME #1  ;a byte is reserved for this variable
+     742   0F:C000                      ;ETC
+     743   0F:C000                      ;
+     744   0F:C000                      	include "include\BTH_RAM.asm"
        1.  0F:C000                      ; Function Pointer
        2.  0F:C000  00 (2)              draw_pointer ds 2
        3.  0F:C002                      
@@ -4797,7 +4773,7 @@ Errors: 0
       66.  0F:C100  00 (2)                  DS 2
       67.  0F:C102                      MAP_RAM:
       68.  0F:C102  00 (736)                DS 736
-     769   0F:C3E2                          include "include\ayFX-RAM.ASM"
+     745   0F:C3E2                          include "include\ayFX-RAM.ASM"
        1.  0F:C3E2                      		; --- ayFX REPLAYER v1.31 ---
        2.  0F:C3E2                      
        3.  0F:C3E2                      		; --- THIS FILE MUST BE COMPILED IN RAM ---
@@ -4817,8 +4793,8 @@ Errors: 0
       17.  0F:C3ED                      		; --- UNCOMMENT THIS IF YOU DON'T USE THIS REPLAYER WITH PT3 REPLAYER ---
       18.  0F:C3ED                      ;AYREGS:		.ds	14			; Ram copy of PSG registers
       19.  0F:C3ED                      		; --- UNCOMMENT THIS IF YOU DON'T USE THIS REPLAYER WITH PT3 REPLAYER ---
-     770   0F:C3ED  (0000)              	ENDMAP
-     771   0F:C3ED                        
+     746   0F:C3ED  (0000)              	ENDMAP
+     747   0F:C3ED                        
 
     LABELS
 -------------------------------------------------
@@ -4826,7 +4802,7 @@ Errors: 0
 00:00006000 X _bank1
 00:00007000   _bank2
 00:00000069   CLRSPR
-00:0000009F   CHGET
+00:0000009F X CHGET
 00:000000A2 X CHPUT
 00:0000005F   CHGMOD
 00:0000005C   LDIRVM
@@ -5279,38 +5255,39 @@ Errors: 0
 00:000051D7   INIT_CHARS_VARS
 00:00005266   STAGE1
 00:000052C9   STAGE1.nobackfromstg2
-00:000052F5   MAIN_LOOP
-00:00005300 X MAIN_LOOP.check_tombs
-00:0000535D   MAIN_LOOP.puzzle_wrong_order
-00:00005383   MAIN_LOOP.check_john_tomb
-00:000053CB   MAIN_LOOP.check_gus_tomb
-00:0000540C   MAIN_LOOP.check_skull_hint
-00:00005430   MAIN_LOOP.check_mike_dialog_box
-00:00005440   MAIN_LOOP.check_gus_dialog
-00:00005450   MAIN_LOOP.check_john_dialog
-00:00005460   MAIN_LOOP.check_skull_dialog
-00:0000546E   MAIN_LOOP.animate_ghost
-00:00005490   MAIN_LOOP.CHANGE_DIR_RIGHT
-00:0000549D   MAIN_LOOP.CHANGE_DIR_LEFT
-00:000054A6   MAIN_LOOP.check_pattern
-00:000054C1   MAIN_LOOP.change_pattern_L
-00:000054CC   MAIN_LOOP.check_pattern_RIGHT
-00:000054DF   MAIN_LOOP.change_pattern_R
-00:000054E7   MAIN_LOOP.continue
-00:00005512   MAIN_LOOP.move_shoot
-00:00005515 X MAIN_LOOP.CHECK_GHOST
-00:00005531 X MAIN_LOOP.KILL_GHOST
-00:0000553E   MAIN_LOOP.check_KB
-00:00005568 X no_arrows
-00:00005570   STAGE2
-00:000055B6   MAIN_LOOP2
-00:000055EA   MAIN_LOOP2.GHOST_DEAD
-00:000055ED   MAIN_LOOP2.no_screen_change
-00:00005621   MAIN_LOOP2.check_next_tile
-00:0000564B   MAIN_LOOP2.check_tile3
-00:0000567D   MAIN_LOOP2.continue
-00:000056A8   game_over
-00:000056BB   TILES1
+00:000052D2   MAIN_LOOP
+00:000052DD X MAIN_LOOP.check_tombs
+00:00005329   MAIN_LOOP.puzzle_wrong_order
+00:0000534F   MAIN_LOOP.check_john_tomb
+00:00005386   MAIN_LOOP.check_gus_tomb
+00:000053C7   MAIN_LOOP.check_skull_hint
+00:000053EB   MAIN_LOOP.check_mike_dialog_box
+00:000053FB   MAIN_LOOP.check_gus_dialog
+00:0000540B   MAIN_LOOP.check_john_dialog
+00:0000541B   MAIN_LOOP.check_skull_dialog
+00:00005429   MAIN_LOOP.animate_ghost
+00:0000544B   MAIN_LOOP.CHANGE_DIR_RIGHT
+00:00005458   MAIN_LOOP.CHANGE_DIR_LEFT
+00:00005461   MAIN_LOOP.check_pattern
+00:0000547C   MAIN_LOOP.change_pattern_L
+00:00005487   MAIN_LOOP.check_pattern_RIGHT
+00:0000549A   MAIN_LOOP.change_pattern_R
+00:000054A2   MAIN_LOOP.continue
+00:000054CD   MAIN_LOOP.move_shoot
+00:000054D0 X MAIN_LOOP.CHECK_GHOST
+00:000054EC X MAIN_LOOP.KILL_GHOST
+00:000054F9   MAIN_LOOP.check_KB
+00:00005523 X no_arrows
+00:0000552B   STAGE2
+00:00005571   MAIN_LOOP2
+00:000055A5   MAIN_LOOP2.GHOST_DEAD
+00:000055A8   MAIN_LOOP2.no_screen_change
+00:000055C7   MAIN_LOOP2.check_next_tile
+00:000055DC   MAIN_LOOP2.check_tile3
+00:000055F9   MAIN_LOOP2.continue
+00:00005624   game_over
+00:0000562B   game_over.loop1
+00:00005639   TILES1
 01:00008000   SPRITE_P1_UP
 01:000080C0   SPRITE_P1_DOWN
 01:00008180   SPRITE_P1_LEFT
@@ -5403,12 +5380,12 @@ Errors: 0
 -------------------------------------------------
 
  Page: 00
-  Org: 00004000  Size: 00004000  Used: 000026D2
+  Org: 00004000  Size: 00004000  Used: 00002650
 
    Address   Length Align   Label
-   00004000    9932         ANDY_MAX_ENERGY
-   000066CC       6         
-   000066D2    6446       <empty>
+   00004000    9802         ANDY_MAX_ENERGY
+   0000664A       6         
+   00006650    6576       <empty>
 
  Page: 01
   Org: 00008000  Size: 00004000  Used: 00002802

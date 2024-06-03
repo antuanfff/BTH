@@ -200,21 +200,7 @@ STAGE1:
 	call VDPCMD
 ;	call VDP_Ready
     CALL ENASCR    
-    
-    ; Testing transparency
-    LD IY, tileDatTrans
-    LD (IY + VDP_SX), 224      ; SXL - Tile 2
-    LD (IY+VDP_SY), 0      ; SYL
-    LD (IY + VDP_DX), 0     ; DXL    
-    LD (IY + VDP_DY), 0      ; DYL    
-    LD HL, tileDatTrans
-    CALL VDPCMD
   
-    LD A, 13
-    LD D, 0
-    LD E, 16
-    CALL draw_tile_trans
-
 MAIN_LOOP:
     ;halt ; sincroniza el teclado y pantalla con el procesador (que va muy rápido)    
     
@@ -238,14 +224,11 @@ MAIN_LOOP:
     JP NZ, .puzzle_wrong_order
     INC A
     LD (stg1_puzzle_solved), A
-    ; Open the gate!
-    LD IY, tileDat
-    LD (IY + VDP_SX), 96      ; SXL - Tile 2
-    LD (IY+VDP_SY), 0      ; SYL
-    LD (IY + VDP_DX), 112     ; DXL    
-    LD (IY + VDP_DY), 0      ; DYL    
-    LD HL, tileDat
-    CALL VDPCMD
+    ; Open the gate!    
+    LD A, 3
+    LD D, 112
+    LD E, 0
+    CALL draw_tile
 
     LD IY, stg1_puzzle_solved_strings
     CALL print_strings_dialog_box_v2
@@ -309,13 +292,11 @@ MAIN_LOOP:
     INC A
     LD (stg1_puzzle_solved), A
     ; Half open gate
-    LD IY, tileDat
-    LD (IY + VDP_SX), 64      ; SXL - Tile 2
-    LD (IY+VDP_SY), 0      ; SYL
-    LD (IY + VDP_DX), 112     ; DXL    
-    LD (IY + VDP_DY), 0      ; DYL    
-    LD HL, tileDat
-    CALL VDPCMD
+    LD A, 2
+    LD D, 112
+    LD E, 0
+    CALL draw_tile
+
     ; afx
     LD A,0
     LD C, 0
@@ -624,15 +605,11 @@ MAIN_LOOP2:
     LD A, 3
     LD C, 0
     CALL ayFX_INIT    
-
-    LD IY, tileDat
-    LD (IY + VDP_SX), 192      ; SXL - Tile 2
-    LD (IY+VDP_SY), 0      ; SYL
-    LD (IY+VDP_NX), 16      ; NX    
-    LD (IY + VDP_DX), 112     ; DXL    
-    LD (IY + VDP_DY), 112      ; DYL    
-    LD HL, tileDat
-    CALL VDPCMD
+    
+    LD A, 8
+    LD D, 112
+    LD E, 112
+    CALL draw_tile
     jr .continue
 
 .check_next_tile:
@@ -642,14 +619,10 @@ MAIN_LOOP2:
     LD C, 0
     CALL ayFX_INIT    
 
-    LD IY, tileDat
-    LD (IY + VDP_SX), 192      ; SXL - Tile 2
-    LD (IY+VDP_SY), 0      ; SYL
-    LD (IY+VDP_NX), 16      ; NX    
-    LD (IY + VDP_DX), 128     ; DXL    
-    LD (IY + VDP_DY), 112      ; DYL    
-    LD HL, tileDat
-    CALL VDPCMD
+    LD A, 8
+    LD D, 128
+    LD E, 112
+    CALL draw_tile
 
 .check_tile3:
     CP STG2_TILE3_Y
@@ -661,14 +634,10 @@ MAIN_LOOP2:
     LD C, 0
     CALL ayFX_INIT    
 
-    LD IY, tileDat
-    LD (IY + VDP_SX), 192      ; SXL - Tile 2
-    LD (IY+VDP_SY), 0      ; SYL
-    LD (IY+VDP_NX), 16      ; NX    
-    LD (IY + VDP_DX), 128     ; DXL    
-    LD (IY + VDP_DY), 144      ; DYL    
-    LD HL, tileDat
-    CALL VDPCMD
+    LD A, 8
+    LD D, 128
+    LD E, 144
+    CALL draw_tile
 
 .continue:
     call DUMP_SPR_ATTS      
@@ -702,11 +671,18 @@ MAIN_LOOP2:
 
 game_over:
     LD IY, game_over_strings
-    call print_strings_dialog_box_v2
-    call CHGET
-    call CHGET
-    call CHGET
-    JP START
+    call print_strings_dialog_box_v2    
+    
+.loop1   
+    halt
+    ld a, 8
+	call SNSMAT   
+    LD C,A    
+        
+    BIT KB_SPACE, C			; La tecla presionada es SPACE
+    JP z,START
+
+    JR .loop1
 
 TILES1:
  INCBIN "gfx\tiles1.sc5",#7
