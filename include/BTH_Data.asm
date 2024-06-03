@@ -471,7 +471,7 @@ BLANK_DATA:
     
 PaletteData:
 			;  data 1 (red 0-7; blue 0-7); data 2 (0000; green 0-7)
-    db 0x00, 0x00 ; Color index 0
+    db 0x02, 0x00 ; Color index 0
     db 0x30, 0x00 ; Color index 1
     db 0x70, 0x06 ; Color index 2
     db 0x50, 0x00 ; Color index 3

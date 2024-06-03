@@ -140,7 +140,7 @@ STAGE1:
     LD HL, CEMENTER1
     LD (BITMAP), HL
     LD B, :CEMENTER1
-    ;call load_screen
+    call load_screen
 
     ld	a, BTH_DATA			; page 
 	ld	(_bank2),a
@@ -153,7 +153,7 @@ STAGE1:
     call load_font_vdp
 
     ; Draw screen using map and metatile
-    call load_screen_v2    
+    ;call load_screen_v2    
     
     call DUMP_SPR_ALL
     CALL DUMP_SPR_P1

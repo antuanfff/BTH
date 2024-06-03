@@ -1,21 +1,21 @@
-Sjasm Z80 Assembler v0.42c - www.xl2s.tk             [2024.06.02 - 14:16:43]
+Sjasm Z80 Assembler v0.42c - www.xl2s.tk             [2024.06.03 - 12:02:44]
 
 .\BTH.asm
 Errors: 0
 
        1   00:0000                      	output "BTH.rom" 
-       2   00:6697                      
-       3   00:6697                      ;ROM ASCII16
-       4   00:6697                      		defpage	0,0x4000, 0x4000
-       5   00:6697                      		defpage	1,0x8000, 0x4000        
-       6   00:6697                      		defpage	2..14 ;Here it is determined rom size        
-       7   00:6697                              defpage	15,0xC000, 0x4000
-       8   00:6697                      
-       9   00:6697  (00:4000)           PageSize:	    equ	0x4000	        ; 16kB
-      10   00:6697  (00:6000)           _bank1	equ	6000h
-      11   00:6697  (00:7000)           _bank2	equ	7000h
-      12   00:6697  32 00 70 32 FF 77   		DB 32h,0,70h,32h,0FFh,77h		; Para evitar seleccionar el tipo de ROM ASCII16 en OpenMSX
-      13   00:669D  (00)                		page 0			
+       2   00:6687                      
+       3   00:6687                      ;ROM ASCII16
+       4   00:6687                      		defpage	0,0x4000, 0x4000
+       5   00:6687                      		defpage	1,0x8000, 0x4000        
+       6   00:6687                      		defpage	2..14 ;Here it is determined rom size        
+       7   00:6687                              defpage	15,0xC000, 0x4000
+       8   00:6687                      
+       9   00:6687  (00:4000)           PageSize:	    equ	0x4000	        ; 16kB
+      10   00:6687  (00:6000)           _bank1	equ	6000h
+      11   00:6687  (00:7000)           _bank2	equ	7000h
+      12   00:6687  32 00 70 32 FF 77   		DB 32h,0,70h,32h,0FFh,77h		; Para evitar seleccionar el tipo de ROM ASCII16 en OpenMSX
+      13   00:668D  (00)                		page 0			
       14   00:4000                              org 4000h		
       15   00:4000                              dw  4241h,START,0,0,0,0,0,0
       15   00:4000  41 42 4C 51 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -3150,20 +3150,20 @@ Errors: 0
      140   00:5223  21 00 80                LD HL, CEMENTER1
      141   00:5226  22 FE C0                LD (BITMAP), HL
      142   00:5229  06 07                   LD B, :CEMENTER1
-     143   00:522B                          ;call load_screen
-     144   00:522B                      
-     145   00:522B  3E 01                   ld	a, BTH_DATA			; page 
-     146   00:522D  32 00 70            	ld	(_bank2),a
-     147   00:5230                      
-     148   00:5230                          ;We load the tiles on page 1 of VDP
-     149   00:5230  21 86 56                LD HL, TILES1    
-     150   00:5233  CD E5 42                call load_tiles_vdp
-     151   00:5236                          
-     152   00:5236                          ;We load the font on page 1 of VDP
-     153   00:5236  CD EF 42                call load_font_vdp
-     154   00:5239                      
-     155   00:5239                          ; Draw screen using map and metatile
-     156   00:5239  CD 66 49                call load_screen_v2    
+     143   00:522B  CD 33 42                call load_screen
+     144   00:522E                      
+     145   00:522E  3E 01                   ld	a, BTH_DATA			; page 
+     146   00:5230  32 00 70            	ld	(_bank2),a
+     147   00:5233                      
+     148   00:5233                          ;We load the tiles on page 1 of VDP
+     149   00:5233  21 86 56                LD HL, TILES1    
+     150   00:5236  CD E5 42                call load_tiles_vdp
+     151   00:5239                          
+     152   00:5239                          ;We load the font on page 1 of VDP
+     153   00:5239  CD EF 42                call load_font_vdp
+     154   00:523C                      
+     155   00:523C                          ; Draw screen using map and metatile
+     156   00:523C                          ;call load_screen_v2    
      157   00:523C                          
      158   00:523C  CD C0 42                call DUMP_SPR_ALL
      159   00:523F  CD 17 43                CALL DUMP_SPR_P1
@@ -3722,9 +3722,9 @@ Errors: 0
      712   00:5683  C3 4C 51                JP START
      713   00:5686                      
      714   00:5686                      TILES1:
-     715   00:5686  (1011)               INCBIN "gfx\tiles1.sc5",#7
-     716   00:6697                      
-     717   00:6697  (01)                 PAGE 1
+     715   00:5686  (1001)               INCBIN "gfx\tiles1.sc5",#7
+     716   00:6687                      
+     717   00:6687  (01)                 PAGE 1
      718   01:8000                      ; CODE O NO
      719   01:8000                          include "include\BTH_data.asm"
        1.  01:8000                      SPRITE_P1_UP:
@@ -4556,7 +4556,7 @@ Errors: 0
      471.  01:8E6C                          
      472.  01:8E6C                      PaletteData:
      473.  01:8E6C                      			;  data 1 (red 0-7; blue 0-7); data 2 (0000; green 0-7)
-     474.  01:8E6C  00 00                   db 0x00, 0x00 ; Color index 0
+     474.  01:8E6C  02 00                   db 0x02, 0x00 ; Color index 0
      475.  01:8E6E  30 00                   db 0x30, 0x00 ; Color index 1
      476.  01:8E70  70 06                   db 0x70, 0x06 ; Color index 2
      477.  01:8E72  50 00                   db 0x50, 0x00 ; Color index 3
@@ -5028,7 +5028,7 @@ Errors: 0
 00:00004936   print_string_v2.loop_str
 00:00004944   print_string_v2.first_line_font
 00:00004948   print_string_v2.continue
-00:00004966   load_screen_v2
+00:00004966 X load_screen_v2
 00:0000496A   load_screen_v2.map_element
 00:0000497F   load_screen_v2.loop1
 00:0000499D   load_screen_v2.next_element
@@ -5352,12 +5352,12 @@ Errors: 0
 -------------------------------------------------
 
  Page: 00
-  Org: 00004000  Size: 00004000  Used: 0000269D
+  Org: 00004000  Size: 00004000  Used: 0000268D
 
    Address   Length Align   Label
-   00004000    9879         ANDY_MAX_ENERGY
-   00006697       6         
-   0000669D    6499       <empty>
+   00004000    9863         ANDY_MAX_ENERGY
+   00006687       6         
+   0000668D    6515       <empty>
 
  Page: 01
   Org: 00008000  Size: 00004000  Used: 00002802
