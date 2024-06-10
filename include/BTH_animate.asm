@@ -437,6 +437,14 @@ SHOOT_MAIN_CHAR:
     ret
 
 BOUNCE_ANDY:
+
+    
+    ld hl, SPRITE_COLOR_P1_RED
+    ld (SPRITE_COLOR_REPLACE), HL
+    ld (SPRITE_COLOR_REPLACE2), HL
+    ;    ld (ix+13), $10      ; Sprite 1 - Ghost
+    CALL DUMP_SPR_P1
+
     LD A, (ix)
     ADD 16
     LD (ix), A
