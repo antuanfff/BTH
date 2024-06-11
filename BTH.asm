@@ -584,6 +584,7 @@ STAGE2:
 
     ;XOR a
     ;LD (current_level), A
+    CALL CLEAR_DIALOG_BOX_v2
     CALL DRAW_ANDY_ENERGY
     
     CALL ENASCR

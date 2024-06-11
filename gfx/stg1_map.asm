@@ -53,7 +53,7 @@ stg1_map_front:
 	db 10, 96, 96, 1	; Skull
 	db 13, 32, 32, 1	; RIP
 	db 12, 64, 128, 1	; Antichrist
-	db 13, 208, 96, 1	; Christ
+	db 14, 208, 96, 1	; Christ
 
 	db 11, 158, 52, 1	; Tree 1
 	db 11, 172, 52, 1	; Tree 1
