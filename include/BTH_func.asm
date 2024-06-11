@@ -340,7 +340,7 @@ load_tiles_vdp
     
 	;ld hl, TILES1
     ld de, 0x8000; la rutina necesita haber cargado previamente la dirección de inicio de la VRAM          
-    ld bc,128*32; 32 lineas
+    ld bc,128*16*7; 128*16*(#lineas)
     call  LDIRVM ; Mira arriba, pone la explicación
 	ret 
 

@@ -57,5 +57,8 @@ stg1_map_front:
 
 	db 11, 158, 52, 1	; Tree 1
 	db 11, 172, 52, 1	; Tree 1
+
+	db 15, 192, 16, 1	; 
+	db 16, 0, 80, 1	; 
 	db 255	; fin
 

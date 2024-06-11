@@ -20,3 +20,5 @@ metatiles_data:
     db 16, 16, 16, 16  ; 13 - Tomb RIP
     db 32, 16, 16, 16  ; 14 - Tomb Christ
 
+    db 48, 16, 64, 80  ; 15 - Gargoyle
+    db 112, 16, 48, 96  ; 16 - Cross

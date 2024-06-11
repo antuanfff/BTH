@@ -142,13 +142,16 @@ STAGE1:
     LD B, :CEMENTER1
     ;call load_screen
 
-    ld	a, BTH_DATA			; page 
+    ld	a, TILES_PAGE			; page 
 	ld	(_bank2),a
 
     ;We load the tiles on page 1 of VDP
     LD HL, TILES1    
     call load_tiles_vdp
     
+    ld	a, BTH_DATA			; page 
+	ld	(_bank2),a
+
     ;We load the font on page 1 of VDP
     call load_font_vdp
 
@@ -684,9 +687,6 @@ game_over:
 
     JR .loop1
 
-TILES1:
- INCBIN "gfx\tiles1.sc5",#7
-
  PAGE 1
 ; CODE O NO
     include "include\BTH_data.asm"
@@ -701,6 +701,8 @@ SONG:
     ;incbin "sfx\G-6sin_cabecera.pt3"
 
  PAGE 2
+TILES1:
+ INCBIN "gfx\tiles1.sc5",#7
 
  PAGE 3
 

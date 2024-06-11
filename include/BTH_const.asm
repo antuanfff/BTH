@@ -1,6 +1,7 @@
-; page for SPRITE DATA
+; pages for DATA
 
 BTH_DATA    equ 1
+TILES_PAGE  equ 2
 
 ENTITY_SIZE: EQU 9
 
