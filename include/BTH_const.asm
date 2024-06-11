@@ -28,12 +28,14 @@ damage                          equ 9
 
 ; Notes Black Sabbath
 STG2_TILE1_X    equ 113
-STG2_TILE1_Y    equ 110
+STG2_TILE1_YH    equ 110
+STG2_TILE1_YL    equ 95
 
 STG2_TILE2_X    equ 128
 
 STG2_TILE3_X    equ 128
-STG2_TILE3_Y    equ 142
+STG2_TILE3_YH    equ 144
+STG2_TILE3_YL    equ 128
 
 
 ; VDP Const

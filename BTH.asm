@@ -123,8 +123,13 @@ INIT_CHARS_VARS:
     LD (SHOWING_MIKE_DIALOG), A
     LD (SHOWING_SKULL_STG1_DIALOG), A    
     LD (stg1_puzzle_solved), A
+    LD (stg2_puzzle_solved), A
+    LD (PLAYING_NOTE1_STG2), A
+    LD (PLAYING_NOTE2_STG2), A
+    LD (PLAYING_NOTE3_STG2), A
+
    ; LD A,$FF
-    LD (OLD_KEY_PRESSED), A
+    ;LD (OLD_KEY_PRESSED), A
     LD (counter_stg1_solved), A
     LD A,$01
     LD (CHAR_DIR_MAIN),A        ; $00 - UP, $01 - DOWN, $02 - LEFT, $03 - RIGHT
@@ -236,7 +241,7 @@ MAIN_LOOP:
 
     LD A, (ix +1)   ; Cargamos la X para mirar si hay colisión con la tumba
     CP MIKE_TOMB_STG1_X
-    JP NZ, .check_john_tomb    
+    JR NZ, .check_john_tomb    
     
     LD A, (stg1_puzzle_solved)
     CP 2
@@ -559,8 +564,8 @@ STAGE2:
     CALL DISSCR
     halt
 	di       
-    PUSH IX
-	call	PT3_ROUT			;envia datos a al PSG 	   
+    PUSH IX	
+    call	PT3_ROUT			;envia datos a al PSG 	   
 	call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
 	POP IX
     ei
@@ -638,11 +643,11 @@ MAIN_LOOP2:
     
     ; check X,Y to play Black Sabbath
     ; Ya tenemos en A la Y
-    CP STG2_TILE1_Y
-    JP NZ, .check_tile3
+    CP STG2_TILE1_YH
+    JR NZ, .check_tile3
     LD A, (ix+1)
     CP STG2_TILE1_X
-    JP NZ, .check_next_tile
+    JR NZ, .check_next_tile
     LD A, 3
     LD C, 0
     CALL ayFX_INIT    
@@ -655,7 +660,7 @@ MAIN_LOOP2:
 
 .check_next_tile:
     CP STG2_TILE2_X
-    JP NZ, .check_tile3
+    JR NZ, .check_tile3
     LD A, 4
     LD C, 0
     CALL ayFX_INIT    
@@ -666,11 +671,21 @@ MAIN_LOOP2:
     CALL draw_tile
 
 .check_tile3:
-    CP STG2_TILE3_Y
-    JP NZ, .continue
+    CP STG2_TILE3_YH
+    JR NC, .check_walk_on_tile3
+    CP STG2_TILE3_YL
+    JR C, .check_walk_on_tile3
+    ; YH > y > YL
+    LD A, (PLAYING_NOTE3_STG2)
+    CP 1
+    jr z, .continue
     LD A, (ix+1)
     CP STG2_TILE3_X
-    JP NZ, .continue
+    JR NZ, .continue
+    ; Playing note
+    LD A, 1
+    LD (PLAYING_NOTE3_STG2), A
+
     LD A, 5
     LD C, 0
     CALL ayFX_INIT    
@@ -679,6 +694,17 @@ MAIN_LOOP2:
     LD D, 128
     LD E, 144
     CALL draw_tile
+    JR .continue
+
+.check_walk_on_tile3
+    LD A, (PLAYING_NOTE3_STG2)
+    CP 1
+    LD A, 7
+    LD D, 128
+    LD E, 144
+    CALL draw_tile
+    LD A, 0
+    LD (PLAYING_NOTE3_STG2), A
 
 .continue:
     call DUMP_SPR_ATTS      
