@@ -71,6 +71,8 @@ START
     POP IX
     ei
         
+    ; Load Data to VDP and start entities
+    CALL PRE_STAGE1
     ; Start STG1    
     CALL STAGE1
 
@@ -134,14 +136,7 @@ INIT_CHARS_VARS:
 
     
     ret
-
-STAGE1:
-    CALL DISSCR
-    ;LD HL, CEMENTER1
-    ;LD (BITMAP), HL
-    ;LD B, :CEMENTER1
-    ;call load_screen
-
+PRE_STAGE1
     ; Switch segment to TILES_PAGE
     ld	a, TILES_PAGE			; page 
 	ld	(_bank2),a
@@ -157,6 +152,22 @@ STAGE1:
     ;We load the font on page 1 of VDP
     call load_font_vdp
 
+    ; set energy
+    LD HL, ANDY_MAX_ENERGY
+    ;ADD HL, current_level
+    LD A, (HL)  ; no offset for level 1
+    ;LD A, 0
+    LD (ENTITY_PLAYER_POINTER+3), A
+    
+    RET
+
+STAGE1:
+    CALL DISSCR
+    ;LD HL, CEMENTER1
+    ;LD (BITMAP), HL
+    ;LD B, :CEMENTER1
+    ;call load_screen
+    
     ; Draw screen using map and metatiles
     LD HL, stg1_map_back
     LD (stg_map_ptr_back), HL
@@ -176,13 +187,7 @@ STAGE1:
     
     LD HL, MAP_RAM
     LD (MAPA), HL    
-    
-    ; set energy
-    LD HL, ANDY_MAX_ENERGY
-    ;ADD HL, current_level
-    LD A, (HL)  ; no offset for level 1
-    ;LD A, 0
-    LD (ENTITY_PLAYER_POINTER+3), A
+        
     CALL DRAW_ANDY_ENERGY
 
     LD A, (stg1_puzzle_solved)
@@ -471,6 +476,10 @@ MAIN_LOOP:
     SUB 4    
     LD (ENTITY_PLAYER_POINTER+ENTITY_ENERGY), A
     call DRAW_ANDY_ENERGY
+    ; Copiamos al buffer parte inferior de pantalla
+    LD HL, DiagBoxToBackBufROM
+	call VDPCMD
+
     call BOUNCE_ANDY
     LD A, (ENTITY_PLAYER_POINTER+ENTITY_ENERGY)
     CP 0
