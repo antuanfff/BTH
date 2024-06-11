@@ -1,5 +1,6 @@
-; Function Pointer
-draw_pointer ds 2
+; Stage Map Pointer
+stg_map_ptr_back ds 2
+stg_map_ptr_front ds 2
 
 ;entities data
 ENTITY_DATA: ds 27 ;  10 bytes, 3 entities

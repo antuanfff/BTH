@@ -1,6 +1,6 @@
 ; pages for DATA
 
-BTH_DATA    equ 1
+SPR_DATA_PAGE    equ 1
 TILES_PAGE  equ 2
 
 ENTITY_SIZE: EQU 9

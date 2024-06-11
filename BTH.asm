@@ -51,7 +51,7 @@ START
 	call ClearVram_MSX2		
 	call SET_SCREEN5_MODE    
     call Set212Lines
-    ld	a, BTH_DATA			; page 
+    ld	a, SPR_DATA_PAGE			; page 
 	ld	(_bank2),a
         
     call INIT_CHARS_VARS
@@ -137,25 +137,33 @@ INIT_CHARS_VARS:
 
 STAGE1:
     CALL DISSCR
-    LD HL, CEMENTER1
-    LD (BITMAP), HL
-    LD B, :CEMENTER1
+    ;LD HL, CEMENTER1
+    ;LD (BITMAP), HL
+    ;LD B, :CEMENTER1
     ;call load_screen
 
+    ; Switch segment to TILES_PAGE
     ld	a, TILES_PAGE			; page 
 	ld	(_bank2),a
-
+    
     ;We load the tiles on page 1 of VDP
     LD HL, TILES1    
     call load_tiles_vdp
-    
-    ld	a, BTH_DATA			; page 
+
+    ; Switch segment to SPR_DATA_PAGE
+    ld	a, SPR_DATA_PAGE			; page 
 	ld	(_bank2),a
 
     ;We load the font on page 1 of VDP
     call load_font_vdp
 
-    ; Draw screen using map and metatile
+    ; Draw screen using map and metatiles
+    LD HL, stg1_map_back
+    LD (stg_map_ptr_back), HL
+    
+    LD HL, stg1_map_front
+    LD (stg_map_ptr_front), HL
+     
     call load_screen_v2    
     
     call DUMP_SPR_ALL
@@ -537,15 +545,25 @@ STAGE2:
 	call	PT3_PLAY			;prepara el siguiente trocito de cancion que sera enviada mas tarde al PSG
 	POP IX
     ei
-    LD HL, CEMENTER2
-    LD (BITMAP), HL
-    LD B, :CEMENTER2
+    ;LD HL, CEMENTER2
+    ;LD (BITMAP), HL
+    ;LD B, :CEMENTER2
 
-    call load_screen
+    ;call load_screen
+    
+    ; Draw screen using map and metatiles
+    LD HL, stg2_map_back
+    LD (stg_map_ptr_back), HL
+    
+    LD HL, stg2_map_front
+    LD (stg_map_ptr_front), HL
+     
+    call load_screen_v2    
+
     LD HL, mapa2
     LD (MAPA), HL
 
-    ld	a, BTH_DATA			; page 
+    ld	a, SPR_DATA_PAGE			; page 
 	ld	(_bank2),a
  
     ; Ponemos el P1 por encima del marco
@@ -691,6 +709,7 @@ game_over:
 ; CODE O NO
     include "include\BTH_data.asm"
     include "gfx\stg1_map.asm"
+    include "gfx\stg2_map.asm"
 FONT:
  INCBIN "gfx\FONT.SC5",#7
 AFX:

@@ -585,7 +585,7 @@ print_string_v2:
 ; Loads the screen image using the tile map
 
 load_screen_v2:	
-	LD IY, stg1_map_back
+	LD IY, (stg_map_ptr_back)
 
 .map_element	
 	LD A, (IY+TILENUM_OFFSET)
@@ -631,8 +631,9 @@ load_screen_v2:
 	LD A, (IY)
 	CP 255
 	JR NZ, .map_element
+
 	; Transparent Tiles
-	LD IY, stg1_map_front
+	LD IY, (stg_map_ptr_front)
 
 .map_element_trans
 	LD A, (IY+TILENUM_OFFSET)
