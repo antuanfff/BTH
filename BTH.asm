@@ -125,6 +125,7 @@ INIT_CHARS_VARS:
     LD (stg1_puzzle_solved), A
    ; LD A,$FF
     LD (OLD_KEY_PRESSED), A
+    LD (counter_stg1_solved), A
     LD A,$01
     LD (CHAR_DIR_MAIN),A        ; $00 - UP, $01 - DOWN, $02 - LEFT, $03 - RIGHT
 
@@ -158,7 +159,7 @@ PRE_STAGE1
     LD A, (HL)  ; no offset for level 1
     ;LD A, 0
     LD (ENTITY_PLAYER_POINTER+3), A
-    
+
     RET
 
 STAGE1:
@@ -191,7 +192,7 @@ STAGE1:
     CALL DRAW_ANDY_ENERGY
 
     LD A, (stg1_puzzle_solved)
-    CP 3
+    CP 4
     JR NZ, .nobackfromstg2
         ; Open the gate!
     LD A, 3
@@ -229,6 +230,8 @@ MAIN_LOOP:
 
     LD A, (stg1_puzzle_solved)
     CP 3
+    JP Z, .check_counter_puzzle_solved
+    CP 4
     JP Z, .animate_ghost
 
     LD A, (ix +1)   ; Cargamos la X para mirar si hay colisión con la tumba
@@ -276,14 +279,6 @@ MAIN_LOOP:
     LD (SHOWING_MIKE_DIALOG), A
     XOR A
     LD (stg1_puzzle_solved), A
-            ; Close the gate!
-    ;LD IY, tileDat
-    ;LD (IY + VDP_SX), 0      ; SXL - Tile 2
-    ;LD (IY+VDP_SY), 0      ; SYL
-    ;LD (IY + VDP_DX), 112     ; DXL    
-    ;LD (IY + VDP_DY), 0      ; DYL    
-    ;LD HL, tileDat
-    ;CALL VDPCMD
 
     LD HL,stg1_gate_blocked
     LD DE, MAP_RAM+45
@@ -405,6 +400,21 @@ MAIN_LOOP:
     CALL CLEAR_DIALOG_BOX
     XOR A
     LD (SHOWING_SKULL_STG1_DIALOG), A
+    JR .animate_ghost    
+
+.check_counter_puzzle_solved
+    LD A, (counter_stg1_solved)
+    CP counter_stg1_solved_max
+    JR nc, .hide_dialog_puzzle_solved
+    INC A
+    LD (counter_stg1_solved), A
+    jr .animate_ghost
+
+.hide_dialog_puzzle_solved
+    LD A, (stg1_puzzle_solved)
+    INC a
+    LD (stg1_puzzle_solved), A
+    call CLEAR_DIALOG_BOX    
 
 .animate_ghost    
     LD A,(CHAR_GHOST_DEAD)
@@ -714,7 +724,7 @@ game_over:
     JP z,START
 
     JR .loop1
-
+    
  PAGE 1
 ; CODE O NO
     include "include\BTH_data.asm"

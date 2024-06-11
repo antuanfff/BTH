@@ -1,3 +1,6 @@
+;counter
+counter_stg1_solved_max equ #7F
+
 ; pages for DATA
 
 SPR_DATA_PAGE    equ 1

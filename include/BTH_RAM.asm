@@ -1,3 +1,6 @@
+; Counter stage1 puzzle solved
+counter_stg1_solved ds 1
+
 ; Stage Map Pointer
 stg_map_ptr_back ds 2
 stg_map_ptr_front ds 2
