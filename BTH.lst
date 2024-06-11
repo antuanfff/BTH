@@ -1,21 +1,21 @@
-Sjasm Z80 Assembler v0.42c - www.xl2s.tk             [2024.06.10 - 14:05:13]
+Sjasm Z80 Assembler v0.42c - www.xl2s.tk             [2024.06.11 - 10:34:49]
 
 .\BTH.asm
 Errors: 0
 
        1   00:0000                      	output "BTH.rom" 
-       2   00:6652                      
-       3   00:6652                      ;ROM ASCII16
-       4   00:6652                      		defpage	0,0x4000, 0x4000
-       5   00:6652                      		defpage	1,0x8000, 0x4000        
-       6   00:6652                      		defpage	2..14 ;Here it is determined rom size        
-       7   00:6652                              defpage	15,0xC000, 0x4000
-       8   00:6652                      
-       9   00:6652  (00:4000)           PageSize:	    equ	0x4000	        ; 16kB
-      10   00:6652  (00:6000)           _bank1	equ	6000h
-      11   00:6652  (00:7000)           _bank2	equ	7000h
-      12   00:6652  32 00 70 32 FF 77   		DB 32h,0,70h,32h,0FFh,77h		; Para evitar seleccionar el tipo de ROM ASCII16 en OpenMSX
-      13   00:6658  (00)                		page 0			
+       2   00:6642                      
+       3   00:6642                      ;ROM ASCII16
+       4   00:6642                      		defpage	0,0x4000, 0x4000
+       5   00:6642                      		defpage	1,0x8000, 0x4000        
+       6   00:6642                      		defpage	2..14 ;Here it is determined rom size        
+       7   00:6642                              defpage	15,0xC000, 0x4000
+       8   00:6642                      
+       9   00:6642  (00:4000)           PageSize:	    equ	0x4000	        ; 16kB
+      10   00:6642  (00:6000)           _bank1	equ	6000h
+      11   00:6642  (00:7000)           _bank2	equ	7000h
+      12   00:6642  32 00 70 32 FF 77   		DB 32h,0,70h,32h,0FFh,77h		; Para evitar seleccionar el tipo de ROM ASCII16 en OpenMSX
+      13   00:6648  (00)                		page 0			
       14   00:4000                              org 4000h		
       15   00:4000                              dw  4241h,START,0,0,0,0,0,0
       15   00:4000  41 42 9A 51 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -1071,22 +1071,20 @@ Errors: 0
      436.  00:464A                          ;jp MAIN_LOOP
      437.  00:464A  C9                      ret
      438.  00:464B                      
-     439.  00:464B                      BOUNCE_ANDY:
-     440.  00:464B                      
-     441.  00:464B                          
-     442.  00:464B  21 8C 8D                ld hl, SPRITE_COLOR_P1_RED
-     443.  00:464E  22 FA C0                ld (SPRITE_COLOR_REPLACE), HL
-     444.  00:4651  22 FC C0                ld (SPRITE_COLOR_REPLACE2), HL
-     445.  00:4654                          ;    ld (ix+13), $10      ; Sprite 1 - Ghost
-     446.  00:4654  CD 17 43                CALL DUMP_SPR_P1
-     447.  00:4657                      
-     448.  00:4657  DD 7E 00                LD A, (ix)
-     449.  00:465A  C6 10                   ADD 16
-     450.  00:465C  DD 77 00                LD (ix), A
-     451.  00:465F  DD 77 04                LD (ix+4), A
-     452.  00:4662  DD 77 08                LD (ix+8), A
-     453.  00:4665                      
-     454.  00:4665  C9                      ret
+     439.  00:464B                      BOUNCE_ANDY:    
+     440.  00:464B  21 8C 8D                ld hl, SPRITE_COLOR_P1_RED
+     441.  00:464E  22 FA C0                ld (SPRITE_COLOR_REPLACE), HL
+     442.  00:4651  22 FC C0                ld (SPRITE_COLOR_REPLACE2), HL
+     443.  00:4654                          ;    ld (ix+13), $10      ; Sprite 1 - Ghost
+     444.  00:4654  CD 17 43                CALL DUMP_SPR_P1
+     445.  00:4657                      
+     446.  00:4657  DD 7E 00                LD A, (ix)
+     447.  00:465A  C6 10                   ADD 16
+     448.  00:465C  DD 77 00                LD (ix), A
+     449.  00:465F  DD 77 04                LD (ix+4), A
+     450.  00:4662  DD 77 08                LD (ix+8), A
+     451.  00:4665                      
+     452.  00:4665  C9                      ret
       26   00:4666                      	include "include\VDP.asm"
        1.  00:4666                      ; Offset commands registers
        2.  00:4666  (00:0000)           VDP_SX		 EQU 0
@@ -3750,9 +3748,9 @@ Errors: 0
      685   00:563F  18 F2                   JR .loop1
      686   00:5641                      
      687   00:5641                      TILES1:
-     688   00:5641  (1011)               INCBIN "gfx\tiles1.sc5",#7
-     689   00:6652                      
-     690   00:6652  (01)                 PAGE 1
+     688   00:5641  (1001)               INCBIN "gfx\tiles1.sc5",#7
+     689   00:6642                      
+     690   00:6642  (01)                 PAGE 1
      691   01:8000                      ; CODE O NO
      692   01:8000                          include "include\BTH_data.asm"
        1.  01:8000                      SPRITE_P1_UP:
@@ -5405,12 +5403,12 @@ Errors: 0
 -------------------------------------------------
 
  Page: 00
-  Org: 00004000  Size: 00004000  Used: 00002658
+  Org: 00004000  Size: 00004000  Used: 00002648
 
    Address   Length Align   Label
-   00004000    9810         ANDY_MAX_ENERGY
-   00006652       6         
-   00006658    6568       <empty>
+   00004000    9794         ANDY_MAX_ENERGY
+   00006642       6         
+   00006648    6584       <empty>
 
  Page: 01
   Org: 00008000  Size: 00004000  Used: 00002832
