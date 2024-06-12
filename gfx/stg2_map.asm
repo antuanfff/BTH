@@ -35,7 +35,7 @@ stg2_map_back:
 	
 stg2_map_front:
 	; Transparent Tiles
-	db 10, 142, 112, 1	; Skull	
+	db 10, 96, 160, 1	; Skull	
 
 	db 11, 16, 112, 1	; Tree 1
 	db 11, 224, 112, 1	; Tree 2

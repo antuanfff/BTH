@@ -33,3 +33,9 @@ game_over_strings: dw string01GO, string02GO, string03GO
 string01GO: db 'AAAAHHHHHHHHHH!!!',0
 string02GO: db 'GAME OVER!',0
 string03GO: db '',0
+
+stg2_skull_strings: dw string01Sk2, string02Sk2, string03Sk2
+; Caben 23 caracteres en cada línea
+string01Sk2: db 'MURRAY: BLACK SABBATH    ',0
+string02Sk2: db 'TE MOSTRARA EL CAMINO    ',0
+string03Sk2: db '',0

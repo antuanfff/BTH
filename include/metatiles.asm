@@ -22,3 +22,4 @@ metatiles_data:
 
     db 48, 16, 64, 80  ; 15 - Gargoyle
     db 112, 16, 48, 96  ; 16 - Cross
+    db 0, 32, 16, 16  ; 17 - Gargoyle Door 

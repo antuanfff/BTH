@@ -26,17 +26,26 @@ ENEMY_COLLISION_HEIGHT          equ 7
 SPRITENUMBER_SPAT               equ 8
 damage                          equ 9
 
-; Notes Black Sabbath
-STG2_TILE1_X    equ 113
-STG2_TILE1_YH    equ 110
-STG2_TILE1_YL    equ 95
+; Notes Black Sabbath stg2
+STG2_TILE1_XH    equ 120
+STG2_TILE1_XL    equ 112
+STG2_TILE1_YH    equ 112
+STG2_TILE1_YL    equ 96
 
-STG2_TILE2_X    equ 128
+STG2_TILE2_XH    equ 129
+STG2_TILE2_XL    equ 121
+STG2_TILE2_YH    equ 112
+STG2_TILE2_YL    equ 96
 
-STG2_TILE3_X    equ 128
+STG2_TILE3_XH    equ 129
+STG2_TILE3_XL    equ 121
 STG2_TILE3_YH    equ 144
 STG2_TILE3_YL    equ 128
 
+STG2_MURRAY_X     equ 113
+STG2_MURRAY_XL    equ 112
+STG2_MURRAY_YH    equ 172
+STG2_MURRAY_YL    equ 156
 
 ; VDP Const
 ;IRST_LINE_DLG_BOX   equ 5C28H
