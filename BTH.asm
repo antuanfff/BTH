@@ -686,7 +686,9 @@ MAIN_LOOP2:
     ; Playing note
     LD A, 1
     LD (PLAYING_NOTE1_STG2), A
-    
+    ;We set the puzzle to 1
+    LD (stg2_puzzle_solved), A
+
     LD A, 3
     LD C, 0
     CALL ayFX_INIT    
@@ -710,7 +712,7 @@ MAIN_LOOP2:
     ; Playing note
     LD A, 1
     LD (PLAYING_NOTE2_STG2), A
-
+    
     LD A, 4
     LD C, 0
     CALL ayFX_INIT    
@@ -719,6 +721,15 @@ MAIN_LOOP2:
     LD D, 128
     LD E, 112
     CALL draw_tile
+    ; Check puzzle
+    LD A, (stg2_puzzle_solved)
+    CP 1
+    JR NZ, .wrong_order
+    INC A
+    LD (stg2_puzzle_solved), A
+    
+.wrong_order    
+
     JP .continue
 
 .check_tile3:
@@ -737,7 +748,7 @@ MAIN_LOOP2:
     ; Check if the tile is pressed
     LD A, (PLAYING_NOTE3_STG2)
     CP 1
-    jr z, .continue
+    jp z, .continue
         
     ; Playing note
     LD A, 1
@@ -751,6 +762,24 @@ MAIN_LOOP2:
     LD D, 128
     LD E, 144
     CALL draw_tile
+    ; Check puzzle
+    LD A, (stg2_puzzle_solved)
+    CP 2
+    JR NZ, .wrong_order_tile3
+    INC A
+    LD (stg2_puzzle_solved), A    
+
+    LD A, 17
+    LD D, 120
+    LD E, 80
+    call draw_tile
+
+    JR .continue
+
+.wrong_order_tile3
+    ;reset the counter
+    XOR A
+    LD (stg2_puzzle_solved), A    
     JR .continue
 
 .check_walk_on_tile3
