@@ -672,11 +672,7 @@ MAIN_LOOP2:
     JR NC, .check_tile3
     CP STG2_TILE1_YL
     JR C, .check_tile3
-    ; XH > X > XL
-    JR NC, .check_tile3
-    CP STG2_TILE1_YL
-    JR C, .check_tile3
-    ; XH > X > XL
+    ; XH > X > XL    
     LD A, (ix+1)
     CP STG2_TILE1_XH
     JR NC, .check_next_tile
@@ -690,20 +686,7 @@ MAIN_LOOP2:
     ; Playing note
     LD A, 1
     LD (PLAYING_NOTE1_STG2), A
-
-    CP STG2_TILE1_XH
-    JR NC, .check_next_tile
-    CP STG2_TILE1_XL
-    JR C, .check_next_tile
-    ; Check if the tile is pressed
-    LD A, (PLAYING_NOTE1_STG2)
-    CP 1
-    jp z, .continue
     
-    ; Playing note
-    LD A, 1
-    LD (PLAYING_NOTE1_STG2), A
-
     LD A, 3
     LD C, 0
     CALL ayFX_INIT    
@@ -713,22 +696,8 @@ MAIN_LOOP2:
     LD E, 112
     CALL draw_tile
     jp .continue
-    jp .continue
 
 .check_next_tile:
-    CP STG2_TILE2_XH
-    JR NC, .check_tile3
-    CP STG2_TILE2_XL
-    JR C, .check_tile3
-    ; Check if the tile is pressed
-    LD A, (PLAYING_NOTE2_STG2)
-    CP 1
-    jp z, .continue
-    
-    ; Playing note
-    LD A, 1
-    LD (PLAYING_NOTE2_STG2), A
-
     CP STG2_TILE2_XH
     JR NC, .check_tile3
     CP STG2_TILE2_XL
@@ -750,11 +719,9 @@ MAIN_LOOP2:
     LD D, 128
     LD E, 112
     CALL draw_tile
-    JR .continue
     JP .continue
 
 .check_tile3:
-    ; YH > y > YL
     ; YH > y > YL
     CP STG2_TILE3_YH
     JR NC, .check_walk_on_tile3
@@ -766,19 +733,12 @@ MAIN_LOOP2:
     JR NC, .check_walk_on_tile3
     CP STG2_TILE3_XL
     JR C, .check_walk_on_tile3
-    ; Check if the tile is pressed
-    ; XH > X > XL
-    LD A, (ix+1)
-    CP STG2_TILE3_XH
-    JR NC, .check_walk_on_tile3
-    CP STG2_TILE3_XL
-    JR C, .check_walk_on_tile3
+       
     ; Check if the tile is pressed
     LD A, (PLAYING_NOTE3_STG2)
     CP 1
     jr z, .continue
-    
-    
+        
     ; Playing note
     LD A, 1
     LD (PLAYING_NOTE3_STG2), A
@@ -803,30 +763,6 @@ MAIN_LOOP2:
     CALL draw_tile
     XOR A
     LD (PLAYING_NOTE3_STG2), A
-    jr .continue
-
-.check_walk_on_tile2
-    LD A, (PLAYING_NOTE2_STG2)
-    CP 1
-    JR NZ, .check_walk_on_tile1
-    LD A, 7
-    LD D, 128
-    LD E, 112
-    CALL draw_tile
-    XOR A
-    LD (PLAYING_NOTE2_STG2), A
-    jr .continue
-
-.check_walk_on_tile1
-    LD A, (PLAYING_NOTE1_STG2)
-    CP 1
-    JR NZ, .continue
-    LD A, 7
-    LD D, 112
-    LD E, 112
-    CALL draw_tile
-    XOR A
-    LD (PLAYING_NOTE1_STG2), A
     jr .continue
 
 .check_walk_on_tile2
