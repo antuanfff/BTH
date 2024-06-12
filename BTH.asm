@@ -643,11 +643,26 @@ MAIN_LOOP2:
     
     ; check X,Y to play Black Sabbath
     ; Ya tenemos en A la Y
+    ; YH > y > YL
     CP STG2_TILE1_YH
-    JR NZ, .check_tile3
+    JR NC, .check_tile3
+    CP STG2_TILE1_YL
+    JR C, .check_tile3
+    ; XH > X > XL
     LD A, (ix+1)
-    CP STG2_TILE1_X
-    JR NZ, .check_next_tile
+    CP STG2_TILE1_XH
+    JR NC, .check_next_tile
+    CP STG2_TILE1_XL
+    JR C, .check_next_tile
+    ; Check if the tile is pressed
+    LD A, (PLAYING_NOTE1_STG2)
+    CP 1
+    jp z, .continue
+    
+    ; Playing note
+    LD A, 1
+    LD (PLAYING_NOTE1_STG2), A
+
     LD A, 3
     LD C, 0
     CALL ayFX_INIT    
@@ -656,11 +671,22 @@ MAIN_LOOP2:
     LD D, 112
     LD E, 112
     CALL draw_tile
-    jr .continue
+    jp .continue
 
 .check_next_tile:
-    CP STG2_TILE2_X
-    JR NZ, .check_tile3
+    CP STG2_TILE2_XH
+    JR NC, .check_tile3
+    CP STG2_TILE2_XL
+    JR C, .check_tile3
+    ; Check if the tile is pressed
+    LD A, (PLAYING_NOTE2_STG2)
+    CP 1
+    jp z, .continue
+    
+    ; Playing note
+    LD A, 1
+    LD (PLAYING_NOTE2_STG2), A
+
     LD A, 4
     LD C, 0
     CALL ayFX_INIT    
@@ -669,19 +695,25 @@ MAIN_LOOP2:
     LD D, 128
     LD E, 112
     CALL draw_tile
+    JR .continue
 
 .check_tile3:
+    ; YH > y > YL
     CP STG2_TILE3_YH
     JR NC, .check_walk_on_tile3
     CP STG2_TILE3_YL
     JR C, .check_walk_on_tile3
-    ; YH > y > YL
+    ; XH > X > XL
+    LD A, (ix+1)
+    CP STG2_TILE3_XH
+    JR NC, .check_walk_on_tile3
+    CP STG2_TILE3_XL
+    JR C, .check_walk_on_tile3
+    ; Check if the tile is pressed
     LD A, (PLAYING_NOTE3_STG2)
     CP 1
     jr z, .continue
-    LD A, (ix+1)
-    CP STG2_TILE3_X
-    JR NZ, .continue
+    
     ; Playing note
     LD A, 1
     LD (PLAYING_NOTE3_STG2), A
@@ -699,12 +731,37 @@ MAIN_LOOP2:
 .check_walk_on_tile3
     LD A, (PLAYING_NOTE3_STG2)
     CP 1
+    JR NZ, .check_walk_on_tile2
     LD A, 7
     LD D, 128
     LD E, 144
     CALL draw_tile
-    LD A, 0
+    XOR A
     LD (PLAYING_NOTE3_STG2), A
+    jr .continue
+
+.check_walk_on_tile2
+    LD A, (PLAYING_NOTE2_STG2)
+    CP 1
+    JR NZ, .check_walk_on_tile1
+    LD A, 7
+    LD D, 128
+    LD E, 112
+    CALL draw_tile
+    XOR A
+    LD (PLAYING_NOTE2_STG2), A
+    jr .continue
+
+.check_walk_on_tile1
+    LD A, (PLAYING_NOTE1_STG2)
+    CP 1
+    JR NZ, .continue
+    LD A, 7
+    LD D, 112
+    LD E, 112
+    CALL draw_tile
+    XOR A
+    LD (PLAYING_NOTE1_STG2), A
 
 .continue:
     call DUMP_SPR_ATTS      
@@ -731,8 +788,6 @@ MAIN_LOOP2:
 
     BIT KB_DEL, C			; La tecla presionada es DEL    
     ret z
-
-
 
     jp MAIN_LOOP2
 
