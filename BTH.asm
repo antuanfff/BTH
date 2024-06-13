@@ -491,6 +491,9 @@ MAIN_LOOP:
     LD A, (ENTITY_PLAYER_POINTER+ENTITY_ENERGY)
     SUB 4    
     LD (ENTITY_PLAYER_POINTER+ENTITY_ENERGY), A
+    LD A, 7
+    LD C, 0
+    CALL ayFX_INIT  
     call DRAW_ANDY_ENERGY
     ; Copiamos al buffer parte inferior de pantalla
     LD HL, DiagBoxToBackBufROM
@@ -660,7 +663,9 @@ MAIN_LOOP2:
     LD (SHOWING_MURRAY_STG2), A
     LD IY, stg2_skull_strings
     CALL print_strings_dialog_box_v2
-
+    LD A, 6
+    LD C, 0
+    CALL ayFX_INIT  
     jp .continue
 
 .check_tile1:
@@ -880,8 +885,8 @@ FONT:
 AFX:
     incbin "sfx\cementer_sounds.afb"
 SONG:
-	;incbin "sfx\Nostalgy_sincabecera.pt3"
-    incbin "sfx\test.pt3"
+	incbin "sfx\Nostalgy_sincabecera.pt3"
+    ;incbin "sfx\test.pt3"
     ;incbin "sfx\G-6sin_cabecera.pt3"
 
  PAGE 2
