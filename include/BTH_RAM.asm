@@ -1,5 +1,5 @@
 ; Counter stage1 puzzle solved
-counter_stg1_solved ds 1
+counter_stg_solved ds 1
 
 ; Stage Map Pointer
 stg_map_ptr_back ds 2
@@ -19,7 +19,6 @@ tileDat: ds 15
 tileDatTrans: ds 15
 energyDat: ds 15
 
-
 ; puzzle 1st stage
 stg1_puzzle_solved DS 1
 
@@ -30,6 +29,7 @@ SHOWING_GUS_DIALOG  DS 1
 
 ; puzzle 2nd stage
 stg2_puzzle_solved DS 1
+stg2_delay_border_change DS 1
 
 PLAYING_NOTE1_STG2  DS 1
 PLAYING_NOTE2_STG2  DS 1

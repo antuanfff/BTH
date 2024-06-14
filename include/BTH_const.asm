@@ -1,5 +1,6 @@
 ;counter
-counter_stg1_solved_max equ #7F
+counter_stg1_solved_max equ #6F
+counter_stg2_solved_max equ #9F
 
 ; pages for DATA
 
@@ -82,8 +83,10 @@ PORT_1                  equ 0x99
 PORT_2                  equ 0x9a
 PORT_3                  equ 0x9b
 
-RG15AV equ #F3E0 ; alamcena el valor del registro 1 de escritura del VDP, hay unas rutinas de la bios que guardan estas direcciones valores globals del sistema
-FORCLR equ $F3E9 ; Foreground colour
+RG15AV  equ #F3E0 ; alamcena el valor del registro 1 de escritura del VDP, hay unas rutinas de la bios que guardan estas direcciones valores globals del sistema
+FORCLR  equ $F3E9 ; Foreground colour
+BAKCLR  equ $f3ea ; Background colour
+BDRCLR  equ $f3eb ; Border colour
 
 MIKE_TOMB_STG1_X            equ 200
 JOHN_TOMB_STG1_X            equ 41

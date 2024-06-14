@@ -131,7 +131,7 @@ INIT_CHARS_VARS:
 
    ; LD A,$FF
     ;LD (OLD_KEY_PRESSED), A
-    LD (counter_stg1_solved), A
+    LD (counter_stg_solved), A
     LD A,$01
     LD (CHAR_DIR_MAIN),A        ; $00 - UP, $01 - DOWN, $02 - LEFT, $03 - RIGHT
 
@@ -409,11 +409,11 @@ MAIN_LOOP:
     JR .animate_ghost    
 
 .check_counter_puzzle_solved
-    LD A, (counter_stg1_solved)
+    LD A, (counter_stg_solved)
     CP counter_stg1_solved_max
     JR nc, .hide_dialog_puzzle_solved
     INC A
-    LD (counter_stg1_solved), A
+    LD (counter_stg_solved), A
     jr .animate_ghost
 
 .hide_dialog_puzzle_solved
@@ -644,6 +644,49 @@ MAIN_LOOP2:
     CALL STAGE1
 
 .no_screen_change:
+    ; Check if the puzzle is solved, then don't check tiles
+    LD A, (stg2_puzzle_solved)
+    CP 4
+    JP Z, .continue
+    CP 3
+    JR NZ, .check_murray_tile
+
+    LD A, (counter_stg_solved)
+    CP counter_stg2_solved_max
+    JR nc, .open_gargoyle_gate
+    INC A
+    LD (counter_stg_solved), A
+    LD HL, (BDRCLR)
+    CP 15
+    JR Z, .change_bdr_clr
+    ; change border color to black
+    ld hl,BDRCLR
+    ld (HL), 15
+    call CHGCLR    
+    JP .continue
+
+.change_bdr_clr
+    ; change border color to red
+    ld hl,BDRCLR
+    ld (HL), 2
+    call CHGCLR
+    JP .continue
+
+.open_gargoyle_gate
+    ; Open gargoyle Tile
+    LD A, 17
+    LD D, 120
+    LD E, 80
+    call draw_tile
+    ; Change border color
+    ld hl,BDRCLR
+    ld (HL), 1
+    call CHGCLR
+    LD A, (stg2_puzzle_solved)
+    INC A
+    LD (stg2_puzzle_solved), A
+
+.check_murray_tile
     ; Check murray coords
     CP STG2_MURRAY_YH
     JR NC, .check_tile1
@@ -721,7 +764,7 @@ MAIN_LOOP2:
     LD A, 4
     LD C, 0
     CALL ayFX_INIT    
-
+    ; Draw pressed tile
     LD A, 8
     LD D, 128
     LD E, 112
@@ -773,12 +816,10 @@ MAIN_LOOP2:
     JR NZ, .wrong_order_tile3
     INC A
     LD (stg2_puzzle_solved), A    
-
-    LD A, 17
-    LD D, 120
-    LD E, 80
-    call draw_tile
-
+    ; reset the counter to wait until the note is played
+    XOR A
+    LD (counter_stg_solved), A
+    LD (stg2_delay_border_change), A
     JR .continue
 
 .wrong_order_tile3

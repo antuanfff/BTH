@@ -13,3 +13,4 @@ JIFFY 					equ #FC9E
 INIGRP                  equ #0072   ; Enable Screen 2
 RSLREG                  equ #0138   ; Leemos el contenido del registro de seleccion de slots
 ENASLT                  equ #0024   ; Switches indicated slot at indicated page on perpetually Input    : A - Slot ID, see RDSLT            H - Bit 6 and 7 must contain the page number (00-11)
+CHGCLR                  equ #0062   ; #F3E9 (Foreground color), #F3EA (Foreground color) #F3EB (border color). 
