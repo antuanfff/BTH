@@ -658,7 +658,7 @@ MAIN_LOOP2:
     LD (counter_stg_solved), A
 
     LD A, (stg2_delay_border_change)
-    CP 5
+    CP STG2_DELAY_CYCLES
     JP NZ, .inc_stg2_delay_border_change
     XOR A
     LD (stg2_delay_border_change), A
@@ -696,6 +696,10 @@ MAIN_LOOP2:
     LD A, (stg2_puzzle_solved)
     INC A
     LD (stg2_puzzle_solved), A
+        ; afx
+    LD A,0
+    LD C, 0
+    CALL ayFX_INIT
 
 .check_murray_tile
     ; Check murray coords
