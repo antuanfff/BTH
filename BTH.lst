@@ -1,21 +1,21 @@
-Sjasm Z80 Assembler v0.42c - www.xl2s.tk             [2024.06.14 - 11:05:46]
+Sjasm Z80 Assembler v0.42c - www.xl2s.tk             [2024.06.14 - 11:29:38]
 
 .\BTH.asm
 Errors: 0
 
        1   00:0000                      	output "BTH.rom" 
-       2   00:5803                      
-       3   00:5803                      ;ROM ASCII16
-       4   00:5803                      		defpage	0,0x4000, 0x4000
-       5   00:5803                      		defpage	1,0x8000, 0x4000        
-       6   00:5803                      		defpage	2..14 ;Here it is determined rom size        
-       7   00:5803                              defpage	15,0xC000, 0x4000
-       8   00:5803                      
-       9   00:5803  (00:4000)           PageSize:	    equ	0x4000	        ; 16kB
-      10   00:5803  (00:6000)           _bank1	equ	6000h
-      11   00:5803  (00:7000)           _bank2	equ	7000h
-      12   00:5803  32 00 70 32 FF 77   		DB 32h,0,70h,32h,0FFh,77h		; Para evitar seleccionar el tipo de ROM ASCII16 en OpenMSX
-      13   00:5809  (00)                		page 0			
+       2   00:5819                      
+       3   00:5819                      ;ROM ASCII16
+       4   00:5819                      		defpage	0,0x4000, 0x4000
+       5   00:5819                      		defpage	1,0x8000, 0x4000        
+       6   00:5819                      		defpage	2..14 ;Here it is determined rom size        
+       7   00:5819                              defpage	15,0xC000, 0x4000
+       8   00:5819                      
+       9   00:5819  (00:4000)           PageSize:	    equ	0x4000	        ; 16kB
+      10   00:5819  (00:6000)           _bank1	equ	6000h
+      11   00:5819  (00:7000)           _bank2	equ	7000h
+      12   00:5819  32 00 70 32 FF 77   		DB 32h,0,70h,32h,0FFh,77h		; Para evitar seleccionar el tipo de ROM ASCII16 en OpenMSX
+      13   00:581F  (00)                		page 0			
       14   00:4000                              org 4000h		
       15   00:4000                              dw  4241h,START,0,0,0,0,0,0
       15   00:4000  41 42 E1 51 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -43,7 +43,7 @@ Errors: 0
       21   00:4010                          include "include\BTH_const.asm"
        1.  00:4010                      ;counter
        2.  00:4010  (00:006F)           counter_stg1_solved_max equ #6F
-       3.  00:4010  (00:009F)           counter_stg2_solved_max equ #9F
+       3.  00:4010  (00:006F)           counter_stg2_solved_max equ #6F
        4.  00:4010                      
        5.  00:4010                      ; pages for DATA
        6.  00:4010                      
@@ -3598,7 +3598,7 @@ Errors: 0
      502   00:5557  CD 86 46                call BOUNCE_ANDY
      503   00:555A  3A 08 C0                LD A, (ENTITY_PLAYER_POINTER+ENTITY_ENERGY)
      504   00:555D  FE 00                   CP 0
-     505   00:555F  CA EB 57                JP Z, game_over
+     505   00:555F  CA 01 58                JP Z, game_over
      506   00:5562                      
      507   00:5562                      .move_shoot:
      508   00:5562  CD AB 45                CALL MOVE_SHOOT
@@ -3743,277 +3743,289 @@ Errors: 0
      647   00:5644                          ; Check if the puzzle is solved, then don't check tiles
      648   00:5644  3A 62 C0                LD A, (stg2_puzzle_solved)
      649   00:5647  FE 04                   CP 4
-     650   00:5649  CA C0 57                JP Z, .continue
+     650   00:5649  CA D6 57                JP Z, .continue
      651   00:564C  FE 03                   CP 3
-     652   00:564E  20 40                   JR NZ, .check_murray_tile
+     652   00:564E  20 53                   JR NZ, .check_murray_tile
      653   00:5650                      
      654   00:5650  3A 00 C0                LD A, (counter_stg_solved)
-     655   00:5653  FE 9F                   CP counter_stg2_solved_max
-     656   00:5655  30 21                   JR nc, .open_gargoyle_gate
+     655   00:5653  FE 6F                   CP counter_stg2_solved_max
+     656   00:5655  30 34                   JR nc, .open_gargoyle_gate
      657   00:5657  3C                      INC A
      658   00:5658  32 00 C0                LD (counter_stg_solved), A
-     659   00:565B  2A EB F3                LD HL, (BDRCLR)
-     660   00:565E  FE 0F                   CP 15
-     661   00:5660  28 0B                   JR Z, .change_bdr_clr
-     662   00:5662                          ; change border color to black
-     663   00:5662  21 EB F3                ld hl,BDRCLR
-     664   00:5665  36 0F                   ld (HL), 15
-     665   00:5667  CD 62 00                call CHGCLR    
-     666   00:566A  C3 C0 57                JP .continue
-     667   00:566D                      
-     668   00:566D                      .change_bdr_clr
-     669   00:566D                          ; change border color to red
-     670   00:566D  21 EB F3                ld hl,BDRCLR
-     671   00:5670  36 02                   ld (HL), 2
-     672   00:5672  CD 62 00                call CHGCLR
-     673   00:5675  C3 C0 57                JP .continue
-     674   00:5678                      
-     675   00:5678                      .open_gargoyle_gate
-     676   00:5678                          ; Open gargoyle Tile
-     677   00:5678  3E 11                   LD A, 17
-     678   00:567A  16 78                   LD D, 120
-     679   00:567C  1E 50                   LD E, 80
-     680   00:567E  CD 21 49                call draw_tile
-     681   00:5681                          ; Change border color
-     682   00:5681  21 EB F3                ld hl,BDRCLR
-     683   00:5684  36 01                   ld (HL), 1
-     684   00:5686  CD 62 00                call CHGCLR
-     685   00:5689  3A 62 C0                LD A, (stg2_puzzle_solved)
-     686   00:568C  3C                      INC A
-     687   00:568D  32 62 C0                LD (stg2_puzzle_solved), A
-     688   00:5690                      
-     689   00:5690                      .check_murray_tile
-     690   00:5690                          ; Check murray coords
-     691   00:5690  FE AC                   CP STG2_MURRAY_YH
-     692   00:5692  30 29                   JR NC, .check_tile1
-     693   00:5694  FE 9C                   CP STG2_MURRAY_YL
-     694   00:5696  38 25                   JR C, .check_tile1
-     695   00:5698                          ; XH > X > XL
-     696   00:5698  DD 7E 01                LD A, (ix+1)
-     697   00:569B  FE 71                   CP STG2_MURRAY_X
-     698   00:569D  20 1E                   JR NZ, .check_tile1    
-     699   00:569F                          ; Check if the dialog is showing
-     700   00:569F  3A 67 C0                LD A, (SHOWING_MURRAY_STG2)
-     701   00:56A2  FE 01                   CP 1
-     702   00:56A4  CA C0 57                jp z, .continue
-     703   00:56A7                      
-     704   00:56A7                          ; Showing dialog
-     705   00:56A7  3E 01                   LD A, 1
-     706   00:56A9  32 67 C0                LD (SHOWING_MURRAY_STG2), A
-     707   00:56AC  FD 21 6D 41             LD IY, stg2_skull_strings
-     708   00:56B0  CD 55 49                CALL print_strings_dialog_box_v2
-     709   00:56B3  3E 06                   LD A, 6
-     710   00:56B5  0E 00                   LD C, 0
-     711   00:56B7  CD BC 50                CALL ayFX_INIT  
-     712   00:56BA  C3 C0 57                jp .continue
-     713   00:56BD                      
-     714   00:56BD                      .check_tile1:
-     715   00:56BD                          ; check X,Y to play Black Sabbath
-     716   00:56BD                          ; Ya tenemos en A la Y
-     717   00:56BD                          ; YH > y > YL
-     718   00:56BD  DD 7E 00                LD A, (ix)
-     719   00:56C0  FE 70                   CP STG2_TILE1_YH
-     720   00:56C2  30 65                   JR NC, .check_tile3
-     721   00:56C4  FE 60                   CP STG2_TILE1_YL
-     722   00:56C6  38 61                   JR C, .check_tile3
-     723   00:56C8                          ; XH > X > XL    
-     724   00:56C8  DD 7E 01                LD A, (ix+1)
-     725   00:56CB  FE 78                   CP STG2_TILE1_XH
-     726   00:56CD  30 27                   JR NC, .check_next_tile
-     727   00:56CF  FE 70                   CP STG2_TILE1_XL
-     728   00:56D1  38 23                   JR C, .check_next_tile
-     729   00:56D3                          ; Check if the tile is pressed
-     730   00:56D3  3A 64 C0                LD A, (PLAYING_NOTE1_STG2)
-     731   00:56D6  FE 01                   CP 1
-     732   00:56D8  CA C0 57                jp z, .continue
-     733   00:56DB                          
-     734   00:56DB                          ; Playing note
-     735   00:56DB  3E 01                   LD A, 1
-     736   00:56DD  32 64 C0                LD (PLAYING_NOTE1_STG2), A
-     737   00:56E0                          ;We set the puzzle to 1
-     738   00:56E0  32 62 C0                LD (stg2_puzzle_solved), A
-     739   00:56E3                      
-     740   00:56E3  3E 03                   LD A, 3
-     741   00:56E5  0E 00                   LD C, 0
-     742   00:56E7  CD BC 50                CALL ayFX_INIT    
-     743   00:56EA                          
-     744   00:56EA  3E 08                   LD A, 8
-     745   00:56EC  16 70                   LD D, 112
-     746   00:56EE  1E 70                   LD E, 112
-     747   00:56F0  CD 21 49                CALL draw_tile
-     748   00:56F3  C3 C0 57                jp .continue
-     749   00:56F6                      
-     750   00:56F6                      .check_next_tile:
-     751   00:56F6  FE 81                   CP STG2_TILE2_XH
-     752   00:56F8  30 2F                   JR NC, .check_tile3
-     753   00:56FA  FE 79                   CP STG2_TILE2_XL
-     754   00:56FC  38 2B                   JR C, .check_tile3
-     755   00:56FE                          ; Check if the tile is pressed
-     756   00:56FE  3A 65 C0                LD A, (PLAYING_NOTE2_STG2)
-     757   00:5701  FE 01                   CP 1
-     758   00:5703  CA C0 57                jp z, .continue
-     759   00:5706                          
-     760   00:5706                          ; Playing note
-     761   00:5706  3E 01                   LD A, 1
-     762   00:5708  32 65 C0                LD (PLAYING_NOTE2_STG2), A
-     763   00:570B                          
-     764   00:570B  3E 04                   LD A, 4
-     765   00:570D  0E 00                   LD C, 0
-     766   00:570F  CD BC 50                CALL ayFX_INIT    
-     767   00:5712                          ; Draw pressed tile
-     768   00:5712  3E 08                   LD A, 8
-     769   00:5714  16 80                   LD D, 128
-     770   00:5716  1E 70                   LD E, 112
-     771   00:5718  CD 21 49                CALL draw_tile
-     772   00:571B                          ; Check puzzle
-     773   00:571B  3A 62 C0                LD A, (stg2_puzzle_solved)
-     774   00:571E  FE 01                   CP 1
-     775   00:5720  20 04                   JR NZ, .wrong_order
-     776   00:5722  3C                      INC A
-     777   00:5723  32 62 C0                LD (stg2_puzzle_solved), A
-     778   00:5726                          
-     779   00:5726                      .wrong_order    
-     780   00:5726                      
-     781   00:5726  C3 C0 57                JP .continue
-     782   00:5729                      
-     783   00:5729                      .check_tile3:
-     784   00:5729                          ; YH > y > YL
-     785   00:5729  FE 90                   CP STG2_TILE3_YH
-     786   00:572B  30 43                   JR NC, .check_walk_on_tile3
-     787   00:572D  FE 80                   CP STG2_TILE3_YL
-     788   00:572F  38 3F                   JR C, .check_walk_on_tile3
-     789   00:5731                          ; XH > X > XL
-     790   00:5731  DD 7E 01                LD A, (ix+1)
-     791   00:5734  FE 81                   CP STG2_TILE3_XH
-     792   00:5736  30 38                   JR NC, .check_walk_on_tile3
-     793   00:5738  FE 79                   CP STG2_TILE3_XL
-     794   00:573A  38 34                   JR C, .check_walk_on_tile3
-     795   00:573C                             
-     796   00:573C                          ; Check if the tile is pressed
-     797   00:573C  3A 66 C0                LD A, (PLAYING_NOTE3_STG2)
-     798   00:573F  FE 01                   CP 1
-     799   00:5741  CA C0 57                jp z, .continue
-     800   00:5744                              
-     801   00:5744                          ; Playing note
-     802   00:5744  3E 01                   LD A, 1
-     803   00:5746  32 66 C0                LD (PLAYING_NOTE3_STG2), A
-     804   00:5749                      
-     805   00:5749  3E 05                   LD A, 5
-     806   00:574B  0E 00                   LD C, 0
-     807   00:574D  CD BC 50                CALL ayFX_INIT    
-     808   00:5750                      
-     809   00:5750  3E 08                   LD A, 8
-     810   00:5752  16 80                   LD D, 128
-     811   00:5754  1E 90                   LD E, 144
-     812   00:5756  CD 21 49                CALL draw_tile
-     813   00:5759                          ; Check puzzle
-     814   00:5759  3A 62 C0                LD A, (stg2_puzzle_solved)
-     815   00:575C  FE 02                   CP 2
-     816   00:575E  20 0A                   JR NZ, .wrong_order_tile3
-     817   00:5760  3C                      INC A
-     818   00:5761  32 62 C0                LD (stg2_puzzle_solved), A    
-     819   00:5764                          ; reset the counter to wait until the note is played
-     820   00:5764  AF                      XOR A
-     821   00:5765  32 00 C0                LD (counter_stg_solved), A
-     822   00:5768  18 56                   JR .continue
-     823   00:576A                      
-     824   00:576A                      .wrong_order_tile3
-     825   00:576A                          ;reset the counter
-     826   00:576A  AF                      XOR A
-     827   00:576B  32 62 C0                LD (stg2_puzzle_solved), A    
-     828   00:576E  18 50                   JR .continue
-     829   00:5770                      
-     830   00:5770                      .check_walk_on_tile3
-     831   00:5770  3A 66 C0                LD A, (PLAYING_NOTE3_STG2)
-     832   00:5773  FE 01                   CP 1
-     833   00:5775  20 0F                   JR NZ, .check_walk_on_tile2
-     834   00:5777  3E 07                   LD A, 7
-     835   00:5779  16 80                   LD D, 128
-     836   00:577B  1E 90                   LD E, 144
-     837   00:577D  CD 21 49                CALL draw_tile
+     659   00:565B                      
+     660   00:565B  3A 63 C0                LD A, (stg2_delay_border_change)
+     661   00:565E  FE 05                   CP 5
+     662   00:5660  C2 84 56                JP NZ, .inc_stg2_delay_border_change
+     663   00:5663  AF                      XOR A
+     664   00:5664  32 63 C0                LD (stg2_delay_border_change), A
+     665   00:5667  3A EB F3                LD A, (BDRCLR)
+     666   00:566A  FE 0F                   CP 15
+     667   00:566C  28 0B                   JR Z, .change_bdr_clr
+     668   00:566E                          ; change border color to black
+     669   00:566E  21 EB F3                ld hl,BDRCLR
+     670   00:5671  36 0F                   ld (HL), 15
+     671   00:5673  CD 62 00                call CHGCLR    
+     672   00:5676  C3 D6 57                JP .continue
+     673   00:5679                      
+     674   00:5679                      .change_bdr_clr
+     675   00:5679                          ; change border color to red
+     676   00:5679  21 EB F3                ld HL,BDRCLR
+     677   00:567C  36 01                   ld (HL), 1
+     678   00:567E  CD 62 00                call CHGCLR
+     679   00:5681  C3 D6 57                JP .continue
+     680   00:5684                      
+     681   00:5684                      .inc_stg2_delay_border_change
+     682   00:5684  3C                      INC A
+     683   00:5685  32 63 C0                LD (stg2_delay_border_change), A
+     684   00:5688  C3 D6 57                JP .continue
+     685   00:568B                      
+     686   00:568B                      .open_gargoyle_gate
+     687   00:568B                          ; Open gargoyle Tile
+     688   00:568B  3E 11                   LD A, 17
+     689   00:568D  16 78                   LD D, 120
+     690   00:568F  1E 50                   LD E, 80
+     691   00:5691  CD 21 49                call draw_tile
+     692   00:5694                          ; Change border color
+     693   00:5694  21 EB F3                ld hl,BDRCLR
+     694   00:5697  36 0F                   ld (HL), 15
+     695   00:5699  CD 62 00                call CHGCLR
+     696   00:569C  3A 62 C0                LD A, (stg2_puzzle_solved)
+     697   00:569F  3C                      INC A
+     698   00:56A0  32 62 C0                LD (stg2_puzzle_solved), A
+     699   00:56A3                      
+     700   00:56A3                      .check_murray_tile
+     701   00:56A3                          ; Check murray coords
+     702   00:56A3  FE AC                   CP STG2_MURRAY_YH
+     703   00:56A5  30 29                   JR NC, .check_tile1
+     704   00:56A7  FE 9C                   CP STG2_MURRAY_YL
+     705   00:56A9  38 25                   JR C, .check_tile1
+     706   00:56AB                          ; XH > X > XL
+     707   00:56AB  DD 7E 01                LD A, (ix+1)
+     708   00:56AE  FE 71                   CP STG2_MURRAY_X
+     709   00:56B0  20 1E                   JR NZ, .check_tile1    
+     710   00:56B2                          ; Check if the dialog is showing
+     711   00:56B2  3A 67 C0                LD A, (SHOWING_MURRAY_STG2)
+     712   00:56B5  FE 01                   CP 1
+     713   00:56B7  CA D6 57                jp z, .continue
+     714   00:56BA                      
+     715   00:56BA                          ; Showing dialog
+     716   00:56BA  3E 01                   LD A, 1
+     717   00:56BC  32 67 C0                LD (SHOWING_MURRAY_STG2), A
+     718   00:56BF  FD 21 6D 41             LD IY, stg2_skull_strings
+     719   00:56C3  CD 55 49                CALL print_strings_dialog_box_v2
+     720   00:56C6  3E 06                   LD A, 6
+     721   00:56C8  0E 00                   LD C, 0
+     722   00:56CA  CD BC 50                CALL ayFX_INIT  
+     723   00:56CD  C3 D6 57                jp .continue
+     724   00:56D0                      
+     725   00:56D0                      .check_tile1:
+     726   00:56D0                          ; check X,Y to play Black Sabbath
+     727   00:56D0                          ; Ya tenemos en A la Y
+     728   00:56D0                          ; YH > y > YL
+     729   00:56D0  DD 7E 00                LD A, (ix)
+     730   00:56D3  FE 70                   CP STG2_TILE1_YH
+     731   00:56D5  30 65                   JR NC, .check_tile3
+     732   00:56D7  FE 60                   CP STG2_TILE1_YL
+     733   00:56D9  38 61                   JR C, .check_tile3
+     734   00:56DB                          ; XH > X > XL    
+     735   00:56DB  DD 7E 01                LD A, (ix+1)
+     736   00:56DE  FE 78                   CP STG2_TILE1_XH
+     737   00:56E0  30 27                   JR NC, .check_next_tile
+     738   00:56E2  FE 70                   CP STG2_TILE1_XL
+     739   00:56E4  38 23                   JR C, .check_next_tile
+     740   00:56E6                          ; Check if the tile is pressed
+     741   00:56E6  3A 64 C0                LD A, (PLAYING_NOTE1_STG2)
+     742   00:56E9  FE 01                   CP 1
+     743   00:56EB  CA D6 57                jp z, .continue
+     744   00:56EE                          
+     745   00:56EE                          ; Playing note
+     746   00:56EE  3E 01                   LD A, 1
+     747   00:56F0  32 64 C0                LD (PLAYING_NOTE1_STG2), A
+     748   00:56F3                          ;We set the puzzle to 1
+     749   00:56F3  32 62 C0                LD (stg2_puzzle_solved), A
+     750   00:56F6                      
+     751   00:56F6  3E 03                   LD A, 3
+     752   00:56F8  0E 00                   LD C, 0
+     753   00:56FA  CD BC 50                CALL ayFX_INIT    
+     754   00:56FD                          
+     755   00:56FD  3E 08                   LD A, 8
+     756   00:56FF  16 70                   LD D, 112
+     757   00:5701  1E 70                   LD E, 112
+     758   00:5703  CD 21 49                CALL draw_tile
+     759   00:5706  C3 D6 57                jp .continue
+     760   00:5709                      
+     761   00:5709                      .check_next_tile:
+     762   00:5709  FE 81                   CP STG2_TILE2_XH
+     763   00:570B  30 2F                   JR NC, .check_tile3
+     764   00:570D  FE 79                   CP STG2_TILE2_XL
+     765   00:570F  38 2B                   JR C, .check_tile3
+     766   00:5711                          ; Check if the tile is pressed
+     767   00:5711  3A 65 C0                LD A, (PLAYING_NOTE2_STG2)
+     768   00:5714  FE 01                   CP 1
+     769   00:5716  CA D6 57                jp z, .continue
+     770   00:5719                          
+     771   00:5719                          ; Playing note
+     772   00:5719  3E 01                   LD A, 1
+     773   00:571B  32 65 C0                LD (PLAYING_NOTE2_STG2), A
+     774   00:571E                          
+     775   00:571E  3E 04                   LD A, 4
+     776   00:5720  0E 00                   LD C, 0
+     777   00:5722  CD BC 50                CALL ayFX_INIT    
+     778   00:5725                          ; Draw pressed tile
+     779   00:5725  3E 08                   LD A, 8
+     780   00:5727  16 80                   LD D, 128
+     781   00:5729  1E 70                   LD E, 112
+     782   00:572B  CD 21 49                CALL draw_tile
+     783   00:572E                          ; Check puzzle
+     784   00:572E  3A 62 C0                LD A, (stg2_puzzle_solved)
+     785   00:5731  FE 01                   CP 1
+     786   00:5733  20 04                   JR NZ, .wrong_order
+     787   00:5735  3C                      INC A
+     788   00:5736  32 62 C0                LD (stg2_puzzle_solved), A
+     789   00:5739                          
+     790   00:5739                      .wrong_order    
+     791   00:5739                      
+     792   00:5739  C3 D6 57                JP .continue
+     793   00:573C                      
+     794   00:573C                      .check_tile3:
+     795   00:573C                          ; YH > y > YL
+     796   00:573C  FE 90                   CP STG2_TILE3_YH
+     797   00:573E  30 46                   JR NC, .check_walk_on_tile3
+     798   00:5740  FE 80                   CP STG2_TILE3_YL
+     799   00:5742  38 42                   JR C, .check_walk_on_tile3
+     800   00:5744                          ; XH > X > XL
+     801   00:5744  DD 7E 01                LD A, (ix+1)
+     802   00:5747  FE 81                   CP STG2_TILE3_XH
+     803   00:5749  30 3B                   JR NC, .check_walk_on_tile3
+     804   00:574B  FE 79                   CP STG2_TILE3_XL
+     805   00:574D  38 37                   JR C, .check_walk_on_tile3
+     806   00:574F                             
+     807   00:574F                          ; Check if the tile is pressed
+     808   00:574F  3A 66 C0                LD A, (PLAYING_NOTE3_STG2)
+     809   00:5752  FE 01                   CP 1
+     810   00:5754  CA D6 57                jp z, .continue
+     811   00:5757                              
+     812   00:5757                          ; Playing note
+     813   00:5757  3E 01                   LD A, 1
+     814   00:5759  32 66 C0                LD (PLAYING_NOTE3_STG2), A
+     815   00:575C                      
+     816   00:575C  3E 05                   LD A, 5
+     817   00:575E  0E 00                   LD C, 0
+     818   00:5760  CD BC 50                CALL ayFX_INIT    
+     819   00:5763                      
+     820   00:5763  3E 08                   LD A, 8
+     821   00:5765  16 80                   LD D, 128
+     822   00:5767  1E 90                   LD E, 144
+     823   00:5769  CD 21 49                CALL draw_tile
+     824   00:576C                          ; Check puzzle
+     825   00:576C  3A 62 C0                LD A, (stg2_puzzle_solved)
+     826   00:576F  FE 02                   CP 2
+     827   00:5771  20 0D                   JR NZ, .wrong_order_tile3
+     828   00:5773  3C                      INC A
+     829   00:5774  32 62 C0                LD (stg2_puzzle_solved), A    
+     830   00:5777                          ; reset the counter to wait until the note is played
+     831   00:5777  AF                      XOR A
+     832   00:5778  32 00 C0                LD (counter_stg_solved), A
+     833   00:577B  32 63 C0                LD (stg2_delay_border_change), A
+     834   00:577E  18 56                   JR .continue
+     835   00:5780                      
+     836   00:5780                      .wrong_order_tile3
+     837   00:5780                          ;reset the counter
      838   00:5780  AF                      XOR A
-     839   00:5781  32 66 C0                LD (PLAYING_NOTE3_STG2), A
-     840   00:5784  18 3A                   jr .continue
+     839   00:5781  32 62 C0                LD (stg2_puzzle_solved), A    
+     840   00:5784  18 50                   JR .continue
      841   00:5786                      
-     842   00:5786                      .check_walk_on_tile2
-     843   00:5786  3A 65 C0                LD A, (PLAYING_NOTE2_STG2)
+     842   00:5786                      .check_walk_on_tile3
+     843   00:5786  3A 66 C0                LD A, (PLAYING_NOTE3_STG2)
      844   00:5789  FE 01                   CP 1
-     845   00:578B  20 0F                   JR NZ, .check_walk_on_tile1
+     845   00:578B  20 0F                   JR NZ, .check_walk_on_tile2
      846   00:578D  3E 07                   LD A, 7
      847   00:578F  16 80                   LD D, 128
-     848   00:5791  1E 70                   LD E, 112
+     848   00:5791  1E 90                   LD E, 144
      849   00:5793  CD 21 49                CALL draw_tile
      850   00:5796  AF                      XOR A
-     851   00:5797  32 65 C0                LD (PLAYING_NOTE2_STG2), A
-     852   00:579A  18 24                   jr .continue
+     851   00:5797  32 66 C0                LD (PLAYING_NOTE3_STG2), A
+     852   00:579A  18 3A                   jr .continue
      853   00:579C                      
-     854   00:579C                      .check_walk_on_tile1
-     855   00:579C  3A 64 C0                LD A, (PLAYING_NOTE1_STG2)
+     854   00:579C                      .check_walk_on_tile2
+     855   00:579C  3A 65 C0                LD A, (PLAYING_NOTE2_STG2)
      856   00:579F  FE 01                   CP 1
-     857   00:57A1  20 0F                   JR NZ, .check_murray_dialog
+     857   00:57A1  20 0F                   JR NZ, .check_walk_on_tile1
      858   00:57A3  3E 07                   LD A, 7
-     859   00:57A5  16 70                   LD D, 112
+     859   00:57A5  16 80                   LD D, 128
      860   00:57A7  1E 70                   LD E, 112
      861   00:57A9  CD 21 49                CALL draw_tile
      862   00:57AC  AF                      XOR A
-     863   00:57AD  32 64 C0                LD (PLAYING_NOTE1_STG2), A
-     864   00:57B0  18 0E                   jr .continue
+     863   00:57AD  32 65 C0                LD (PLAYING_NOTE2_STG2), A
+     864   00:57B0  18 24                   jr .continue
      865   00:57B2                      
-     866   00:57B2                      .check_murray_dialog
-     867   00:57B2  3A 67 C0                LD A, (SHOWING_MURRAY_STG2)
+     866   00:57B2                      .check_walk_on_tile1
+     867   00:57B2  3A 64 C0                LD A, (PLAYING_NOTE1_STG2)
      868   00:57B5  FE 01                   CP 1
-     869   00:57B7  20 07                   JR NZ, .continue
-     870   00:57B9  AF                      XOR a
-     871   00:57BA  32 67 C0                LD (SHOWING_MURRAY_STG2), A
-     872   00:57BD  CD DD 47                call CLEAR_DIALOG_BOX
-     873   00:57C0                      
-     874   00:57C0                      .continue:
-     875   00:57C0  CD 37 43                call DUMP_SPR_ATTS      
-     876   00:57C3  CD AB 45                CALL MOVE_SHOOT    
-     877   00:57C6                      
-     878   00:57C6  3E 08                   ld a, 8
-     879   00:57C8  CD 41 01            	call SNSMAT   
-     880   00:57CB  4F                      LD C,A    
-     881   00:57CC                              
-     882   00:57CC  CB 79                   BIT KB_RIGHT, C			; La tecla presionada es RIGHT?
-     883   00:57CE  CC F3 43                call z, move_right
-     884   00:57D1                          
-     885   00:57D1  CB 61                   BIT KB_LEFT, C			; La tecla presionada es LEFT?
-     886   00:57D3  CC 52 44                call z, move_left
-     887   00:57D6                      
-     888   00:57D6  CB 69                   BIT KB_UP, C			; La tecla presionada es UP?
-     889   00:57D8  CC 7E 43                call z, move_up
-     890   00:57DB                      
-     891   00:57DB  CB 71                   BIT KB_DOWN, C			; La tecla presionada es DOWN?
-     892   00:57DD  CC B8 43                call z, move_down
-     893   00:57E0                      
-     894   00:57E0  CB 41                   BIT KB_SPACE, C			; La tecla presionada es SPACE
-     895   00:57E2  CC 16 46                call z,SHOOT_MAIN_CHAR
-     896   00:57E5                      
-     897   00:57E5  CB 59                   BIT KB_DEL, C			; La tecla presionada es DEL    
-     898   00:57E7  C8                      ret z
-     899   00:57E8                      
-     900   00:57E8  C3 0D 56                jp MAIN_LOOP2
-     901   00:57EB                      
-     902   00:57EB                      game_over:
-     903   00:57EB  FD 21 49 41             LD IY, game_over_strings
-     904   00:57EF  CD 55 49                call print_strings_dialog_box_v2    
-     905   00:57F2  CD B0 4A                call PT3_MUTE
-     906   00:57F5                      
-     907   00:57F5                      .loop1   
-     908   00:57F5  76                      halt
-     909   00:57F6  3E 08                   ld a, 8
-     910   00:57F8  CD 41 01            	call SNSMAT   
-     911   00:57FB  4F                      LD C,A    
-     912   00:57FC                              
-     913   00:57FC  CB 41                   BIT KB_SPACE, C			; La tecla presionada es SPACE
-     914   00:57FE  CA E1 51                JP z,START
-     915   00:5801                      
-     916   00:5801  18 F2                   JR .loop1
-     917   00:5803                          
-     918   00:5803  (01)                 PAGE 1
-     919   01:8000                      ; CODE O NO
-     920   01:8000                          include "include\BTH_data.asm"
+     869   00:57B7  20 0F                   JR NZ, .check_murray_dialog
+     870   00:57B9  3E 07                   LD A, 7
+     871   00:57BB  16 70                   LD D, 112
+     872   00:57BD  1E 70                   LD E, 112
+     873   00:57BF  CD 21 49                CALL draw_tile
+     874   00:57C2  AF                      XOR A
+     875   00:57C3  32 64 C0                LD (PLAYING_NOTE1_STG2), A
+     876   00:57C6  18 0E                   jr .continue
+     877   00:57C8                      
+     878   00:57C8                      .check_murray_dialog
+     879   00:57C8  3A 67 C0                LD A, (SHOWING_MURRAY_STG2)
+     880   00:57CB  FE 01                   CP 1
+     881   00:57CD  20 07                   JR NZ, .continue
+     882   00:57CF  AF                      XOR a
+     883   00:57D0  32 67 C0                LD (SHOWING_MURRAY_STG2), A
+     884   00:57D3  CD DD 47                call CLEAR_DIALOG_BOX
+     885   00:57D6                      
+     886   00:57D6                      .continue:
+     887   00:57D6  CD 37 43                call DUMP_SPR_ATTS      
+     888   00:57D9  CD AB 45                CALL MOVE_SHOOT    
+     889   00:57DC                      
+     890   00:57DC  3E 08                   ld a, 8
+     891   00:57DE  CD 41 01            	call SNSMAT   
+     892   00:57E1  4F                      LD C,A    
+     893   00:57E2                              
+     894   00:57E2  CB 79                   BIT KB_RIGHT, C			; La tecla presionada es RIGHT?
+     895   00:57E4  CC F3 43                call z, move_right
+     896   00:57E7                          
+     897   00:57E7  CB 61                   BIT KB_LEFT, C			; La tecla presionada es LEFT?
+     898   00:57E9  CC 52 44                call z, move_left
+     899   00:57EC                      
+     900   00:57EC  CB 69                   BIT KB_UP, C			; La tecla presionada es UP?
+     901   00:57EE  CC 7E 43                call z, move_up
+     902   00:57F1                      
+     903   00:57F1  CB 71                   BIT KB_DOWN, C			; La tecla presionada es DOWN?
+     904   00:57F3  CC B8 43                call z, move_down
+     905   00:57F6                      
+     906   00:57F6  CB 41                   BIT KB_SPACE, C			; La tecla presionada es SPACE
+     907   00:57F8  CC 16 46                call z,SHOOT_MAIN_CHAR
+     908   00:57FB                      
+     909   00:57FB  CB 59                   BIT KB_DEL, C			; La tecla presionada es DEL    
+     910   00:57FD  C8                      ret z
+     911   00:57FE                      
+     912   00:57FE  C3 0D 56                jp MAIN_LOOP2
+     913   00:5801                      
+     914   00:5801                      game_over:
+     915   00:5801  FD 21 49 41             LD IY, game_over_strings
+     916   00:5805  CD 55 49                call print_strings_dialog_box_v2    
+     917   00:5808  CD B0 4A                call PT3_MUTE
+     918   00:580B                      
+     919   00:580B                      .loop1   
+     920   00:580B  76                      halt
+     921   00:580C  3E 08                   ld a, 8
+     922   00:580E  CD 41 01            	call SNSMAT   
+     923   00:5811  4F                      LD C,A    
+     924   00:5812                              
+     925   00:5812  CB 41                   BIT KB_SPACE, C			; La tecla presionada es SPACE
+     926   00:5814  CA E1 51                JP z,START
+     927   00:5817                      
+     928   00:5817  18 F2                   JR .loop1
+     929   00:5819                          
+     930   00:5819  (01)                 PAGE 1
+     931   01:8000                      ; CODE O NO
+     932   01:8000                          include "include\BTH_data.asm"
        1.  01:8000                      SPRITE_P1_UP:
        2.  01:8000                          ; UP 1        
        3.  01:8000                          ; mask 0
@@ -4875,7 +4887,7 @@ Errors: 0
      497.  01:8EB6  02 04                   db 0x02, 0x04 ; Color index 13
      498.  01:8EB8  01 02                   db 0x01, 0x02 ; Color index 14
      499.  01:8EBA  00 00                   db 0x00, 0x00 ; Color index 15
-     921   01:8EBC                          include "gfx\stg1_map.asm"
+     933   01:8EBC                          include "gfx\stg1_map.asm"
        1.  01:8EBC                      stg1_map_back:
        2.  01:8EBC                      ; Background Tiles - #Tile, X, Y, #reps
        3.  01:8EBC  09 00 00 07         	db 9, 0, 0, 7	
@@ -4937,7 +4949,7 @@ Errors: 0
       59.  01:8F59  0B AC 34 01         	db 11, 172, 52, 1	; Tree 1
       60.  01:8F5D  FF                  	db 255	; fin
       61.  01:8F5E                      
-     922   01:8F5E                          include "gfx\stg2_map.asm"
+     934   01:8F5E                          include "gfx\stg2_map.asm"
        1.  01:8F5E                      stg2_map_back:
        2.  01:8F5E                      ; Background Tiles - #Tile, X, Y, #reps
        3.  01:8F5E  09 00 00 10         	db 9, 0, 0, 16    		
@@ -4987,59 +4999,59 @@ Errors: 0
       47.  01:8FDB  10 B8 08 01             db 16, 184, 8, 1	; Cross 2
       48.  01:8FDF  FF                  	db 255	; fin
       49.  01:8FE0                      
-     923   01:8FE0                      FONT:
-     924   01:8FE0  (07F7)               INCBIN "gfx\FONT.SC5",#7
-     925   01:97D7                      AFX:
-     926   01:97D7  (0353)                  incbin "sfx\cementer_sounds.afb"
-     927   01:9B2A                      SONG:
-     928   01:9B2A  (0F92)              	incbin "sfx\Nostalgy_sincabecera.pt3"
-     929   01:AABC                          ;incbin "sfx\test.pt3"
-     930   01:AABC                          ;incbin "sfx\G-6sin_cabecera.pt3"
-     931   01:AABC                      
-     932   01:AABC  (02)                 PAGE 2
-     933   02:8000                      TILES1:
-     934   02:8000  (3801)               INCBIN "gfx\tiles1.sc5",#7
-     935   02:B801                      
-     936   02:B801  (03)                 PAGE 3
-     937   03:8000                      
-     938   03:8000  (04)                 PAGE 4
-     939   04:8000  (05)                 PAGE 5
-     940   05:8000  (06)                 PAGE 6
-     941   06:8000  (07)                 PAGE 7
-     942   07:8000                      CEMENTER1
-     943   07:8000                       ;#Para el fondo borrar de BDA0 en adelante para quitar la parte de la energia
-     944   07:8000  (4000)               INCBIN "gfx\CEMENTER1.SC5",#7,#4000			; Cada página tiene 16K = 4000h
-     945   07:C000  (08)                 PAGE 8
-     946   08:8000  (200D)               INCBIN "gfx\CEMENTER1.SC5",#4007			; Cada página tiene 16K = 4000h 
-     947   08:A00D  (09)                 PAGE 9
-     948   09:8000                      GRAPHIC
-     949   09:8000  (4000)               INCBIN "gfx\BTH.SR8",#7,#4000			; Cada página tiene 16K = 4000h
-     950   09:C000  (0A)                 PAGE 10
-     951   0A:8000  (4000)               INCBIN "gfx\BTH.SR8",#4007,#4000
-     952   0A:C000                      
-     953   0A:C000  (0B)                 PAGE 11
-     954   0B:8000  (4000)               INCBIN "gfx\BTH.SR8",#8007,#4000
-     955   0B:C000                      
-     956   0B:C000  (0C)                 PAGE 12
-     957   0C:8000  (1400)               INCBIN "gfx\BTH.SR8",#C007
-     958   0C:9400                      
-     959   0C:9400  (0D)                 PAGE 13
-     960   0D:8000                      CEMENTER2
-     961   0D:8000                      ;#Para el fondo borrar de BDA0 en adelante para quitar la parte de la energia
-     962   0D:8000  (4000)               INCBIN "gfx\CEMENTER2.SC5",#7,#4000			; Cada página tiene 16K = 4000h
-     963   0D:C000  (0E)                 PAGE 14
-     964   0E:8000  (200E)               INCBIN "gfx\CEMENTER2.SC5",#4007			; Cada página tiene 16K = 4000h 
-     965   0E:A00E  (0F)                 PAGE 15
-     966   0F:C000                      ;---------------------------------------------------------
-     967   0F:C000                      ; Variables
-     968   0F:C000                      ;---------------------------------------------------------
-     969   0F:C000                      	
-     970   0F:C000  (C000)              	MAP #C000  ;Ram page 3
-     971   0F:C000                      ;	MAP #E5FF  ;Ram page 3
-     972   0F:C000                      ;NAME #1  ;a byte is reserved for this variable
-     973   0F:C000                      ;ETC
-     974   0F:C000                      ;
-     975   0F:C000                      	include "include\BTH_RAM.asm"
+     935   01:8FE0                      FONT:
+     936   01:8FE0  (07F7)               INCBIN "gfx\FONT.SC5",#7
+     937   01:97D7                      AFX:
+     938   01:97D7  (0353)                  incbin "sfx\cementer_sounds.afb"
+     939   01:9B2A                      SONG:
+     940   01:9B2A  (0F92)              	incbin "sfx\Nostalgy_sincabecera.pt3"
+     941   01:AABC                          ;incbin "sfx\test.pt3"
+     942   01:AABC                          ;incbin "sfx\G-6sin_cabecera.pt3"
+     943   01:AABC                      
+     944   01:AABC  (02)                 PAGE 2
+     945   02:8000                      TILES1:
+     946   02:8000  (3801)               INCBIN "gfx\tiles1.sc5",#7
+     947   02:B801                      
+     948   02:B801  (03)                 PAGE 3
+     949   03:8000                      
+     950   03:8000  (04)                 PAGE 4
+     951   04:8000  (05)                 PAGE 5
+     952   05:8000  (06)                 PAGE 6
+     953   06:8000  (07)                 PAGE 7
+     954   07:8000                      CEMENTER1
+     955   07:8000                       ;#Para el fondo borrar de BDA0 en adelante para quitar la parte de la energia
+     956   07:8000  (4000)               INCBIN "gfx\CEMENTER1.SC5",#7,#4000			; Cada página tiene 16K = 4000h
+     957   07:C000  (08)                 PAGE 8
+     958   08:8000  (200D)               INCBIN "gfx\CEMENTER1.SC5",#4007			; Cada página tiene 16K = 4000h 
+     959   08:A00D  (09)                 PAGE 9
+     960   09:8000                      GRAPHIC
+     961   09:8000  (4000)               INCBIN "gfx\BTH.SR8",#7,#4000			; Cada página tiene 16K = 4000h
+     962   09:C000  (0A)                 PAGE 10
+     963   0A:8000  (4000)               INCBIN "gfx\BTH.SR8",#4007,#4000
+     964   0A:C000                      
+     965   0A:C000  (0B)                 PAGE 11
+     966   0B:8000  (4000)               INCBIN "gfx\BTH.SR8",#8007,#4000
+     967   0B:C000                      
+     968   0B:C000  (0C)                 PAGE 12
+     969   0C:8000  (1400)               INCBIN "gfx\BTH.SR8",#C007
+     970   0C:9400                      
+     971   0C:9400  (0D)                 PAGE 13
+     972   0D:8000                      CEMENTER2
+     973   0D:8000                      ;#Para el fondo borrar de BDA0 en adelante para quitar la parte de la energia
+     974   0D:8000  (4000)               INCBIN "gfx\CEMENTER2.SC5",#7,#4000			; Cada página tiene 16K = 4000h
+     975   0D:C000  (0E)                 PAGE 14
+     976   0E:8000  (200E)               INCBIN "gfx\CEMENTER2.SC5",#4007			; Cada página tiene 16K = 4000h 
+     977   0E:A00E  (0F)                 PAGE 15
+     978   0F:C000                      ;---------------------------------------------------------
+     979   0F:C000                      ; Variables
+     980   0F:C000                      ;---------------------------------------------------------
+     981   0F:C000                      	
+     982   0F:C000  (C000)              	MAP #C000  ;Ram page 3
+     983   0F:C000                      ;	MAP #E5FF  ;Ram page 3
+     984   0F:C000                      ;NAME #1  ;a byte is reserved for this variable
+     985   0F:C000                      ;ETC
+     986   0F:C000                      ;
+     987   0F:C000                      	include "include\BTH_RAM.asm"
        1.  0F:C000                      ; Counter stage1 puzzle solved
        2.  0F:C000  00 (1)              counter_stg_solved ds 1
        3.  0F:C001                      
@@ -5120,7 +5132,7 @@ Errors: 0
       78.  0F:C105  00 (2)                  DS 2
       79.  0F:C107                      MAP_RAM:
       80.  0F:C107  00 (736)                DS 736
-     976   0F:C3E7                          include "include\ayFX-RAM.ASM"
+     988   0F:C3E7                          include "include\ayFX-RAM.ASM"
        1.  0F:C3E7                      		; --- ayFX REPLAYER v1.31 ---
        2.  0F:C3E7                      
        3.  0F:C3E7                      		; --- THIS FILE MUST BE COMPILED IN RAM ---
@@ -5140,8 +5152,8 @@ Errors: 0
       17.  0F:C3F2                      		; --- UNCOMMENT THIS IF YOU DON'T USE THIS REPLAYER WITH PT3 REPLAYER ---
       18.  0F:C3F2                      ;AYREGS:		.ds	14			; Ram copy of PSG registers
       19.  0F:C3F2                      		; --- UNCOMMENT THIS IF YOU DON'T USE THIS REPLAYER WITH PT3 REPLAYER ---
-     977   0F:C3F2  (0000)              	ENDMAP
-     978   0F:C3F2                        
+     989   0F:C3F2  (0000)              	ENDMAP
+     990   0F:C3F2                        
 
     LABELS
 -------------------------------------------------
@@ -5163,7 +5175,7 @@ Errors: 0
 00:00000024   ENASLT
 00:00000062   CHGCLR
 00:0000006F   counter_stg1_solved_max
-00:0000009F   counter_stg2_solved_max
+00:0000006F   counter_stg2_solved_max
 00:00000001   SPR_DATA_PAGE
 00:00000002   TILES_PAGE
 00:00000009   ENTITY_SIZE
@@ -5653,21 +5665,22 @@ Errors: 0
 00:0000560D   MAIN_LOOP2
 00:00005641   MAIN_LOOP2.GHOST_DEAD
 00:00005644   MAIN_LOOP2.no_screen_change
-00:0000566D   MAIN_LOOP2.change_bdr_clr
-00:00005678   MAIN_LOOP2.open_gargoyle_gate
-00:00005690   MAIN_LOOP2.check_murray_tile
-00:000056BD   MAIN_LOOP2.check_tile1
-00:000056F6   MAIN_LOOP2.check_next_tile
-00:00005726   MAIN_LOOP2.wrong_order
-00:00005729   MAIN_LOOP2.check_tile3
-00:0000576A   MAIN_LOOP2.wrong_order_tile3
-00:00005770   MAIN_LOOP2.check_walk_on_tile3
-00:00005786   MAIN_LOOP2.check_walk_on_tile2
-00:0000579C   MAIN_LOOP2.check_walk_on_tile1
-00:000057B2   MAIN_LOOP2.check_murray_dialog
-00:000057C0   MAIN_LOOP2.continue
-00:000057EB   game_over
-00:000057F5   game_over.loop1
+00:00005679   MAIN_LOOP2.change_bdr_clr
+00:00005684   MAIN_LOOP2.inc_stg2_delay_border_change
+00:0000568B   MAIN_LOOP2.open_gargoyle_gate
+00:000056A3   MAIN_LOOP2.check_murray_tile
+00:000056D0   MAIN_LOOP2.check_tile1
+00:00005709   MAIN_LOOP2.check_next_tile
+00:00005739   MAIN_LOOP2.wrong_order
+00:0000573C   MAIN_LOOP2.check_tile3
+00:00005780   MAIN_LOOP2.wrong_order_tile3
+00:00005786   MAIN_LOOP2.check_walk_on_tile3
+00:0000579C   MAIN_LOOP2.check_walk_on_tile2
+00:000057B2   MAIN_LOOP2.check_walk_on_tile1
+00:000057C8   MAIN_LOOP2.check_murray_dialog
+00:000057D6   MAIN_LOOP2.continue
+00:00005801   game_over
+00:0000580B   game_over.loop1
 01:00008000   SPRITE_P1_UP
 01:000080C0   SPRITE_P1_DOWN
 01:00008180   SPRITE_P1_LEFT
@@ -5714,7 +5727,7 @@ Errors: 0
 0F:0000C060   SHOWING_JOHN_DIALOG
 0F:0000C061   SHOWING_GUS_DIALOG
 0F:0000C062   stg2_puzzle_solved
-0F:0000C063 X stg2_delay_border_change
+0F:0000C063   stg2_delay_border_change
 0F:0000C064   PLAYING_NOTE1_STG2
 0F:0000C065   PLAYING_NOTE2_STG2
 0F:0000C066   PLAYING_NOTE3_STG2
@@ -5768,12 +5781,12 @@ Errors: 0
 -------------------------------------------------
 
  Page: 00
-  Org: 00004000  Size: 00004000  Used: 00001809
+  Org: 00004000  Size: 00004000  Used: 0000181F
 
    Address   Length Align   Label
-   00004000    6147         ANDY_MAX_ENERGY
-   00005803       6         
-   00005809   10231       <empty>
+   00004000    6169         ANDY_MAX_ENERGY
+   00005819       6         
+   0000581F   10209       <empty>
 
  Page: 01
   Org: 00008000  Size: 00004000  Used: 00002ABC

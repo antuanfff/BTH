@@ -1,6 +1,6 @@
 ;counter
 counter_stg1_solved_max equ #6F
-counter_stg2_solved_max equ #9F
+counter_stg2_solved_max equ #6F
 
 ; pages for DATA
 

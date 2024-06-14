@@ -656,7 +656,13 @@ MAIN_LOOP2:
     JR nc, .open_gargoyle_gate
     INC A
     LD (counter_stg_solved), A
-    LD HL, (BDRCLR)
+
+    LD A, (stg2_delay_border_change)
+    CP 5
+    JP NZ, .inc_stg2_delay_border_change
+    XOR A
+    LD (stg2_delay_border_change), A
+    LD A, (BDRCLR)
     CP 15
     JR Z, .change_bdr_clr
     ; change border color to black
@@ -667,9 +673,14 @@ MAIN_LOOP2:
 
 .change_bdr_clr
     ; change border color to red
-    ld hl,BDRCLR
-    ld (HL), 2
+    ld HL,BDRCLR
+    ld (HL), 1
     call CHGCLR
+    JP .continue
+
+.inc_stg2_delay_border_change
+    INC A
+    LD (stg2_delay_border_change), A
     JP .continue
 
 .open_gargoyle_gate
@@ -680,7 +691,7 @@ MAIN_LOOP2:
     call draw_tile
     ; Change border color
     ld hl,BDRCLR
-    ld (HL), 1
+    ld (HL), 15
     call CHGCLR
     LD A, (stg2_puzzle_solved)
     INC A
