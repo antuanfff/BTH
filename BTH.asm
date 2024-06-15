@@ -53,7 +53,17 @@ START
     call Set212Lines
     ld	a, SPR_DATA_PAGE			; page 
 	ld	(_bank2),a
-        
+
+    ; init sfx
+    di	
+	ld		hl,SONG-99		; hl vale la direccion donde se encuentra la cancion - 99
+    ;PUSH IX
+    call	PT3_INIT			; Inicia el reproductor de PT3
+	ld hl, AFX
+    call ayFX_SETUP
+    ;POP IX
+    ei
+
     call INIT_CHARS_VARS
     call initVDPBuffers    
 
@@ -61,15 +71,7 @@ START
 	LD (CHAR_SPEED_X_GHOST), A
     LD HL, PaletteData
     CALL SetPalette
-    ; init sfx
-    di	
-	ld		hl,SONG-99		; hl vale la direccion donde se encuentra la cancion - 99
-    PUSH IX
-    call	PT3_INIT			; Inicia el reproductor de PT3
-	ld hl, AFX
-    call ayFX_SETUP
-    POP IX
-    ei
+    
         
     ; Load Data to VDP and start entities
     CALL PRE_STAGE1
@@ -703,6 +705,7 @@ MAIN_LOOP2:
 
 .check_murray_tile
     ; Check murray coords
+    LD A, (ix)
     CP STG2_MURRAY_YH
     JR NC, .check_tile1
     CP STG2_MURRAY_YL
