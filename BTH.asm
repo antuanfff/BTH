@@ -16,7 +16,6 @@ _bank2	equ	7000h
 
 ;Llamadas a rutinas bios
     include "include\System_BIOSCalls.asm"
-
 ;Constantes
     include "include\BTH_const.asm"
     include "include\BTH_strings.asm"
@@ -29,8 +28,6 @@ _bank2	equ	7000h
     include	"include\PT3_player.s"
 ; AFX
     include "include\ayFX-ROM.ASM"
-; GFX
-    include "include\metatiles.asm"
 ; entities
     include "include\entities.asm"
 START
@@ -933,21 +930,23 @@ game_over:
     JP z,START
 
     JR .loop1
-    
+
  PAGE 1
 ; CODE O NO
-    include "include\BTH_data.asm"
-    include "gfx\stg1_map.asm"
-    include "gfx\stg2_map.asm"
+SONG:
+    incbin "sfx\Nostalgy_sincabecera.pt3"
+
+    include "include\BTH_data.asm"    
 FONT:
  INCBIN "gfx\FONT.SC5",#7
 AFX:
     incbin "sfx\cementer_sounds.afb"
-SONG:
-	incbin "sfx\Nostalgy_sincabecera.pt3"
     ;incbin "sfx\test.pt3"
     ;incbin "sfx\G-6sin_cabecera.pt3"
-
+; GFX
+    include "include\metatiles.asm"
+    include "gfx\stg1_map.asm"
+    include "gfx\stg2_map.asm"
  PAGE 2
 TILES1:
  INCBIN "gfx\tiles1.sc5",#7
@@ -965,15 +964,15 @@ CEMENTER1
  INCBIN "gfx\CEMENTER1.SC5",#4007			; Cada página tiene 16K = 4000h 
  PAGE 9
 GRAPHIC
- INCBIN "gfx\BTH.SR8",#7,#4000			; Cada página tiene 16K = 4000h
+; INCBIN "gfx\BTH.SR8",#7,#4000			; Cada página tiene 16K = 4000h
  PAGE 10
- INCBIN "gfx\BTH.SR8",#4007,#4000
+; INCBIN "gfx\BTH.SR8",#4007,#4000
 
  PAGE 11
- INCBIN "gfx\BTH.SR8",#8007,#4000
+; INCBIN "gfx\BTH.SR8",#8007,#4000
 
  PAGE 12
- INCBIN "gfx\BTH.SR8",#C007
+; INCBIN "gfx\BTH.SR8",#C007
 
  PAGE 13
 CEMENTER2
