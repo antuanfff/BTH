@@ -26,6 +26,9 @@ _bank2	equ	7000h
     include "include\VDP_Data.asm"
 ; SFX
     include	"include\PT3_player.s"
+SONG:
+    incbin "sfx\Nostalgy_sincabecera.pt3"
+
 ; AFX
     include "include\ayFX-ROM.ASM"
 ; entities
@@ -70,7 +73,7 @@ START
     CALL SetPalette
     
         
-    ; Load Data to VDP and start entities
+    ; Load Data to VDP and init entities
     CALL PRE_STAGE1
     ; Start STG1    
     CALL STAGE1
@@ -226,7 +229,7 @@ STAGE1:
 MAIN_LOOP:
     ;halt ; sincroniza el teclado y pantalla con el procesador (que va muy rápido)    
     
-    LD A, (ix)  ; Cargamos la Y
+    LD A, (ENTITY_PLAYER_POINTER+ENEMY_Y)  ; Cargamos la Y
     CP $00
     JP Z, STAGE2
     call DUMP_SPR_ATTS    
@@ -326,7 +329,7 @@ MAIN_LOOP:
     LD A, (SHOWING_GUS_DIALOG)
     CP 1
     JP Z, .animate_ghost
-    LD A, (ix)
+    LD A, (ENTITY_PLAYER_POINTER+ENEMY_Y)
     CP GUS_TOMB_STG1_Y
     jp c, .animate_ghost
     LD IY, gus_tomb_strings
@@ -356,7 +359,7 @@ MAIN_LOOP:
     CP SKULL_TOMB_STG1_X
     jr nz, .check_mike_dialog_box
         
-    LD A, (ix)
+    LD A, (ENTITY_PLAYER_POINTER+ENEMY_Y)
     CP SKULL_TOMB_STG1_Y1
     jr c, .check_mike_dialog_box
     CP SKULL_TOMB_STG1_Y2
@@ -612,7 +615,17 @@ STAGE2:
     ;LD (current_level), A
     CALL CLEAR_DIALOG_BOX
     CALL DRAW_ANDY_ENERGY
-    
+    ; Miramos si el puzzle está resuelto para abrir la puerta de la gárgola
+    LD A, (stg2_puzzle_solved)
+    CP 4
+    JR NZ, .stg2_puzzle_not_solved
+    ; Open gargoyle Tile
+    LD A, 17
+    LD D, 120
+    LD E, 80
+    call draw_tile
+
+.stg2_puzzle_not_solved
     CALL ENASCR
     
 MAIN_LOOP2:
@@ -625,7 +638,7 @@ MAIN_LOOP2:
 	call ayFX_PLAY
     POP IX
     ei
-    LD A, (ix)    
+    LD A, (ENTITY_PLAYER_POINTER+ENEMY_Y)    
     CP 176      ; Miramos si la Y es 160 para pasar a stg1
     JP NZ, .no_screen_change
     ; Ponemos el P1 al principio de la pantalla 1
@@ -701,7 +714,7 @@ MAIN_LOOP2:
 
 .check_murray_tile
     ; Check murray coords
-    LD A, (ix)
+    LD A, (ENTITY_PLAYER_POINTER+ENEMY_Y)
     CP STG2_MURRAY_YH
     JR NC, .check_tile1
     CP STG2_MURRAY_YL
@@ -729,7 +742,7 @@ MAIN_LOOP2:
     ; check X,Y to play Black Sabbath
     ; Ya tenemos en A la Y
     ; YH > y > YL
-    LD A, (ix)
+    LD A, (ENTITY_PLAYER_POINTER+ENEMY_Y)
     CP STG2_TILE1_YH
     JR NC, .check_tile3
     CP STG2_TILE1_YL
@@ -930,8 +943,6 @@ game_over:
 
     JR .loop1
 
-SONG:
-    incbin "sfx\Nostalgy_sincabecera.pt3"
  PAGE 1
 ; CODE O NO
     include "include\BTH_data.asm"    

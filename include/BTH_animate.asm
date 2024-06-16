@@ -251,6 +251,7 @@ UPDATE_MOVEMENT:
 	LD (ix), A
     LD (ix+4), A
     LD (ix+8), A
+    LD (ENTITY_PLAYER_POINTER+ENEMY_Y), A
 	
 	LD A, (ix+1)			;cargamos la X
 	LD HL, (CHAR_SPEED_X)
@@ -259,6 +260,7 @@ UPDATE_MOVEMENT:
 	LD (ix+1), A
     LD (ix+5), A
     LD (ix+9), A	
+    LD (ENTITY_PLAYER_POINTER+ENEMY_X), A
 
     XOR A            ; reseteamos las variables de movimiento para el siguiente ciclo
     LD (CHAR_SPEED_X),A
