@@ -79,7 +79,6 @@ START
     ;CALL CHGET
 	ret
 
-
 INIT_CHARS_VARS:    
     ld ix, SPRITE_ATTRS           
     
@@ -127,6 +126,7 @@ INIT_CHARS_VARS:
     LD (PLAYING_NOTE2_STG2), A
     LD (PLAYING_NOTE3_STG2), A
     LD (SHOWING_MURRAY_STG2), A
+    LD (counter_P1_flickering), A
 
    ; LD A,$FF
     ;LD (OLD_KEY_PRESSED), A
@@ -526,8 +526,7 @@ MAIN_LOOP:
     LD (ix+SPR_GHOST_STG1+4),217    
 
 .check_KB:
-    halt    
-	
+    halt    	
 	di       
     PUSH IX
 	call	PT3_ROUT			;envia datos a al PSG 	   
@@ -931,11 +930,10 @@ game_over:
 
     JR .loop1
 
- PAGE 1
-; CODE O NO
 SONG:
     incbin "sfx\Nostalgy_sincabecera.pt3"
-
+ PAGE 1
+; CODE O NO
     include "include\BTH_data.asm"    
 FONT:
  INCBIN "gfx\FONT.SC5",#7
