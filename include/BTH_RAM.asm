@@ -10,7 +10,8 @@ ENTITY_DATA: ds 27 ;  10 bytes, 3 entities
 ENTITY_PLAYER_POINTER:  EQU ENTITY_DATA
 ENTITY_ENEMY1_POINTER:  EQU ENTITY_DATA+9
 ENTITY_ENEMY2_POINTER:  EQU ENTITY_DATA+18
-
+P1_flickering_state ds 1
+P1_flickering_counter   ds 1
 current_level: 	ds 1
 
 ; VDP variables

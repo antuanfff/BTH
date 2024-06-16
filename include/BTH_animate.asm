@@ -6,7 +6,7 @@ move_up:
     LD (CHAR_NEW_DIR_MAIN),A
     CALL CHECK_DIRECTION_MAIN
 
-    ld a,(ix); obtenemos el valor actual de la posicion y
+    ld a,(ENTITY_PLAYER_POINTER+ENEMY_Y); obtenemos el valor actual de la posicion y
     sub 1 ; decrementamos en 1 el valor, aunque realmente será dos por el desplazamiento de la Y que hace el VDP
     ld e,a  ; Metemos el parametro Y para verificar si hay colision
     ld a,(ix+1)
@@ -15,7 +15,7 @@ move_up:
     cp 1
     jp z,NO_MOVEMENT
 
-    ld a,(ix); obtenemos el valor actual de la posicion y
+    ld a,(ENTITY_PLAYER_POINTER+ENEMY_Y); obtenemos el valor actual de la posicion y
     sub 1 ; decrementamos en 1 el valor, aunque realmente será dos por el desplazamiento de la Y que hace el VGP
     ld e,a  ; Metemos el parametro Y para verificar si hay colision
     ld a,(ix+1)
@@ -39,7 +39,7 @@ move_down:
     LD (CHAR_NEW_DIR_MAIN),A
     CALL CHECK_DIRECTION_MAIN
 
-    ld a,(ix); obtenemos el valor actual de la posicion y
+    ld a,(ENTITY_PLAYER_POINTER+ENEMY_Y); obtenemos el valor actual de la posicion y
     add 17 ; incrementamos en 15+2 el valor
     ld e,a  ; Metemos el parametro Y para verificar si hay colision
     ld a,(ix+1)
@@ -48,7 +48,7 @@ move_down:
     cp 1
     jp z,NO_MOVEMENT
 
-    ld a,(ix); obtenemos el valor actual de la posicion y
+    ld a,(ENTITY_PLAYER_POINTER+ENEMY_Y); obtenemos el valor actual de la posicion y
     add 17 ; incrementamos en 15 el valor
     ld e,a  ; Metemos el parametro Y para verificar si hay colision
     ld a,(ix+1)
@@ -80,7 +80,7 @@ move_right:
     ld a,(ix+1); obtenemos el valor actual de la posicion x   
     add 16; incrementamos en 3 el valor
     ld d,a  ; Metemos el parametro X para verificar si hay colision
-    ld a,(ix)   ;obtenemos el valor actual de la posicion Y
+    ld a,(ENTITY_PLAYER_POINTER+ENEMY_Y)   ;obtenemos el valor actual de la posicion Y
     add 1   ; incrementamos en 1 por el desplazamiento del VGP
     ld e,a  ; Metemos el parametro Y para verificar si hay colision
     call get_bloque_en_X_Y
@@ -91,7 +91,7 @@ move_right:
     ld a,(ix+1); obetenemos el valor actual de la posicion x   
     add 16; incrementamos en 2 tiles el valor
     ld d,a  ; Metemos el parametro X para verificar si hay colision
-    ld a,(ix) ;obtenemos el valor actual de la posicion y
+    ld a,(ENTITY_PLAYER_POINTER+ENEMY_Y) ;obtenemos el valor actual de la posicion y
     add 8 ; Añadimos 8 para mirar el tile inferior - centro
     ld e,a  ; Metemos el parametro Y para verificar si hay colision
     call get_bloque_en_X_Y
@@ -102,7 +102,7 @@ move_right:
     ld a,(ix+1); obetenemos el valor actual de la posicion x   
     add 16; incrementamos en 2 tiles el valor
     ld d,a  ; Metemos el parametro X para verificar si hay colision
-    ld a,(ix) ;obtenemos el valor actual de la posicion y
+    ld a,(ENTITY_PLAYER_POINTER+ENEMY_Y) ;obtenemos el valor actual de la posicion y
     add 15 ; Añadimos 8+1 para mirar la esquina inferior derecha del tile inferior
     ld e,a  ; Metemos el parametro Y para verificar si hay colision
     call get_bloque_en_X_Y
@@ -133,7 +133,7 @@ move_left:
     ld a,(ix+1); obetenemos el valor actual de la posicion x
     sub 2 ; decrementamos en 2 el valor
     ld d,a  ; Metemos el parametro X para verificar si hay colision
-    ld a,(ix)   ;obtenemos el valor actual de la posicion Y
+    ld a,(ENTITY_PLAYER_POINTER+ENEMY_Y)   ;obtenemos el valor actual de la posicion Y
     add 1   ; incrementamos en 1 por el desplazamiento del VGP
     ld e,a  ; Metemos el parametro Y para verificar si hay colision
     call get_bloque_en_X_Y
@@ -144,7 +144,7 @@ move_left:
     ld a,(ix+1); obetenemos el valor actual de la posicion x
     sub 2 ; decrementamos en 2 el valor
     ld d,a  ; Metemos el parametro X para verificar si hay colision
-    ld a,(ix)   ;obtenemos el valor actual de la posicion Y
+    ld a,(ENTITY_PLAYER_POINTER+ENEMY_Y)   ;obtenemos el valor actual de la posicion Y
     add 8   ; incrementamos en 8 para mirar la parte central del personaje
     ld e,a  ; Metemos el parametro Y para verificar si hay colision
     call get_bloque_en_X_Y
@@ -155,7 +155,7 @@ move_left:
     ld a,(ix+1); obetenemos el valor actual de la posicion x
     sub 2 ; decrementamos en 2 el valor
     ld d,a  ; Metemos el parametro X para verificar si hay colision
-    ld a,(ix)   ;obtenemos el valor actual de la posicion Y
+    ld a,(ENTITY_PLAYER_POINTER+ENEMY_Y)   ;obtenemos el valor actual de la posicion Y
     add 15   ; incrementamos en 8 para mirar la parte central del personaje (-1 por el offset del VGP)
     ld e,a  ; Metemos el parametro Y para verificar si hay colision
     call get_bloque_en_X_Y
@@ -244,7 +244,7 @@ CHECK_DIRECTION_MAIN:
     RET
 
 UPDATE_MOVEMENT:
-	LD A, (ix)          ;cargamos la Y			
+	LD A, (ENTITY_PLAYER_POINTER+ENEMY_Y)          ;cargamos la Y			
 	LD HL, (CHAR_SPEED_Y)
 	ADD L					; Actualizamos la posicion en base a la velocidad
     
@@ -381,7 +381,7 @@ SHOOT_MAIN_CHAR:
 
     ld (ix+SPR_SHOOT_P1+2), SPR_SHOOT_P1_PTRN     ; Sprite Disparo
 
-    LD A, (ix)          
+    LD A, (ENTITY_PLAYER_POINTER+ENEMY_Y)          
     ld (ix+SPR_SHOOT_P1), A       ; Asignamos la Y del personaje    
 
     LD A, (CHAR_DIR_MAIN)
@@ -445,8 +445,9 @@ BOUNCE_ANDY:
     ;    ld (ix+13), $10      ; Sprite 1 - Ghost
     CALL DUMP_SPR_P1
 
-    LD A, (ix)
+    LD A, (ENTITY_PLAYER_POINTER+ENEMY_Y)
     ADD 16
+    LD (ENTITY_PLAYER_POINTER+ENEMY_Y), A
     LD (ix), A
     LD (ix+4), A
     LD (ix+8), A

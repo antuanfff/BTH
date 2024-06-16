@@ -1,7 +1,7 @@
 ;counter
 counter_stg1_solved_max equ #6F
 counter_stg2_solved_max equ #5F
-counter_P1_flickering equ #5F
+counter_P1_flickering_max equ #5F
 
 ; pages for DATA
 

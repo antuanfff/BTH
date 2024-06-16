@@ -129,7 +129,8 @@ INIT_CHARS_VARS:
     LD (PLAYING_NOTE2_STG2), A
     LD (PLAYING_NOTE3_STG2), A
     LD (SHOWING_MURRAY_STG2), A
-    LD (counter_P1_flickering), A
+    LD (P1_flickering_counter), A
+    LD (P1_flickering_state), A
 
    ; LD A,$FF
     ;LD (OLD_KEY_PRESSED), A
@@ -481,6 +482,10 @@ MAIN_LOOP:
     LD (ix+SPR_GHOST_STG1+6),SPR_GHOST_STG1_PTRN_R2+4
 
 .continue:    
+    LD A, (P1_flickering_state)
+    CP 1
+    JR Z, .p1_flickering
+
     LD A, (ix+SPR_GHOST_STG1+1)     ; Cargamos la X
     LD (ENTITY_ENEMY1_POINTER+1), A
     LD A, (ix+SPR_GHOST_STG1)           ; Cargamos la Y
@@ -500,11 +505,26 @@ MAIN_LOOP:
     ; Copiamos al buffer parte inferior de pantalla
     LD HL, DiagBoxToBackBufROM
 	call VDPCMD
+    ;set the flickering state
+    LD A, 1
+    LD (P1_flickering_state), A
+    XOR A
+    LD (P1_flickering_counter), A
 
     call BOUNCE_ANDY
     LD A, (ENTITY_PLAYER_POINTER+ENTITY_ENERGY)
     CP 0
     JP Z, game_over
+    JR .move_shoot
+
+.p1_flickering
+    LD A, (P1_flickering_counter)
+    INC A
+    LD (P1_flickering_counter),a
+    CP counter_P1_flickering_max
+    JR NZ, .move_shoot
+    XOR A
+    LD (P1_flickering_state), A
 
 .move_shoot:
     CALL MOVE_SHOOT
@@ -596,9 +616,11 @@ STAGE2:
 	ld	(_bank2),a
  
     ; Ponemos el P1 por encima del marco
-    LD (ix), 175      ; mask 0
-    LD (ix+4), 175    ; mask 1
-    LD (ix+8), 175    ; mask 2
+    LD A, 175
+    LD (ENTITY_PLAYER_POINTER+ENEMY_Y), A      ; mask 0
+    LD (ix), A      ; mask 0
+    LD (ix+4), A    ; mask 1
+    LD (ix+8), A    ; mask 2
     
     LD (ix+SPR_GHOST_STG1),217  ; ocultamos el fantasma
     LD (ix+SPR_GHOST_STG1+4),217  ; ocultamos el fantasma
@@ -642,6 +664,8 @@ MAIN_LOOP2:
     CP 176      ; Miramos si la Y es 160 para pasar a stg1
     JP NZ, .no_screen_change
     ; Ponemos el P1 al principio de la pantalla 1
+    LD A, 1
+    LD (ENTITY_PLAYER_POINTER+ENEMY_Y), A
     LD (ix), 1          ; P1.Y = 1
     LD (ix+4), 1
     LD (ix+8), 1

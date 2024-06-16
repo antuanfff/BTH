@@ -21,7 +21,7 @@ EnemyCollisionCheck:
         call    .check                          ;                                   [18]
         ret     nc                              ;                                   [12/6]
 
-        ld      a,(ix)                     ; read player y-coordinate          [14]
+        ld      a,(ENTITY_PLAYER_POINTER+ENEMY_Y)                     ; read player y-coordinate          [14]
         add     PLAYER_COLLISION_OFFSET_Y       ; add offset for smaller rectangle  [8]
         ld      b,a                             ;                                   [5]
         ld      c,PLAYER_HEIGHT                 ; set the height of the player      [8]
