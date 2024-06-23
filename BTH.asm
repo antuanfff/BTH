@@ -496,7 +496,7 @@ MAIN_LOOP:
     JR NC, .move_shoot
     ; Collision
     LD A, (ENTITY_PLAYER_POINTER+ENTITY_ENERGY)
-    SUB 4    
+    ;SUB 4    
     LD (ENTITY_PLAYER_POINTER+ENTITY_ENERGY), A
     LD A, 7
     LD C, 0
@@ -525,6 +525,10 @@ MAIN_LOOP:
     JR NZ, .move_shoot
     XOR A
     LD (P1_flickering_state), A
+    LD A, (ENTITY_PLAYER_POINTER+ENEMY_Y)
+    LD (ix), a
+    LD (ix+4), a
+    LD (ix+8), a
 
 .move_shoot:
     CALL MOVE_SHOOT
@@ -582,17 +586,16 @@ no_arrows:
     ;BIT KB_DEL, C			; La tecla presionada es DEL    
     ;ret z
     
-.flick_P1:
+;flick_P1:
     LD A, (P1_flickering_state)
     CP 1
     JR NZ, .jp_main_loop
     LD A, (P1_flickering_counter)
     AND $0F
-    CP $A
-    JR Z, .hide_p1
-
-    CP $E
-    JR NZ, .jp_main_loop
+    ; Cogemos el primer dígito y escondemos el P1 entre 0 y A (contador de parpadeo)
+    CP $0A
+    JR NC, .hide_p1
+    ; Si hay carry, el contador es mayor de A y mostramos el P1
     LD A, (ENTITY_PLAYER_POINTER+ENEMY_Y)
     LD (ix), A      ; mask 0
     LD (ix+4), A    ; mask 1
@@ -645,7 +648,10 @@ STAGE2:
     LD (ix), A      ; mask 0
     LD (ix+4), A    ; mask 1
     LD (ix+8), A    ; mask 2
-    
+    ; Reset flickering status
+    XOR A
+    LD (P1_flickering_state), A
+
     LD (ix+SPR_GHOST_STG1),217  ; ocultamos el fantasma
     LD (ix+SPR_GHOST_STG1+4),217  ; ocultamos el fantasma
     
