@@ -511,7 +511,7 @@ MAIN_LOOP:
     XOR A
     LD (P1_flickering_counter), A
 
-    call BOUNCE_ANDY
+    ;call BOUNCE_ANDY
     LD A, (ENTITY_PLAYER_POINTER+ENTITY_ENERGY)
     CP 0
     JP Z, game_over
@@ -582,6 +582,30 @@ no_arrows:
     ;BIT KB_DEL, C			; La tecla presionada es DEL    
     ;ret z
     
+.flick_P1:
+    LD A, (P1_flickering_state)
+    CP 1
+    JR NZ, .jp_main_loop
+    LD A, (P1_flickering_counter)
+    AND $0F
+    CP $A
+    JR Z, .hide_p1
+
+    CP $E
+    JR NZ, .jp_main_loop
+    LD A, (ENTITY_PLAYER_POINTER+ENEMY_Y)
+    LD (ix), A      ; mask 0
+    LD (ix+4), A    ; mask 1
+    LD (ix+8), A    ; mask 2
+    jr .jp_main_loop
+
+.hide_p1
+    ; Hide P1
+    LD (ix), 217      ; mask 0
+    LD (ix+4), 217    ; mask 1
+    LD (ix+8), 217    ; mask 2
+
+.jp_main_loop
     jp MAIN_LOOP
 
 

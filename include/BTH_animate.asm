@@ -248,9 +248,9 @@ UPDATE_MOVEMENT:
 	LD HL, (CHAR_SPEED_Y)
 	ADD L					; Actualizamos la posicion en base a la velocidad
     
-	LD (ix), A
-    LD (ix+4), A
-    LD (ix+8), A
+	;LD (ix), A
+    ;LD (ix+4), A
+    ;LD (ix+8), A
     LD (ENTITY_PLAYER_POINTER+ENEMY_Y), A
 	
 	LD A, (ix+1)			;cargamos la X
@@ -265,6 +265,21 @@ UPDATE_MOVEMENT:
     XOR A            ; reseteamos las variables de movimiento para el siguiente ciclo
     LD (CHAR_SPEED_X),A
     LD (CHAR_SPEED_Y),A	
+
+    LD A, (P1_flickering_state)
+    CP 1
+    RET Z   ; si está parpadeando no imprime el SPRITE en pantalla
+    
+    ;LD A, (ENTITY_PLAYER_POINTER+ENEMY_X)
+    ;LD (ix+1), A
+    ;LD (ix+5), A
+    ;LD (ix+9), A	
+    
+    LD A, (ENTITY_PLAYER_POINTER+ENEMY_Y)
+    LD (ix), A
+    LD (ix+4), A
+    LD (ix+8), A
+
     RET
 
 ANIMATE_P1:
@@ -439,11 +454,11 @@ SHOOT_MAIN_CHAR:
     ret
 
 BOUNCE_ANDY:    
-    ld hl, SPRITE_COLOR_P1_RED
-    ld (SPRITE_COLOR_REPLACE), HL
-    ld (SPRITE_COLOR_REPLACE2), HL
+    ;ld hl, SPRITE_COLOR_P1_RED
+    ;ld (SPRITE_COLOR_REPLACE), HL
+    ;ld (SPRITE_COLOR_REPLACE2), HL
     ;    ld (ix+13), $10      ; Sprite 1 - Ghost
-    CALL DUMP_SPR_P1
+    ;CALL DUMP_SPR_P1
 
     LD A, (ENTITY_PLAYER_POINTER+ENEMY_Y)
     ADD 16
